@@ -196,9 +196,9 @@ Blockly.JavaScript.dwenguino_digital_read_switch = function(){
 
 Blockly.JavaScript.dwenguino_wait_for_switch = function(){
     var switch_number = this.getFieldValue('SWITCH');
-    var code = 'while(digitalRead(' + switch_number + ')){}';
+    var code = 'while(' + machine + 'digitalRead("' + switch_number + '")){}\n';
 
-    return [code, Blockly.Arduino.ORDER_ATOMIC];
+    return code
 };
 
 
@@ -208,3 +208,4 @@ Blockly.JavaScript.dwenguino_leds_reg = function(){
 
     return code;
 };
+
