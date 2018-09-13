@@ -45,24 +45,22 @@ var DwenguinoSimulation = {
 
   translateSimulatorInterface: function(){
     // translation
-    document.getElementById('sim_start').textContent = MSG.simulator['start'];
-    document.getElementById('sim_stop').textContent = MSG.simulator['stop'];
-    document.getElementById('sim_pause').textContent = MSG.simulator['pause'];
-    document.getElementById('sim_step').textContent = MSG.simulator['step'];
-    document.getElementById('sim_speedTag').textContent = MSG.simulator['speed'] + ":";
+    document.getElementById('sim_start').innerHTML = "<span class='glyphicon glyphicon-play' alt='" + MSG.simulator['start'] + "'></span>";
+    document.getElementById('sim_stop').innerHTML = "<span class='glyphicon glyphicon-stop' alt='" + MSG.simulator['stop'] + "'></span>";
+    document.getElementById('sim_pause').innerHTML = "<span class='glyphicon glyphicon-pause' alt='" + MSG.simulator['pause'] + "'></span>";
+    document.getElementById('sim_step').innerHTML = "<span class='glyphicon glyphicon-step-forward' alt='" + MSG.simulator['step'] + "'></span>";
+
+    /*document.getElementById('sim_speedTag').textContent = MSG.simulator['speed'] + ":";
 
     document.getElementById('sim_speed_verySlow').textContent = MSG.simulator['speedVerySlow'];
     document.getElementById('sim_speed_slow').textContent = MSG.simulator['speedSlow'];
     document.getElementById('sim_speed_medium').textContent = MSG.simulator['speedMedium'];
     document.getElementById('sim_speed_fast').textContent = MSG.simulator['speedFast'];
     document.getElementById('sim_speed_veryFast').textContent = MSG.simulator['speedVeryFast'];
-    document.getElementById('sim_speed_realTime').textContent = MSG.simulator['speedRealTime'];
+    document.getElementById('sim_speed_realTime').textContent = MSG.simulator['speedRealTime'];*/
 
-    document.getElementById('sim_scenarioTag').textContent = MSG.simulator['scenario'] + ":";
+    document.getElementById('sim_scenarioTag').textContent = MSG.simulator['scenario'];
 
-    $.each(Object.keys(DwenguinoSimulation.scenarios), function(index, value){
-      $('#sim_scenario_' + value).text(MSG.simulator['scenario_' + value]);
-    });
 
     //document.getElementById('sim_components_select').textContent = MSG.simulator['components'] + ":";
     //document.getElementById('servo1').textContent = MSG.simulator['servo'] + " 1";
@@ -85,8 +83,17 @@ var DwenguinoSimulation = {
     //Add scenarios to the dropdown
     $("#sim_scenario").empty();
     $.each(Object.keys(DwenguinoSimulation.scenarios), function(index, value){
-      var newOpt = $("<option></option>").attr("id", "sim_scenario_" + value).attr("value", value).text(value);
-      $("#sim_scenario").append(newOpt);
+      var container = $("<div></div>").attr("class", "scenario_radio_container");
+      var newOpt = $("<input></input>").attr("type", "radio").attr("name", "scenario_type").attr("id", "sim_scenario_" + value).attr("value", value);
+      console.log(value);
+      console.log(DwenguinoSimulation.scenarioView);
+      if (value == DwenguinoSimulation.scenarioView){
+        newOpt.attr("checked", "checked");
+      }
+      var image = $("<img></img>").attr("class", "scenario_image").attr("src", "img/scenarios/scenario_" + value + ".png");
+      container.append(newOpt);
+      container.append(image);
+      $("#sim_scenario").append(container);
     });
 
     //Translate the interface.
@@ -249,13 +256,13 @@ var DwenguinoSimulation = {
       DwenguinoSimulation.setSpeed();
     });
 
-    // change scenario view
-    $("#sim_scenario").on('change', function() {
-      var e = document.getElementById("sim_scenario");
-      DwenguinoSimulation.scenarioView = e.options[e.selectedIndex].value;
+    $("input[name=scenario_type]:radio").change(function () {
+      console.log($(this).val());
+      DwenguinoSimulation.scenarioView = $(this).val();
       DwenguinoSimulation.currentScenario = DwenguinoSimulation.scenarios[DwenguinoSimulation.scenarioView];
       DwenguinoSimulation.currentScenario.initSimulationDisplay(DwenguinoSimulation.simulationViewContainerId);
       DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("changedScenario", DwenguinoSimulation.scenarioView));
+
     });
 
     var toggleSimulatorPaneView = function(currentPane, otherPanes, e){
@@ -271,6 +278,7 @@ var DwenguinoSimulation = {
 
       e.preventDefault();
     };
+
     $("a[href$='#db_code_pane']").click(function(e){
       toggleSimulatorPaneView(this, [$("a[href$='#db_robot_pane']")], e);
     });
@@ -296,6 +304,9 @@ var DwenguinoSimulation = {
         $(this.hash).hide();
       });
     });
+
+    //Select the scenario view by default.
+    $("a[href$='#db_robot_pane']").trigger("click");
 
 
   },
@@ -926,7 +937,7 @@ var DwenguinoSimulation = {
 
       // change view of driving robot
       var e = document.getElementById("sim_scenario");
-      var option = e.options[e.selectedIndex].value;
+      //var option = e.options[e.selectedIndex].value;
 
     },
 
