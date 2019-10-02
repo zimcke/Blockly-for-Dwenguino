@@ -119,6 +119,7 @@ scenario: "Senario",
 senario_default: "Papan biasa",
 scenario_moving: "Bergerak robot",
 scenario_wall: "Memindahkan robot dengan dinding",
+scenario_socialrobot:"Social robot",
 code: "Kod",
 };
 

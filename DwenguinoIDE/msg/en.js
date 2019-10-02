@@ -117,6 +117,7 @@ MSG.simulator = {
   scenario_default: "Normal board",
   scenario_moving: "Moving robot",
   scenario_wall: "Moving robot with wall",
+  scenario_socialrobot:"Social robot",
   code: "Code",
 };
 

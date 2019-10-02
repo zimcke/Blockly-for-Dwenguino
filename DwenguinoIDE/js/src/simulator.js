@@ -19,7 +19,7 @@ var DwenguinoSimulation = {
   isSimulationPaused: false,
   speedDelay: 16,
   debuggingView: false,
-  scenarios: ["default", "moving", "wall", "spyrograph"],
+  scenarios: ["default", "moving", "wall", "socialrobot", "spyrograph"],
   scenarioView: "spyrograph",
 
   debugger: {

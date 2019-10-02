@@ -112,6 +112,7 @@ MSG.simulator = {
   scenario_default: "Normale bord",
   scenario_moving: "Bewegende robot",
   scenario_wall: "Bewegende robot met muur",
+  scenario_socialrobot:"Sociale robot",
   scenario_spyrograph: "Spyrograaf",
   code: "Code",
 };

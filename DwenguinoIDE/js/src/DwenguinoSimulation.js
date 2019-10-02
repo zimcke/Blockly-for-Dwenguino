@@ -21,6 +21,7 @@ var DwenguinoSimulation = {
   scenarios: {
     "moving": new DwenguinoSimulationScenarioRidingRobot(),
     "wall": new DwenguinoSimulationScenarioRidingRobotWithWall(),
+    "socialrobot": new DwenguinoSimulationScenarioSocialRobot(),
     //"spyrograph": new DwenguinoSimulationScenarioSpyrograph() /*, "moving", "wall", "spyrograph"*/
   },
   currentScenario: null,
@@ -93,6 +94,9 @@ var DwenguinoSimulation = {
 
     //Init the current scenario view
     DwenguinoSimulation.currentScenario.initSimulationDisplay(DwenguinoSimulation.simulationViewContainerId);
+
+    //Init the simulation canvas element
+    document.getElementById('sim_canvas');
 
     // start/stop/pause
     $("#sim_start").click(function() {
