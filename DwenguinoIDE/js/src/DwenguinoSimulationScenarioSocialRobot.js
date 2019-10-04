@@ -25,29 +25,11 @@ function DwenguinoSimulationScenarioSocialRobot(){
     // init superclass
      DwenguinoSimulationScenario.prototype.initSimulationState.call(this);
      //init robot state
-     this.robot = {
-       image: {
-         width: 50,
-         height: 40
-       },
-       start: {
-         x: 100,
-         y: 100,
-         angle: 0
-       },
-       position: {
-         x: 100,
-         y: 100,
-         angle: 0
-       },
-       collision: [{
-         type: 'circle',
-         radius: 25
-       }]
-     };
-     this.containerWidth = 0;
-     this.containerHeight = 0;
-  
+     this.initSocialRobot();
+
+     //load images for the simulation canvas
+     this.loadImages();
+
    }
   
   /* @brief Initializes the simulator social robot display.
@@ -101,19 +83,53 @@ function DwenguinoSimulationScenarioSocialRobot(){
 
     var sim_canvas = document.getElementById('sim_canvas');
 
+    // set initial canvas dimensions
+    sim_canvas.setAttribute('width', window.innerWidth);
+    sim_canvas.setAttribute('height', window.innerHeight);
+
+    // Get DPI
+    let dpi = window.devicePixelRatio;
+
     if (sim_canvas.getContext) {
         var ctx = sim_canvas.getContext('2d');
-        
-        var servo1 = new Image();
-        servo1.src = './img/board/servo_movement.png';
+        this.drawSimulationCanvas = new DwenguinoDrawSimulationCanvas(sim_canvas, ctx);
 
-        ctx.fillStyle = '#0a3c7a';
-        ctx.fillRect(10, 10, 50, 50);
-        ctx.drawImage(servo1, 10, 10);
-        } else {
+        function fix_dpi() {
+          // Get CSS height, the + prefix casts it to an integer
+          // Slice method gets rid of "px"
+          let style_height = +getComputedStyle(sim_canvas).getPropertyValue("height").slice(0, -2);
+          let style_width = +getComputedStyle(sim_canvas).getPropertyValue("width").slice(0, -2);
+          sim_canvas.setAttribute('height', style_height * dpi);
+          sim_canvas.setAttribute('width', style_width * dpi);
+        }
+
+        this.drawSimulationDisplay();
+
+        window.addEventListener('resize', resizeCanvas, false);
+
+        function resizeCanvas() {
+          fix_dpi();
+          // TODO fix this
+          this.drawSimulationDisplay();
+        }
+        
+      } else {
             // canvas unsupported
             console.log("The simulation canvas is not supported by your browser")
         }
+  };
+
+  /**
+   * This function draws the initial state of the simulation canvas
+   */
+  DwenguinoSimulationScenarioSocialRobot.prototype.drawSimulationDisplay = function() {
+    this.drawSimulationCanvas.clearCanvas();
+
+    this.drawSimulationCanvas.drawServo(this.robot.servo1);
+    this.drawSimulationCanvas.drawServo(this.robot.servo2);
+  
+    this.drawSimulationCanvas.drawLed(this.robot.led1);
+    this.drawSimulationCanvas.drawLed(this.robot.led2);
   };
   
   /* @brief updates the simulation state and display
@@ -153,6 +169,13 @@ function DwenguinoSimulationScenarioSocialRobot(){
   DwenguinoSimulationScenarioSocialRobot.prototype.updateScenarioState = function(dwenguinoState){
     DwenguinoSimulationScenario.prototype.updateScenarioState.call(this, dwenguinoState);
     
+    var angle1 = dwenguinoState.servoAngles[0];
+    var angle2 = dwenguinoState.servoAngles[1];
+
+    this.robot.servo1.position.prevAngle = this.robot.servo1.position.angle;
+    this.robot.servo2.position.prevAngle = this.robot.servo2.position.angle;
+    this.robot.servo1.position.angle = angle1;  
+    this.robot.servo2.position.angle = angle2;
   
     return dwenguinoState;
   };
@@ -165,7 +188,72 @@ function DwenguinoSimulationScenarioSocialRobot(){
    */
   DwenguinoSimulationScenarioSocialRobot.prototype.updateScenarioDisplay = function(dwenguinoState){
     DwenguinoSimulationScenario.prototype.updateScenarioDisplay.call(this, dwenguinoState);
-  
- 
+    this.drawSimulationDisplay();
+    console.log("canvas updated");
   };
+
+  /* @brief Initializes the social robot state for the simulation canvas
+   * 
+   */
+  DwenguinoSimulationScenarioSocialRobot.prototype.initSocialRobot = function(containerIdSelector){
+    var xOffset = 100;
+    var yOffset = 50;
+    this.robot = {
+
+      servo1: {
+        width: 150,
+        height: 75,
+        position: {
+          x: xOffset,
+          y: yOffset,
+          angle: 0,
+          prevAngle: 0,
+        },
+        image: new Image(),
+        backgroundcolor: '#0a3c7a',
+      },
+
+      servo2: {
+        width: 150,
+        height: 75,
+        position: {
+          x: 170 + xOffset,
+          y: yOffset,
+          angle: 0,
+          prevAngle: 0,
+        },
+        image: new Image(),
+        backgroundcolor: '#0a3c7a',
+      },
+
+      led1: {
+        radius: 30,
+        position: {
+          x: 70  + xOffset,
+          y: 150 + yOffset,
+        },
+        color: 'yellow',
+        bordercolor: 'black',
+      },
+
+      led2: {
+        radius: 30,
+        position: {
+          x: 240 + xOffset,
+          y: 150 + yOffset,
+        },
+        color: 'yellow',
+        bordercolor: 'black',
+      },
+    };
+ }
+
+ /* @brief Load all images that are used by the simulation canvas
+  * This function loads all images that are being used by the simulation canvas 
+  * to display the social robot
+  */
+ DwenguinoSimulationScenarioSocialRobot.prototype.loadImages = function(containerIdSelector){
+    this.robot.servo1.image.src = './img/board/servo_movement.png';
+    this.robot.servo2.image.src = './img/board/servo_movement.png';
+ }
   
