@@ -76,10 +76,10 @@ function DwenguinoSimulationScenarioSocialRobot(){
     .css("height", "100%")
     .css("box-sizing", "border-box");
 
-    $("#sim_canvas")
-    .css("position", "relative")
-    .css("width", "100%")
-    .css("height", "100%")
+    // $("#sim_canvas")
+    // .css("position", "relative")
+    // .css("width", "100%")
+    // .css("height", "100%")
 
     var sim_canvas = document.getElementById('sim_canvas');
 
@@ -109,9 +109,12 @@ function DwenguinoSimulationScenarioSocialRobot(){
 
         function resizeCanvas() {
           fix_dpi();
-          // TODO fix this
-          this.drawSimulationDisplay();
+          self.drawSimulationDisplay();
         }
+
+        $("#sim_stop").click(function() {
+          self.initSimulationDisplay();
+        });
         
       } else {
             // canvas unsupported
@@ -176,7 +179,12 @@ function DwenguinoSimulationScenarioSocialRobot(){
     this.robot.servo2.position.prevAngle = this.robot.servo2.position.angle;
     this.robot.servo1.position.angle = angle1;  
     this.robot.servo2.position.angle = angle2;
-  
+
+    var led1 = dwenguinoState.leds[1];
+    var led2 = dwenguinoState.leds[2];
+    this.robot.led1.state = led1;
+    this.robot.led2.state = led2;
+
     return dwenguinoState;
   };
   
@@ -189,7 +197,6 @@ function DwenguinoSimulationScenarioSocialRobot(){
   DwenguinoSimulationScenarioSocialRobot.prototype.updateScenarioDisplay = function(dwenguinoState){
     DwenguinoSimulationScenario.prototype.updateScenarioDisplay.call(this, dwenguinoState);
     this.drawSimulationDisplay();
-    console.log("canvas updated");
   };
 
   /* @brief Initializes the social robot state for the simulation canvas
@@ -232,8 +239,10 @@ function DwenguinoSimulationScenarioSocialRobot(){
           x: 70  + xOffset,
           y: 150 + yOffset,
         },
-        color: 'yellow',
+        oncolor: 'yellow',
+        offcolor: 'gray',
         bordercolor: 'black',
+        state: 0,
       },
 
       led2: {
@@ -242,8 +251,10 @@ function DwenguinoSimulationScenarioSocialRobot(){
           x: 240 + xOffset,
           y: 150 + yOffset,
         },
-        color: 'yellow',
+        oncolor: 'yellow',
+        offcolor: 'gray',
         bordercolor: 'black',
+        state: 0,
       },
     };
  }
