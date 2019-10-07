@@ -47,10 +47,10 @@ var DwenguinoSimulation = {
 
   translateSimulatorInterface: function(){
     // translation
-    document.getElementById('sim_start').textContent = MSG.simulator['start'];
-    document.getElementById('sim_stop').textContent = MSG.simulator['stop'];
-    document.getElementById('sim_pause').textContent = MSG.simulator['pause'];
-    document.getElementById('sim_step').textContent = MSG.simulator['step'];
+    //document.getElementById('sim_start').textContent = MSG.simulator['start'];
+    //document.getElementById('sim_stop').textContent = MSG.simulator['stop'];
+    //document.getElementById('sim_pause').textContent = MSG.simulator['pause'];
+    //document.getElementById('sim_step').textContent = MSG.simulator['step'];
     document.getElementById('sim_speedTag').textContent = MSG.simulator['speed'] + ":";
 
     document.getElementById('sim_speed_verySlow').textContent = MSG.simulator['speedVerySlow'];
@@ -232,6 +232,10 @@ var DwenguinoSimulation = {
       
   },
 
+  /**
+   * This function only loads the elements in the simulation pane that 
+   * are used by the Social Robot scenario.
+   */
   loadSocialRobotSimulationPane: function(){
     // Remove all unnecessary elements from the simulation pane
     $('#db_simulator_pane').children().remove();
@@ -243,6 +247,10 @@ var DwenguinoSimulation = {
     .css("width", "100%");
   },
 
+  /**
+   * This function only loads the elements in the simulation pane that 
+   * are used by all Riding Robot scenarios.
+   */
   loadRidingRobotSimulationPane: function(){
     $('#db_simulator_pane').children().remove();
 
@@ -418,15 +426,15 @@ var DwenguinoSimulation = {
     });
 
     // Initialize the simulator pane correctly  
-    $("#sim_board")
-    .css("display", "block")
-    .css("width", "30vmin");
+    // $("#sim_board")
+    // .css("display", "block")
+    // .css("width", "30vmin");
 
-    $("#sim_components")
-    .css("display", "block");
+    // $("#sim_components")
+    // .css("display", "block");
 
-    $("#sim_components_menu")
-    .css("max-width", "100px");
+    // $("#sim_components_menu")
+    // .css("max-width", "100px");
   },
 
   /* -------------------------------------------------------------------------
@@ -1066,23 +1074,23 @@ var DwenguinoSimulation = {
     */
     setButtonsStart: function() {
       // enable pauze and stop
-      document.getElementById('sim_pause').className = "sim_item";
-      document.getElementById('sim_stop').className = "sim_item";
+      document.getElementById('sim_pause').className = "sim_item glyphicon glyphicon-pause";
+      document.getElementById('sim_stop').className = "sim_item glyphicon glyphicon-stop";
       // disable start and step
-      document.getElementById('sim_start').className = "sim_item disabled";
-      document.getElementById('sim_step').className = "sim_item disabled";
+      document.getElementById('sim_start').className = "sim_item glyphicon glyphicon-play sim_item_disabled";
+      document.getElementById('sim_step').className = "sim_item glyphicon glyphicon-step-forward sim_item_disabled";
     },
-
+    
     /*
     * Adjust css when simulation is paused
     */
     setButtonsPause: function() {
       // enable start, stop and step
-      document.getElementById('sim_start').className = "sim_item";
-      document.getElementById('sim_step').className = "sim_item";
-      document.getElementById('sim_stop').className = "sim_item";
+      document.getElementById('sim_start').className = "sim_item glyphicon glyphicon-play";
+      document.getElementById('sim_step').className = "sim_item glyphicon glyphicon-step-forward";
+      document.getElementById('sim_stop').className = "sim_item glyphicon glyphicon-stop";
       // disable pause
-      document.getElementById('sim_pause').className = "sim_item disabled";
+      document.getElementById('sim_pause').className = "sim_item glyphicon glyphicon-pause sim_item_disabled";
     },
 
     /*
@@ -1090,11 +1098,11 @@ var DwenguinoSimulation = {
     */
     setButtonsStop: function() {
       // enable start, stop and step
-      document.getElementById('sim_start').className = "sim_item";
-      document.getElementById('sim_step').className = "sim_item";
+      document.getElementById('sim_start').className = "sim_item glyphicon glyphicon-play";
+      document.getElementById('sim_step').className = "sim_item glyphicon glyphicon-step-forward";
       // disable pause
-      document.getElementById('sim_stop').className = "sim_item disabled";
-      document.getElementById('sim_pause').className = "sim_item disabled";
+      document.getElementById('sim_stop').className = "sim_item glyphicon glyphicon-stop sim_item_disabled";
+      document.getElementById('sim_pause').className = "sim_item glyphicon glyphicon-pause sim_item_disabled";
     },
 
     /*
@@ -1102,11 +1110,11 @@ var DwenguinoSimulation = {
     */
     setButtonsStep: function() {
       // enable start, stop and step
-      document.getElementById('sim_start').className = "sim_item";
-      document.getElementById('sim_step').className = "sim_item";
-      document.getElementById('sim_stop').className = "sim_item";
+      document.getElementById('sim_start').className = "sim_item glyphicon glyphicon-play";
+      document.getElementById('sim_step').className = "sim_item glyphicon glyphicon-step-forward";
+      document.getElementById('sim_stop').className = "sim_item glyphicon glyphicon-stop";
       // disable pause
-      document.getElementById('sim_pause').className = "sim_item disabled";
+      document.getElementById('sim_pause').className = "sim_item glyphicon glyphicon-pause sim_item_disabled";
     },
     /*
     * Adjusts the view during simulation

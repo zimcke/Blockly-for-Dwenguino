@@ -195,7 +195,17 @@ body{
 }
 
 .sim_item:hover {
-    text-decoration: underline;
+    /*text-decoration: underline;*/
+    color: #FFF;
+}
+
+.sim_item_disabled {
+    color: lightgray;
+}
+
+.sim_item_disabled:hover {
+    text-decoration: none;
+    color: lightgray;
 }
 
 #sim_board {
@@ -388,6 +398,23 @@ body{
 
 #sim_start {
     padding-left: 10px;
+    padding-top: 0px;
+    font-size: 20px;
+}
+
+#sim_pause {
+    padding-top: 0px;
+    font-size: 20px;
+}
+
+#sim_stop {
+    padding-top: 0px;
+    font-size: 20px;
+}
+
+#sim_step {
+    padding-top: 0px;
+    font-size: 20px;
 }
 
 #sim-speed {
