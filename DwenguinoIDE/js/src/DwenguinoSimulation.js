@@ -42,6 +42,7 @@ var DwenguinoSimulation = {
   setupEnvironment: function() {
     this.currentScenario = this.scenarios[this.scenarioView];
     DwenguinoSimulation.initDwenguinoSimulation();
+
   },
 
   translateSimulatorInterface: function(){
@@ -82,6 +83,7 @@ var DwenguinoSimulation = {
   * inits the right actions to handle the simulation view
   */
   initDwenguinoSimulation: function() {
+    console.log("DwenguinoSimulation.js init");
     //Add scenarios to the dropdown
     $("#sim_scenario").empty();
     $.each(Object.keys(DwenguinoSimulation.scenarios), function(index, value){
@@ -89,8 +91,12 @@ var DwenguinoSimulation = {
       $("#sim_scenario").append(newOpt);
     });
 
+    //Init the simulator pane view
+    DwenguinoSimulation.initSimulationPane();
+
     //Translate the interface.
     DwenguinoSimulation.translateSimulatorInterface();
+
 
     //Init the current scenario view
     DwenguinoSimulation.currentScenario.initSimulationDisplay(DwenguinoSimulation.simulationViewContainerId);
@@ -144,6 +150,164 @@ var DwenguinoSimulation = {
         DwenguinoSimulation.isSimulationPaused = true;
       }
     });
+
+    // change speed of simulation
+    $("#sim_speed").on('change', function() {
+      DwenguinoSimulation.setSpeed();
+    });
+
+    // change scenario view
+    $("#sim_scenario").on('change', function() {
+      var e = document.getElementById("sim_scenario");
+      DwenguinoSimulation.scenarioView = e.options[e.selectedIndex].value;
+      DwenguinoSimulation.initSimulationPane();
+      DwenguinoSimulation.currentScenario = DwenguinoSimulation.scenarios[DwenguinoSimulation.scenarioView];
+      DwenguinoSimulation.currentScenario.initSimulationDisplay(DwenguinoSimulation.simulationViewContainerId);
+      DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("changedScenario", DwenguinoSimulation.scenarioView));
+    });
+
+    var toggleSimulatorPaneView = function(currentPane, otherPanes, e){
+      $.each(otherPanes, function(index, pane){
+        $content = $(pane.attr("href"));
+        pane.removeClass("active");
+        $content.hide();
+      });
+
+
+      $(currentPane).addClass("active");
+      $(currentPane.hash).show();
+
+      e.preventDefault();
+    };
+    $("a[href$='#db_code_pane']").click(function(e){
+      toggleSimulatorPaneView(this, [$("a[href$='#db_robot_pane']")], e);
+    });
+
+    $("a[href$='#db_robot_pane']").click(function(e){
+      toggleSimulatorPaneView(this, [$("a[href$='#db_code_pane']")], e);
+    });
+
+    $("ul.tabs").each(function(){
+      // For each set of tabs, we want to keep track of
+      // which tab is active and its associated content
+      var $active, $content, $links = $(this).find('a');
+
+      // If the location.hash matches one of the links, use that as the active tab.
+      // If no match is found, use the first link as the initial active tab.
+      $active = $($links.filter('[href="'+location.hash+'"]')[0] || $links[0]);
+      $active.addClass('active');
+
+      $content = $($active[0].hash);
+
+      // Hide the remaining content
+      $links.not($active).each(function () {
+        $(this.hash).hide();
+      });
+    });
+
+
+  },
+
+  /**
+   * This function initializes the simulation pane according to the selected scenario.
+   * Each time a different scenario is selected, this function will update the simulation pane.
+   */
+  initSimulationPane: function() {
+    var option = DwenguinoSimulation.scenarioView;
+
+    switch (option) {
+      case "moving":
+        DwenguinoSimulation.loadRidingRobotSimulationPane();
+        break;
+      case "wall":
+        DwenguinoSimulation.loadRidingRobotSimulationPane();
+        break;
+      case "socialrobot":
+        DwenguinoSimulation.loadSocialRobotSimulationPane();
+        break;
+      case "default":
+        DwenguinoSimulation.loadRidingRobotSimulationPane();
+        break;
+    }
+      
+  },
+
+  loadSocialRobotSimulationPane: function(){
+    // Remove all unnecessary elements from the simulation pane
+    $('#db_simulator_pane').children().remove();
+      
+    $('#db_simulator_pane').append('<div id="sim_components_menu"></div>');
+
+    $("#sim_components_menu")
+    .css("max-width", "100%")
+    .css("width", "100%");
+  },
+
+  loadRidingRobotSimulationPane: function(){
+    $('#db_simulator_pane').children().remove();
+
+    $('#db_simulator_pane').append('<div id="sim_components_menu"></div>');
+    $('#db_simulator_pane').append('<div id="debug"></div>');
+    $('#db_simulator_pane').append('<div id="sim_board"></div>');
+    $('#db_simulator_pane').append('<div id="sim_components"></div>');
+
+    $('#sim_components_menu').append('<div id="sim_components_select" class="sim_item">Select components:</div>');
+    $('#sim_components_menu').append('<div id="sim_components_options"></div>');
+    $('#sim_components_menu').append('<div id="sim_scope_name">Variables:</div>');
+    $('#sim_components_menu').append('<div id="sim_scope"></div>');
+
+    $('#sim_components_options').append('<input type="checkbox" id="motor1" value="motor1">Motor 1<br>');
+    $('#sim_components_options').append('<input type="checkbox" id="motor2" value="motor2">Motor 2<br>');
+    $('#sim_components_options').append('<input type="checkbox" id="servo1" value="servo1">Servo 1<br>');
+    $('#sim_components_options').append('<input type="checkbox" id="servo2" value="servo2">Servo 2<br>');
+    $('#sim_components_options').append('<input type="checkbox" id="sonar" value="sonar">Sonar<br>');
+
+    $('#sim_board').append('<div class="sim_light sim_light_off" id ="sim_light_13"></div>');
+    $('#sim_board').append('<div id="sim_lcds"></div>');
+    $('#sim_board').append('<div id="sim_lights"></div>');
+    $('#sim_board').append('<div id="sim_buttons"></div>');
+    $('#sim_board').append('<div id="sim_button_reset"></div>');
+
+    $('#sim_lcds').append('<div class="sim_lcd" id="sim_lcd_row0"></div>');
+    $('#sim_lcds').append('<div class="sim_lcd" id="sim_lcd_row1"></div>');
+
+    $('#sim_lights').append('<div class="sim_light sim_light_off" id ="sim_light_7"></div>');
+    $('#sim_lights').append('<div class="sim_light sim_light_off" id ="sim_light_6"></div>');
+    $('#sim_lights').append('<div class="sim_light sim_light_off" id ="sim_light_5"></div>');
+    $('#sim_lights').append('<div class="sim_light sim_light_off" id ="sim_light_4"></div>');
+    $('#sim_lights').append('<div class="sim_light sim_light_off" id ="sim_light_3"></div>');
+    $('#sim_lights').append('<div class="sim_light sim_light_off" id ="sim_light_2"></div>');
+    $('#sim_lights').append('<div class="sim_light sim_light_off" id ="sim_light_1"></div>');
+    $('#sim_lights').append('<div class="sim_light sim_light_off" id ="sim_light_0"></div>');
+
+    $('#sim_buttons').append('<div id="sim_buttons_top"></div>');
+    $('#sim_buttons').append('<div id="sim_buttons_middle"></div>');
+    $('#sim_buttons').append('<div id="sim_buttons_bottom"></div>');
+
+    $('#sim_buttons_top').append('<div id="sim_button_N" class="sim_button"></div>');
+
+    $('#sim_buttons_middle').append('<div id="sim_button_E" class="sim_button"></div>');
+    $('#sim_buttons_middle').append('<div id="sim_button_C" class="sim_button"></div>');
+    $('#sim_buttons_middle').append('<div id="sim_button_S" class="sim_button"></div>');
+
+    $('#sim_buttons_bottom').append('<div id="sim_button_W" class="sim_button"></div>');
+
+    $('#sim_components').append('<div id="sim_motors"></div>');
+    $('#sim_components').append('<div id="sim_servos"></div>');
+    $('#sim_components').append('<div id="sim_sonar" class="sim_sonar"></div>');
+    $('#sim_components').append('<div id="sim_sonar_distance" class="sim_sonar_distance"></div>');
+    $('#sim_components').append('<div id="sim_sonar_input"></div>');
+
+    $('#sim_motors').append('<div id="sim_motor1" class="sim_motor"></div>');
+    $('#sim_motors').append('<div id="sim_motor2" class="sim_motor"></div>');
+
+    $('#sim_servos').append('<div id="sim_servo1" class="sim_servo"></div>');
+    $('#sim_servos').append('<div id="sim_servo2" class="sim_servo"></div>');
+
+    $('#sim_servo1').append('<div id="sim_servo1_mov" class="sim_servo_mov"></div>');
+    $('#sim_servo2').append('<div id="sim_servo2_mov" class="sim_servo_mov"></div>');
+
+    $('#sim_sonar_input').append('<input type="text" id="sonar_input" name="sim_sonar_input" onkeypress="return event.charCode >= 48 && event.charCode <= 57">&nbsp;cm');
 
     // jquery to create select list with checkboxes that hide
     $("#sim_components_select").on('click', function() {
@@ -252,60 +416,17 @@ var DwenguinoSimulation = {
         }
       }
     });
-    // change speed of simulation
-    $("#sim_speed").on('change', function() {
-      DwenguinoSimulation.setSpeed();
-    });
 
-    // change scenario view
-    $("#sim_scenario").on('change', function() {
-      var e = document.getElementById("sim_scenario");
-      DwenguinoSimulation.scenarioView = e.options[e.selectedIndex].value;
-      DwenguinoSimulation.currentScenario = DwenguinoSimulation.scenarios[DwenguinoSimulation.scenarioView];
-      DwenguinoSimulation.currentScenario.initSimulationDisplay(DwenguinoSimulation.simulationViewContainerId);
-      DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("changedScenario", DwenguinoSimulation.scenarioView));
-    });
+    // Initialize the simulator pane correctly  
+    $("#sim_board")
+    .css("display", "block")
+    .css("width", "30vmin");
 
-    var toggleSimulatorPaneView = function(currentPane, otherPanes, e){
-      $.each(otherPanes, function(index, pane){
-        $content = $(pane.attr("href"));
-        pane.removeClass("active");
-        $content.hide();
-      });
+    $("#sim_components")
+    .css("display", "block");
 
-
-      $(currentPane).addClass("active");
-      $(currentPane.hash).show();
-
-      e.preventDefault();
-    };
-    $("a[href$='#db_code_pane']").click(function(e){
-      toggleSimulatorPaneView(this, [$("a[href$='#db_robot_pane']")], e);
-    });
-
-    $("a[href$='#db_robot_pane']").click(function(e){
-      toggleSimulatorPaneView(this, [$("a[href$='#db_code_pane']")], e);
-    });
-
-    $("ul.tabs").each(function(){
-      // For each set of tabs, we want to keep track of
-      // which tab is active and its associated content
-      var $active, $content, $links = $(this).find('a');
-
-      // If the location.hash matches one of the links, use that as the active tab.
-      // If no match is found, use the first link as the initial active tab.
-      $active = $($links.filter('[href="'+location.hash+'"]')[0] || $links[0]);
-      $active.addClass('active');
-
-      $content = $($active[0].hash);
-
-      // Hide the remaining content
-      $links.not($active).each(function () {
-        $(this.hash).hide();
-      });
-    });
-
-
+    $("#sim_components_menu")
+    .css("max-width", "100px");
   },
 
   /* -------------------------------------------------------------------------

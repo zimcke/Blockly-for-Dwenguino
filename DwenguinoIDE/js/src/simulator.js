@@ -331,6 +331,7 @@ var DwenguinoSimulation = {
   * inits the right actions to handle the simulation view
   */
   initDwenguinoSimulation: function() {
+    console.log("simulator.js init");
     //Add scenarios to the dropdown
     $("sim_scenario").empty();
     $.each(DwenguinoSimulation.scenarios, function(index, value){
@@ -899,6 +900,7 @@ var DwenguinoSimulation = {
       };
       DwenguinoSimulation.renderScenario();
 
+      
       // Reset the spyrograph
       //DwenguinoSimulation.initMatterJsEnvironment();
       //Stop timeer
@@ -1251,7 +1253,6 @@ var DwenguinoSimulation = {
       };
 
       DwenguinoSimulation.renderScenario();
-
 
       setTimeout(function() {
         DwenguinoSimulation.adjustMovingRobot(speed1, speed2, wall);

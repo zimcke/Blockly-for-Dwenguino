@@ -54,7 +54,6 @@ function DwenguinoSimulationScenarioSocialRobot(){
     //Add resize listerner to the conainer and update width and height accordingly
     var self = this;
     new ResizeSensor(simulationContainer, function() {
-      console.log('myelement has been resized');
       self.containerWidth = simulationContainer.width();
       self.containerHeight = simulationContainer.height();
     });
@@ -62,7 +61,6 @@ function DwenguinoSimulationScenarioSocialRobot(){
     //Init the simulation canvas element in which the social robot will be displayed
     var simCanvas = $("<canvas>").attr("id", "sim_canvas");
     
-
     simulationContainer.append(simCanvas);
     container.empty();
     container.append(simulationContainer);
@@ -75,11 +73,6 @@ function DwenguinoSimulationScenarioSocialRobot(){
     .css("width", "100%")
     .css("height", "100%")
     .css("box-sizing", "border-box");
-
-    // $("#sim_canvas")
-    // .css("position", "relative")
-    // .css("width", "100%")
-    // .css("height", "100%")
 
     var sim_canvas = document.getElementById('sim_canvas');
 
