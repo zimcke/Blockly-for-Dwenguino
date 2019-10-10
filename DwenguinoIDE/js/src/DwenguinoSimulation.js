@@ -42,54 +42,97 @@ var DwenguinoSimulation = {
   setupEnvironment: function() {
     this.currentScenario = this.scenarios[this.scenarioView];
     DwenguinoSimulation.initDwenguinoSimulation();
-
   },
 
   translateSimulatorInterface: function(){
     // translation
-    //document.getElementById('sim_start').textContent = MSG.simulator['start'];
-    //document.getElementById('sim_stop').textContent = MSG.simulator['stop'];
-    //document.getElementById('sim_pause').textContent = MSG.simulator['pause'];
-    //document.getElementById('sim_step').textContent = MSG.simulator['step'];
-    document.getElementById('sim_speedTag').textContent = MSG.simulator['speed'] + ":";
+    document.getElementById('sim_start').innerHTML = "<span class='glyphicon glyphicon-play' alt='" + MSG.simulator['start'] + "'></span>";
+    document.getElementById('sim_stop').innerHTML = "<span class='glyphicon glyphicon-stop' alt='" + MSG.simulator['stop'] + "'></span>";
+    document.getElementById('sim_pause').innerHTML = "<span class='glyphicon glyphicon-pause' alt='" + MSG.simulator['pause'] + "'></span>";
+    document.getElementById('sim_step').innerHTML = "<span class='glyphicon glyphicon-step-forward' alt='" + MSG.simulator['step'] + "'></span>";
+
+    /*document.getElementById('sim_speedTag').textContent = MSG.simulator['speed'] + ":";
 
     document.getElementById('sim_speed_verySlow').textContent = MSG.simulator['speedVerySlow'];
     document.getElementById('sim_speed_slow').textContent = MSG.simulator['speedSlow'];
     document.getElementById('sim_speed_medium').textContent = MSG.simulator['speedMedium'];
     document.getElementById('sim_speed_fast').textContent = MSG.simulator['speedFast'];
     document.getElementById('sim_speed_veryFast').textContent = MSG.simulator['speedVeryFast'];
-    document.getElementById('sim_speed_realTime').textContent = MSG.simulator['speedRealTime'];
+    document.getElementById('sim_speed_realTime').textContent = MSG.simulator['speedRealTime'];*/
 
-    document.getElementById('sim_scenarioTag').textContent = MSG.simulator['scenario'] + ":";
+    document.getElementById('sim_scenarioTag').textContent = MSG.simulator['scenario'];
+    var option = DwenguinoSimulation.scenarioView;
 
-    $.each(Object.keys(DwenguinoSimulation.scenarios), function(index, value){
-      $('#sim_scenario_' + value).text(MSG.simulator['scenario_' + value]);
-    });
+    switch (option) {
+      case "moving":
+        DwenguinoSimulation.translateSimComponents();
+        break;
+      case "wall":
+        DwenguinoSimulation.translateSimComponents();
+        break;
+      case "socialrobot":
+        break;
+      case "default":
+        DwenguinoSimulation.translateSimComponents();
+        break;
+    }
+  },
 
-    document.getElementById('sim_components_select').textContent = MSG.simulator['components'] + ":";
-    document.getElementById('servo1').textContent = MSG.simulator['servo'] + " 1";
-    document.getElementById('servo2').textContent = MSG.simulator['servo'] + " 2";
-    document.getElementById('motor1').textContent = MSG.simulator['motor'] + " 1";
-    document.getElementById('motor2').textContent = MSG.simulator['motor'] + " 2";
-    document.getElementById('sim_scope_name').textContent = MSG.simulator['scope'] + ":";
+  translateSimComponents: function() {
+    //document.getElementById('sim_components_select').textContent = MSG.simulator['components'] + ":";
+    //document.getElementById('servo1').textContent = MSG.simulator['servo'] + " 1";
+    //document.getElementById('servo2').textContent = MSG.simulator['servo'] + " 2";
+    //document.getElementById('motor1').textContent = MSG.simulator['motor'] + " 1";
+    //document.getElementById('motor2').textContent = MSG.simulator['motor'] + " 2";
+    //document.getElementById('sim_scope_name').textContent = MSG.simulator['scope'] + ":";
+    //TODO: put back sonar input
     document.getElementById('sim_sonar_distance').textContent = "Sonar " + MSG.simulator['distance'] + ":";
     document.getElementById('sonar_input').value = DwenguinoSimulation.board.sonarDistance;
-
-    $("a[href$='#db_robot_pane']").text(MSG.simulator['scenario']);
-    $("a[href$='#db_code_pane']").text(MSG.simulator['code']);
   },
 
   /*
   * inits the right actions to handle the simulation view
   */
   initDwenguinoSimulation: function() {
-    console.log("DwenguinoSimulation.js init");
-    //Add scenarios to the dropdown
-    $("#sim_scenario").empty();
-    $.each(Object.keys(DwenguinoSimulation.scenarios), function(index, value){
-      var newOpt = $("<option></option>").attr("id", "sim_scenario_" + value).attr("value", value).text(value);
-      $("#sim_scenario").append(newOpt);
-    });
+    $('#db_simulator_top_pane').append('<div id="db_simulator_menu"></div>');
+    $('#db_simulator_top_pane').append('<div id="db_simulator_pane"></div>');
+
+    $('#db_simulator_menu').append('<div id="sim_menu"></div>');
+
+    $('#sim_menu').append('<div id="sim_start" class="sim_item"></div>');
+    $('#sim_menu').append('<div id="sim_pause" class="sim_item_disabled"></div>');
+    $('#sim_menu').append('<div id="sim_stop" class="sim_item_disabled"></div>');
+    $('#sim_menu').append('<div id="sim_step" class="sim_item"></div>');
+
+    // $('#sim_menu').append('<div id="sim_speedTag">Speed:</div>');
+    // $('#sim_speedTag').append('<select id="sim_speed"></select');
+    // $('#sim_speed').append('<option id="sim_speed_verySlow" value="veryslow">Very slow</option>');
+    // $('#sim_speed').append('<option id="sim_speed_slow" value="slow">Slow</option>');
+    // $('#sim_speed').append('<option id="sim_speed_medium" value="medium">Medium</option>');
+    // $('#sim_speed').append('<option id="sim_speed_fast" value="fast">Fast</option>');
+    // $('#sim_speed').append('<option id="sim_speed_veryFast" value="veryfast">Very fast</option>');
+    // $('#sim_speed').append('<option id="sim_speed_realTime" value="realtime" selected>Real Time</option>');
+
+
+    $('#sim_menu').append('<div id="sim_menu_next_line" class="sim_menu_next_line"></div>');
+    $('#sim_menu_next_line').append('<div id="sim_scenarioTag"></div>');
+    $('#sim_menu_next_line').append('<div id="sim_scenario"></div>');
+
+        //Add scenarios to the dropdown
+        $("#sim_scenario").empty();
+        $.each(Object.keys(DwenguinoSimulation.scenarios), function(index, value){
+          var container = $("<div></div>").attr("class", "scenario_radio_container");
+          var newOpt = $("<input></input>").attr("type", "radio").attr("name", "scenario_type").attr("id", "sim_scenario_" + value).attr("value", value);
+          console.log(value);
+          console.log(DwenguinoSimulation.scenarioView);
+          if (value == DwenguinoSimulation.scenarioView){
+            newOpt.attr("checked", "checked");
+          }
+          var image = $("<img></img>").attr("class", "scenario_image").attr("src", "img/scenarios/scenario_" + value + ".png");
+          container.append(newOpt);
+          container.append(image);
+          $("#sim_scenario").append(container);
+        });
 
     //Init the simulator pane view
     DwenguinoSimulation.initSimulationPane();
@@ -97,12 +140,12 @@ var DwenguinoSimulation = {
     //Translate the interface.
     DwenguinoSimulation.translateSimulatorInterface();
 
-
     //Init the current scenario view
     DwenguinoSimulation.currentScenario.initSimulationDisplay(DwenguinoSimulation.simulationViewContainerId);
 
     //Init the simulation canvas element
     document.getElementById('sim_canvas');
+    console.log(document.getElementById('sim_canvas'));
 
     // start/stop/pause
     $("#sim_start").click(function() {
@@ -129,11 +172,8 @@ var DwenguinoSimulation = {
     });
 
     $("#sim_stop").click(function() {
-      DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("simStop", ""));
-      DwenguinoSimulation.isSimulationRunning = false;
-      DwenguinoSimulation.isSimulationPaused = false;
-      DwenguinoSimulation.setButtonsStop();
-      DwenguinoSimulation.stopSimulation();
+      DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("simStopButtonClicked", ""));
+      DwenguinoSimulation.handleSimulationStop();
     });
 
     $("#sim_step").click(function() {
@@ -156,14 +196,15 @@ var DwenguinoSimulation = {
       DwenguinoSimulation.setSpeed();
     });
 
-    // change scenario view
-    $("#sim_scenario").on('change', function() {
-      var e = document.getElementById("sim_scenario");
-      DwenguinoSimulation.scenarioView = e.options[e.selectedIndex].value;
+    $("input[name=scenario_type]:radio").change(function () {
+      console.log($(this).val());
+      DwenguinoSimulation.scenarioView = $(this).val();
       DwenguinoSimulation.initSimulationPane();
+      DwenguinoSimulation.translateSimulatorInterface();
       DwenguinoSimulation.currentScenario = DwenguinoSimulation.scenarios[DwenguinoSimulation.scenarioView];
       DwenguinoSimulation.currentScenario.initSimulationDisplay(DwenguinoSimulation.simulationViewContainerId);
       DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("changedScenario", DwenguinoSimulation.scenarioView));
+
     });
 
     var toggleSimulatorPaneView = function(currentPane, otherPanes, e){
@@ -179,6 +220,7 @@ var DwenguinoSimulation = {
 
       e.preventDefault();
     };
+
     $("a[href$='#db_code_pane']").click(function(e){
       toggleSimulatorPaneView(this, [$("a[href$='#db_robot_pane']")], e);
     });
@@ -205,6 +247,9 @@ var DwenguinoSimulation = {
       });
     });
 
+    //Select the scenario view by default.
+    $("a[href$='#db_robot_pane']").trigger("click");
+
 
   },
 
@@ -213,6 +258,8 @@ var DwenguinoSimulation = {
    * Each time a different scenario is selected, this function will update the simulation pane.
    */
   initSimulationPane: function() {
+    $('#db_simulator_pane').children().remove();
+
     var option = DwenguinoSimulation.scenarioView;
 
     switch (option) {
@@ -237,12 +284,10 @@ var DwenguinoSimulation = {
    * are used by the Social Robot scenario.
    */
   loadSocialRobotSimulationPane: function(){
-    // Remove all unnecessary elements from the simulation pane
-    $('#db_simulator_pane').children().remove();
       
-    $('#db_simulator_pane').append('<div id="sim_components_menu"></div>');
+    $('#db_simulator_pane').append('<div id="robot_components"></div>');
 
-    $("#sim_components_menu")
+    $("#robot_components")
     .css("max-width", "100%")
     .css("width", "100%");
   },
@@ -252,29 +297,44 @@ var DwenguinoSimulation = {
    * are used by all Riding Robot scenarios.
    */
   loadRidingRobotSimulationPane: function(){
-    $('#db_simulator_pane').children().remove();
-
-    $('#db_simulator_pane').append('<div id="sim_components_menu"></div>');
+    //$('#db_simulator_pane').append('<div id="sim_components_menu"></div>');
     $('#db_simulator_pane').append('<div id="debug"></div>');
-    $('#db_simulator_pane').append('<div id="sim_board"></div>');
     $('#db_simulator_pane').append('<div id="sim_components"></div>');
+    $('#db_simulator_pane').append('<div id="sim_board"></div>');
 
-    $('#sim_components_menu').append('<div id="sim_components_select" class="sim_item">Select components:</div>');
-    $('#sim_components_menu').append('<div id="sim_components_options"></div>');
-    $('#sim_components_menu').append('<div id="sim_scope_name">Variables:</div>');
-    $('#sim_components_menu').append('<div id="sim_scope"></div>');
+    //$('#sim_components_menu').append('<div id="sim_components_select" class="sim_item">Select components:</div>');
+    //$('#sim_components_menu').append('<div id="sim_components_options"></div>');
+    // $('#sim_components_menu').append('<div id="sim_scope_name">Variables:</div>');
+    // $('#sim_components_menu').append('<div id="sim_scope"></div>');
 
-    $('#sim_components_options').append('<input type="checkbox" id="motor1" value="motor1">Motor 1<br>');
-    $('#sim_components_options').append('<input type="checkbox" id="motor2" value="motor2">Motor 2<br>');
-    $('#sim_components_options').append('<input type="checkbox" id="servo1" value="servo1">Servo 1<br>');
-    $('#sim_components_options').append('<input type="checkbox" id="servo2" value="servo2">Servo 2<br>');
-    $('#sim_components_options').append('<input type="checkbox" id="sonar" value="sonar">Sonar<br>');
+    // $('#sim_components_options').append('<input type="checkbox" id="motor1" value="motor1">Motor 1<br>');
+    // $('#sim_components_options').append('<input type="checkbox" id="motor2" value="motor2">Motor 2<br>');
+    // $('#sim_components_options').append('<input type="checkbox" id="servo1" value="servo1">Servo 1<br>');
+    // $('#sim_components_options').append('<input type="checkbox" id="servo2" value="servo2">Servo 2<br>');
+    // $('#sim_components_options').append('<input type="checkbox" id="sonar" value="sonar">Sonar<br>');
+
+    //$('#sim_components').append('<div id="sim_motors"></div>');
+    //$('#sim_components').append('<div id="sim_servos"></div>');
+    $('#sim_components').append('<div id="sim_sonar" class="sim_sonar"></div>');
+    $('#sim_components').append('<div id="sim_sonar_distance" class="sim_sonar_distance"></div>');
+    $('#sim_components').append('<div id="sim_sonar_input"></div>');
+
+    //$('#sim_motors').append('<div id="sim_motor1" class="sim_motor"></div>');
+    //$('#sim_motors').append('<div id="sim_motor2" class="sim_motor"></div>');
+
+    //$('#sim_servos').append('<div id="sim_servo1" class="sim_servo"></div>');
+    //$('#sim_servos').append('<div id="sim_servo2" class="sim_servo"></div>');
+
+    //$('#sim_servo1').append('<div id="sim_servo1_mov" class="sim_servo_mov"></div>');
+    //$('#sim_servo2').append('<div id="sim_servo2_mov" class="sim_servo_mov"></div>');
+
+    $('#sim_sonar_input').append('<input type="text" id="sonar_input" name="sim_sonar_input" onkeypress="return event.charCode >= 48 && event.charCode <= 57">&nbsp;cm');
 
     $('#sim_board').append('<div class="sim_light sim_light_off" id ="sim_light_13"></div>');
     $('#sim_board').append('<div id="sim_lcds"></div>');
     $('#sim_board').append('<div id="sim_lights"></div>');
     $('#sim_board').append('<div id="sim_buttons"></div>');
-    $('#sim_board').append('<div id="sim_button_reset"></div>');
+    $('#sim_board').append('<div id="sim_button_reset" class="sim_button"></div>');
 
     $('#sim_lcds').append('<div class="sim_lcd" id="sim_lcd_row0"></div>');
     $('#sim_lcds').append('<div class="sim_lcd" id="sim_lcd_row1"></div>');
@@ -300,83 +360,64 @@ var DwenguinoSimulation = {
 
     $('#sim_buttons_bottom').append('<div id="sim_button_W" class="sim_button"></div>');
 
-    $('#sim_components').append('<div id="sim_motors"></div>');
-    $('#sim_components').append('<div id="sim_servos"></div>');
-    $('#sim_components').append('<div id="sim_sonar" class="sim_sonar"></div>');
-    $('#sim_components').append('<div id="sim_sonar_distance" class="sim_sonar_distance"></div>');
-    $('#sim_components').append('<div id="sim_sonar_input"></div>');
-
-    $('#sim_motors').append('<div id="sim_motor1" class="sim_motor"></div>');
-    $('#sim_motors').append('<div id="sim_motor2" class="sim_motor"></div>');
-
-    $('#sim_servos').append('<div id="sim_servo1" class="sim_servo"></div>');
-    $('#sim_servos').append('<div id="sim_servo2" class="sim_servo"></div>');
-
-    $('#sim_servo1').append('<div id="sim_servo1_mov" class="sim_servo_mov"></div>');
-    $('#sim_servo2').append('<div id="sim_servo2_mov" class="sim_servo_mov"></div>');
-
-    $('#sim_sonar_input').append('<input type="text" id="sonar_input" name="sim_sonar_input" onkeypress="return event.charCode >= 48 && event.charCode <= 57">&nbsp;cm');
-
     // jquery to create select list with checkboxes that hide
-    $("#sim_components_select").on('click', function() {
-      if (!$("#sim_components_options").is(":visible")) {
-        $("#sim_components_options").show();
-      } else {
-        $("#sim_components_options").hide();
-      }
-    });
+    // $("#sim_components_select").on('click', function() {
+    //   if (!$("#sim_components_options").is(":visible")) {
+    //     $("#sim_components_options").show();
+    //   } else {
+    //     $("#sim_components_options").hide();
+    //   }
+    // });
 
-    // enable show hide for dwenguino components
-    $("#sim_servo1").hide();
-    $("#servo1").on('change', function() {
-      if (document.getElementById("servo1").checked) {
-        $("#sim_servo1").show();
-      } else {
-        $("#sim_servo1").hide();
-      }
-    });
+    // // enable show hide for dwenguino components
+    // $("#sim_servo1").hide();
+    // $("#servo1").on('change', function() {
+    //   if (document.getElementById("servo1").checked) {
+    //     $("#sim_servo1").show();
+    //   } else {
+    //     $("#sim_servo1").hide();
+    //   }
+    // });
 
-    $("#sim_servo2").hide();
-    $("#servo2").on('change', function() {
-      if (document.getElementById("servo2").checked) {
-        $("#sim_servo2").show();
-      } else {
-        $("#sim_servo2").hide();
-      }
-    });
+    // $("#sim_servo2").hide();
+    // $("#servo2").on('change', function() {
+    //   if (document.getElementById("servo2").checked) {
+    //     $("#sim_servo2").show();
+    //   } else {
+    //     $("#sim_servo2").hide();
+    //   }
+    // });
 
-    $("#sim_motor1").hide();
-    $("#motor1").on('change', function() {
-      if (document.getElementById("motor1").checked) {
-        $("#sim_motor1").show();
-      } else {
-        $("#sim_motor1").hide();
-      }
-    });
+    // $("#sim_motor1").hide();
+    // $("#motor1").on('change', function() {
+    //   if (document.getElementById("motor1").checked) {
+    //     $("#sim_motor1").show();
+    //   } else {
+    //     $("#sim_motor1").hide();
+    //   }
+    // });
 
-    $("#sim_motor2").hide();
-    $("#motor2").on('change', function() {
-      if (document.getElementById("motor2").checked) {
-        $("#sim_motor2").show();
-      } else {
-        $("#sim_motor2").hide();
-      }
-    });
+    // $("#sim_motor2").hide();
+    // $("#motor2").on('change', function() {
+    //   if (document.getElementById("motor2").checked) {
+    //     $("#sim_motor2").show();
+    //   } else {
+    //     $("#sim_motor2").hide();
+    //   }
+    // });
 
-    $("#sim_sonar").hide();
-    $("#sim_sonar_distance").hide();
-    $("#sim_sonar_input").hide();
-    $("#sonar").on('change', function() {
-      if (document.getElementById("sonar").checked) {
-        $("#sim_sonar").show();
-        $("#sim_sonar_distance").show();
-        $("#sim_sonar_input").show();
-      } else {
-        $("#sim_sonar").hide();
-        $("#sim_sonar_distance").hide();
-        $("#sim_sonar_input").hide();
-      }
-    });
+    DwenguinoSimulation.hideSonar();
+    // $("#sonar").on('change', function() {
+    //   if (document.getElementById("sonar").checked) {
+    //     $("#sim_sonar").show();
+    //     $("#sim_sonar_distance").show();
+    //     $("#sim_sonar_input").show();
+    //   } else {
+    //     $("#sim_sonar").hide();
+    //     $("#sim_sonar_distance").hide();
+    //     $("#sim_sonar_input").hide();
+    //   }
+    // });
 
     // push buttons
     $("#sim_button_N, #sim_button_E, #sim_button_C, #sim_button_S, #sim_button_W").on('mousedown', function() {
@@ -424,17 +465,36 @@ var DwenguinoSimulation = {
         }
       }
     });
+  },
 
-    // Initialize the simulator pane correctly  
-    // $("#sim_board")
-    // .css("display", "block")
-    // .css("width", "30vmin");
+  /*
+  * Simulator event handlers
+  */
 
-    // $("#sim_components")
-    // .css("display", "block");
-
-    // $("#sim_components_menu")
-    // .css("max-width", "100px");
+  handleSimulationStop: function(){
+    DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("simStop", ""));
+    DwenguinoSimulation.isSimulationRunning = false;
+    DwenguinoSimulation.isSimulationPaused = false;
+    DwenguinoSimulation.setButtonsStop();
+    DwenguinoSimulation.stopSimulation();
+    DwenguinoSimulation.hideSonar();
+    DwenguinoSimulation.lcdBacklightOff();
+  },
+  showSonar: function(){
+    $("#sim_sonar").show();
+    $("#sim_sonar_distance").show();
+    $("#sim_sonar_input").show();
+  },
+  hideSonar: function(){
+    $("#sim_sonar").hide();
+    $("#sim_sonar_distance").hide();
+    $("#sim_sonar_input").hide();
+  },
+  lcdBacklightOn: function(){
+    $("#sim_lcds").addClass("on");
+  },
+  lcdBacklightOff: function(){
+    $("#sim_lcds").removeClass("on");
   },
 
   /* -------------------------------------------------------------------------
@@ -597,11 +657,11 @@ var DwenguinoSimulation = {
   */
   handleScope: function() {
     var scope = DwenguinoSimulation.debugger.debuggerjs.machine.getCurrentStackFrame().scope;
-    document.getElementById('sim_scope').innerHTML = "";
+    //document.getElementById('sim_scope').innerHTML = "";
     for (var i in scope) {
       var item = scope[i];
       var value = DwenguinoSimulation.debugger.debuggerjs.machine.$runner.gen.stackFrame.evalInScope(item.name);
-      document.getElementById('sim_scope').innerHTML = document.getElementById('sim_scope').innerHTML + item.name + " = " + value + "<br>";
+      //document.getElementById('sim_scope').innerHTML = document.getElementById('sim_scope').innerHTML + item.name + " = " + value + "<br>";
     }
   },
 
@@ -772,18 +832,18 @@ var DwenguinoSimulation = {
 
     // reset servo
     DwenguinoSimulation.board.servoAngles = [0, 0];
-    $("#sim_servo1_mov, #sim_servo2_mov").css("transform", "rotate(0deg)");
+    //$("#sim_servo1_mov, #sim_servo2_mov").css("transform", "rotate(0deg)");
 
     // reset motors
     DwenguinoSimulation.board.motorSpeeds = [0, 0];
-    $("#sim_motor1, #sim_motor2").css("transform", "rotate(0deg)");
+    //$("#sim_motor1, #sim_motor2").css("transform", "rotate(0deg)");
 
     //reset buttons
     DwenguinoSimulation.board.buttons = [1,1,1,1,1];
     $("#sim_button_N, #sim_button_E, #sim_button_C, #sim_button_S, #sim_button_W").removeClass().addClass('sim_button');
 
     // clear scope
-    document.getElementById('sim_scope').innerHTML = "";
+    //document.getElementById('sim_scope').innerHTML = "";
   },
   /*
     * function called by the delay block to delay the simulation
@@ -812,6 +872,7 @@ var DwenguinoSimulation = {
     * @param {int} column: 0-15: the start position on the given row
     */
     writeLcd: function(text, row, column) {
+      DwenguinoSimulation.lcdBacklightOn();
       // replace text in current content (if text is hello and then a is written this gives aello)
       text = DwenguinoSimulation.board.lcdContent[row].substr(0, column) +
       text.substring(0, 16 - column) +
@@ -944,8 +1005,8 @@ var DwenguinoSimulation = {
     * @param {int} angle between 0 and 180
     */
     servo: function(channel, angle) {
-      $("#sim_servo"+channel).show();
-      document.getElementById("servo"+channel).checked = true;
+      //$("#sim_servo"+channel).show();
+      //document.getElementById("servo"+channel).checked = true;
 
       //set angle
       if (angle > 180) {
@@ -971,9 +1032,9 @@ var DwenguinoSimulation = {
       if (angle !== DwenguinoSimulation.board.servoAngles[channel - 1]) {
         return;
       }
-      var prevAngle = DwenguinoSimulation.getAngle($("#sim_servo" + channel + "_mov"));
+      //var prevAngle = DwenguinoSimulation.getAngle($("#sim_servo" + channel + "_mov"));
       // set 10 degrees closer at a time to create rotate effect
-      if (Math.abs(angle - prevAngle) > maxMovement) {
+      /*if (Math.abs(angle - prevAngle) > maxMovement) {
         var direction = ((angle - prevAngle) > 0) ? 1 : -1;
         $("#sim_servo" + channel + "_mov").css("transform", "rotate(" + (prevAngle + direction * maxMovement) + "deg)");
         setTimeout(function() {
@@ -981,7 +1042,7 @@ var DwenguinoSimulation = {
         }, 20);
       } else {
         $("#sim_servo" + channel + "_mov").css("transform", "rotate(" + angle + "deg)");
-      }
+      }*/
     },
 
     /*
@@ -1012,8 +1073,8 @@ var DwenguinoSimulation = {
     * @param {int} speed between 0 and 255
     */
     startDcMotor: function(channel, speed) {
-      $("#sim_motor"+channel).show();
-      document.getElementById("motor"+channel).checked = true;
+      //$("#sim_motor"+channel).show();
+      //document.getElementById("motor"+channel).checked = true;
 
       //set angle
       if (speed > 255) {
@@ -1032,7 +1093,7 @@ var DwenguinoSimulation = {
 
       // change view of driving robot
       var e = document.getElementById("sim_scenario");
-      var option = e.options[e.selectedIndex].value;
+      //var option = e.options[e.selectedIndex].value;
 
     },
 
@@ -1046,9 +1107,9 @@ var DwenguinoSimulation = {
       if (speed !== DwenguinoSimulation.board.motorSpeeds[channel - 1] && speed !== 0) {
         return;
       }
-      var prevAngle = DwenguinoSimulation.getAngle($("#sim_motor" + channel));
+      //var prevAngle = DwenguinoSimulation.getAngle($("#sim_motor" + channel));
       // rotate x degrees at a time based on speed
-      $("#sim_motor" + channel).css("transform", "rotate(" + ((prevAngle + maxMovement) % 360) + "deg)");
+      //$("#sim_motor" + channel).css("transform", "rotate(" + ((prevAngle + maxMovement) % 360) + "deg)");
 
       DwenguinoSimulation.timeout = setTimeout(function() {
         DwenguinoSimulation.dcMotorRotate(channel, speed);
@@ -1061,10 +1122,8 @@ var DwenguinoSimulation = {
     * @returns {int} distance in cm
     */
     sonar: function(trigPin, echoPin) {
-      $("#sim_sonar").show();
-      $("#sim_sonar_distance").show();
-      $("#sim_sonar_input").show();
-      document.getElementById("sonar").checked = true;
+      DwenguinoSimulation.showSonar();
+      //document.getElementById("sonar").checked = true;
       document.getElementById('sonar_input').value = DwenguinoSimulation.board.sonarDistance;
       return this.board.sonarDistance;
     },
@@ -1074,23 +1133,23 @@ var DwenguinoSimulation = {
     */
     setButtonsStart: function() {
       // enable pauze and stop
-      document.getElementById('sim_pause').className = "sim_item glyphicon glyphicon-pause";
-      document.getElementById('sim_stop').className = "sim_item glyphicon glyphicon-stop";
+      document.getElementById('sim_pause').className = "sim_item";
+      document.getElementById('sim_stop').className = "sim_item";
       // disable start and step
-      document.getElementById('sim_start').className = "sim_item glyphicon glyphicon-play sim_item_disabled";
-      document.getElementById('sim_step').className = "sim_item glyphicon glyphicon-step-forward sim_item_disabled";
+      document.getElementById('sim_start').className = "sim_item_disabled";
+      document.getElementById('sim_step').className = "sim_item_disabled";
     },
-    
+
     /*
     * Adjust css when simulation is paused
     */
     setButtonsPause: function() {
       // enable start, stop and step
-      document.getElementById('sim_start').className = "sim_item glyphicon glyphicon-play";
-      document.getElementById('sim_step').className = "sim_item glyphicon glyphicon-step-forward";
-      document.getElementById('sim_stop').className = "sim_item glyphicon glyphicon-stop";
+      document.getElementById('sim_start').className = "sim_item";
+      document.getElementById('sim_step').className = "sim_item";
+      document.getElementById('sim_stop').className = "sim_item";
       // disable pause
-      document.getElementById('sim_pause').className = "sim_item glyphicon glyphicon-pause sim_item_disabled";
+      document.getElementById('sim_pause').className = "sim_item_disabled";
     },
 
     /*
@@ -1098,11 +1157,11 @@ var DwenguinoSimulation = {
     */
     setButtonsStop: function() {
       // enable start, stop and step
-      document.getElementById('sim_start').className = "sim_item glyphicon glyphicon-play";
-      document.getElementById('sim_step').className = "sim_item glyphicon glyphicon-step-forward";
+      document.getElementById('sim_start').className = "sim_item";
+      document.getElementById('sim_step').className = "sim_item";
       // disable pause
-      document.getElementById('sim_stop').className = "sim_item glyphicon glyphicon-stop sim_item_disabled";
-      document.getElementById('sim_pause').className = "sim_item glyphicon glyphicon-pause sim_item_disabled";
+      document.getElementById('sim_stop').className = "sim_item_disabled";
+      document.getElementById('sim_pause').className = "sim_item_disabled";
     },
 
     /*
@@ -1110,11 +1169,11 @@ var DwenguinoSimulation = {
     */
     setButtonsStep: function() {
       // enable start, stop and step
-      document.getElementById('sim_start').className = "sim_item glyphicon glyphicon-play";
-      document.getElementById('sim_step').className = "sim_item glyphicon glyphicon-step-forward";
-      document.getElementById('sim_stop').className = "sim_item glyphicon glyphicon-stop";
+      document.getElementById('sim_start').className = "sim_item";
+      document.getElementById('sim_step').className = "sim_item";
+      document.getElementById('sim_stop').className = "sim_item";
       // disable pause
-      document.getElementById('sim_pause').className = "sim_item glyphicon glyphicon-pause sim_item_disabled";
+      document.getElementById('sim_pause').className = "sim_item_disabled";
     },
     /*
     * Adjusts the view during simulation
@@ -1128,7 +1187,7 @@ var DwenguinoSimulation = {
       $('#db_body').append(alertMessage);
       document.getElementsByClassName('alertDebug')[0].style.width = document.getElementById("blocklyDiv").style.width;
       document.getElementById('blocklyDiv').style.opacity = "0.5";
-      document.getElementById('blocklyDiv').style.pointerEvents = "none";
+      //document.getElementById('blocklyDiv').style.pointerEvents = "none";
     },
     /*
     * Returns to normal view when debugging is finished

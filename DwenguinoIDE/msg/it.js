@@ -74,6 +74,7 @@ var MSG = {
   dwenguinoAnalogRead: "Leggi un valore analogico dal pin %1",
   dwenguinoAnalogWriteTooltip: "Leggi un valore compreso fra 0 e 255 dal pin specificato.",
   digitalReadSwitch: "Leggi dal pulsante %1",
+  waitForSwitch: "attendere fino a quando si preme %1 il pulsante",
   digitalReadSwitchTooltip: "Leggi un valore da uno dei pulsanti di Dwenguino",
   north: "Nord",
   east:"Est",
@@ -85,6 +86,7 @@ var MSG = {
   pressed: "PREMUTO",
   notPressed: "NON PREMUTO",
   pressedTooltip: "Rappresenta lo stato del pulsante. Usa questi valori per confrontare lo stato attuale di uno o più pulsanti.",
+  create_global: "Create global",
 };
 
 
@@ -114,6 +116,11 @@ MSG.simulator = {
 };
 MSG.tutorials = {
     introduction: {},
+};
+
+MSG.tutorials.general = {
+  sureTitle: "Are you sure?",
+  sureText: "When you click 'Next' all blocks in the workspace will be removed.",
 };
 
 MSG.tutorials.introduction = {

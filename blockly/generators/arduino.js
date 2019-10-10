@@ -67,6 +67,34 @@ Blockly.Arduino.ORDER_CONDITIONAL = 13;   // expr ? expr : expr
 Blockly.Arduino.ORDER_ASSIGNMENT = 14;    // = *= /= ~/= %= += -= <<= >>= &= ^= |=
 Blockly.Arduino.ORDER_NONE = 99;          // (...)
 
+
+Blockly.Arduino.TYPES = [
+                  [
+                      "int",
+                      "int"
+                  ],
+                  [
+                      "double",
+                      "double"
+                  ],
+                  [
+                      "String",
+                      "String"
+                  ],
+                  [
+                      "char",
+                      "char"
+                  ],
+                  [
+                      "unsigned int",
+                      "unsigned int"
+                  ],
+                  [
+                      "unsigned char",
+                      "unsigned char"
+                  ]
+             ];
+
 /*
  * Arduino Board profiles
  *
@@ -121,6 +149,7 @@ Blockly.Arduino.init = function(workspace) {
     } else {
             Blockly.Arduino.variableDB_.reset();
     }
+
 };
 
 
@@ -172,6 +201,7 @@ Blockly.Arduino.finish = function(code) {
  * @return {string} Legal line of code.
  */
 Blockly.Arduino.scrubNakedValue = function(line) {
+  console.log(line);
   return line + ';\n';
 };
 

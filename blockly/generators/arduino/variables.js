@@ -35,6 +35,7 @@ Blockly.Arduino.variables_get = function() {
   return [code, Blockly.Arduino.ORDER_ATOMIC];
 };
 
+
 Blockly.Arduino.variables_declare = function() {
   // Variable setter.
   var varType = this.getFieldValue('TYPE');
@@ -43,6 +44,16 @@ Blockly.Arduino.variables_declare = function() {
       Blockly.Variables.NAME_TYPE);
   //Blockly.Arduino.definitions_[varName + '_' + varType] = varType + ' ' + varName + ';\n';
   return varType + ' ' + varName + ';\n';
+};
+
+Blockly.Arduino.variables_declare_global = function() {
+  // Variable setter.
+  var varType = this.getFieldValue('TYPE');
+  //TODO: settype to variable
+  var varName = Blockly.Arduino.variableDB_.getName(this.getFieldValue('VAR'),
+      Blockly.Variables.NAME_TYPE);
+  Blockly.Arduino.definitions_[varName + '_' + varType] = varType + ' ' + varName + ';\n';
+  return "";
 };
 
 Blockly.Arduino.variables_set = function() {
