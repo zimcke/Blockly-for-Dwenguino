@@ -51,7 +51,6 @@
         </div>
         <div id="db_infopane">
             <div id="db_simulator_top_pane">
-                
             </div>
             <div id="db_simulator_bottom_pane" class="resize-sensor">
               <div id="db_simulator_tab_selection">
@@ -212,6 +211,13 @@
               <value name="echo">
                   <block type="char_type" id="77">
                       <field name="BITMASK">12</field>
+                  </block>
+              </value>
+          </block>
+          <block type="pir_sensor">
+              <value name="trig">
+                  <block type="char_type" id="pir_sensor_pin"> 
+                    <field name="BITMASK">11</field>
                   </block>
               </value>
           </block>
@@ -400,6 +406,7 @@
     <script src="js/src/DwenguinoBlockly.js"></script>
     <script src="js/src/DwenguinoSimulation.js"></script>
     <script src="js/src/DwenguinoDrawSimulationCanvas.js"></script>
+    <!--<script src="js/src/DwenguinoSimulationRobotComponents.js"></script>-->
 
 
 

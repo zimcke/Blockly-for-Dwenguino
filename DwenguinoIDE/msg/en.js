@@ -44,6 +44,7 @@ var MSG = {
   trig: "trig pin number",
   echo: "echo pin number",
   sonarTooltip: "This sensor reads the distance from a sonar sensor",
+  pirTooltip: "This sensor can detect motion",
   miliseconds: "ms",
   digitalRead: "Read digital value from",
   digitalWriteToPin: "Write on",

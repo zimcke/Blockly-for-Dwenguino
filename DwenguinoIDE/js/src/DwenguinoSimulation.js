@@ -145,7 +145,6 @@ var DwenguinoSimulation = {
 
     //Init the simulation canvas element
     document.getElementById('sim_canvas');
-    console.log(document.getElementById('sim_canvas'));
 
     // start/stop/pause
     $("#sim_start").click(function() {

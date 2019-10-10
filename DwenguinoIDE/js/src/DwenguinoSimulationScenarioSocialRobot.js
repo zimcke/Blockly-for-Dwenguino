@@ -109,10 +109,10 @@ function DwenguinoSimulationScenarioSocialRobot(){
           self.initSimulationDisplay();
         });
         
-      } else {
-            // canvas unsupported
-            console.log("The simulation canvas is not supported by your browser")
-        }
+    } else {
+      // canvas unsupported
+      console.log("The simulation canvas is not supported by your browser")
+    }
   };
 
   /**
