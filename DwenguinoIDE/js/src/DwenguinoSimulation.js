@@ -94,9 +94,11 @@ var DwenguinoSimulation = {
   * inits the right actions to handle the simulation view
   */
   initDwenguinoSimulation: function() {
+    // make sure we are not loading the menu twice
+    $('#db_simulator_top_pane').children().remove();
+
     $('#db_simulator_top_pane').append('<div id="db_simulator_menu"></div>');
     $('#db_simulator_top_pane').append('<div id="db_simulator_pane"></div>');
-
     $('#db_simulator_menu').append('<div id="sim_menu"></div>');
 
     $('#sim_menu').append('<div id="sim_start" class="sim_item"></div>');
@@ -118,21 +120,21 @@ var DwenguinoSimulation = {
     $('#sim_menu_next_line').append('<div id="sim_scenarioTag"></div>');
     $('#sim_menu_next_line').append('<div id="sim_scenario"></div>');
 
-        //Add scenarios to the dropdown
-        $("#sim_scenario").empty();
-        $.each(Object.keys(DwenguinoSimulation.scenarios), function(index, value){
-          var container = $("<div></div>").attr("class", "scenario_radio_container");
-          var newOpt = $("<input></input>").attr("type", "radio").attr("name", "scenario_type").attr("id", "sim_scenario_" + value).attr("value", value);
-          console.log(value);
-          console.log(DwenguinoSimulation.scenarioView);
-          if (value == DwenguinoSimulation.scenarioView){
-            newOpt.attr("checked", "checked");
-          }
-          var image = $("<img></img>").attr("class", "scenario_image").attr("src", "img/scenarios/scenario_" + value + ".png");
-          container.append(newOpt);
-          container.append(image);
-          $("#sim_scenario").append(container);
-        });
+    //Add scenarios to the dropdown
+    $("#sim_scenario").empty();
+    $.each(Object.keys(DwenguinoSimulation.scenarios), function(index, value){
+      var container = $("<div></div>").attr("class", "scenario_radio_container");
+      var newOpt = $("<input></input>").attr("type", "radio").attr("name", "scenario_type").attr("id", "sim_scenario_" + value).attr("value", value);
+      console.log(value);
+      console.log(DwenguinoSimulation.scenarioView);
+      if (value == DwenguinoSimulation.scenarioView){
+        newOpt.attr("checked", "checked");
+      }
+      var image = $("<img></img>").attr("class", "scenario_image").attr("src", "img/scenarios/scenario_" + value + ".png");
+      container.append(newOpt);
+      container.append(image);
+      $("#sim_scenario").append(container);
+    });
 
     //Init the simulator pane view
     DwenguinoSimulation.initSimulationPane();
@@ -200,6 +202,7 @@ var DwenguinoSimulation = {
       DwenguinoSimulation.scenarioView = $(this).val();
       DwenguinoSimulation.initSimulationPane();
       DwenguinoSimulation.translateSimulatorInterface();
+      // TODO check if currentScenario is set correctly
       DwenguinoSimulation.currentScenario = DwenguinoSimulation.scenarios[DwenguinoSimulation.scenarioView];
       DwenguinoSimulation.currentScenario.initSimulationDisplay(DwenguinoSimulation.simulationViewContainerId);
       DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("changedScenario", DwenguinoSimulation.scenarioView));
@@ -284,11 +287,9 @@ var DwenguinoSimulation = {
    */
   loadSocialRobotSimulationPane: function(){
       
-    $('#db_simulator_pane').append('<div id="robot_components"></div>');
+    $('#db_simulator_pane').append('<div id="robot_components_menu"></div>');
 
-    $("#robot_components")
-    .css("max-width", "100%")
-    .css("width", "100%");
+    DwenguinoSimulationRobotComponentsMenu.setupEnvironment(DwenguinoSimulation.scenarios['socialrobot']);
   },
 
   /**
@@ -646,8 +647,6 @@ var DwenguinoSimulation = {
       DwenguinoSimulation.delayRemainingAfterSteps = delayTime % DwenguinoSimulation.baseSpeedDelay;
       DwenguinoSimulation.performDelayLoop(function(){/*Do nothing after delay loop*/});
     }
-
-
   },
 
 
@@ -816,6 +815,24 @@ var DwenguinoSimulation = {
     DwenguinoSimulation.debugger.blocks.lastColours = [-1, -1];
     DwenguinoSimulation.debugger.blocks.lastBlocks = [null, null];
 
+    var option = DwenguinoSimulation.scenarioView;
+
+    switch (option) {
+      case "moving":
+        DwenguinoSimulation.resetBoard();
+        break;
+      case "wall":
+        DwenguinoSimulation.resetBoard();
+        break;
+      case "socialrobot":
+        break;
+      case "default":
+        DwenguinoSimulation.resetBoard();
+        break;
+    }
+  },
+
+  resetBoard: function(){
     // stop sound
     if (DwenguinoSimulation.board.buzzer.tonePlaying !== 0) {
       DwenguinoSimulation.noTone("BUZZER");
@@ -843,7 +860,8 @@ var DwenguinoSimulation = {
 
     // clear scope
     //document.getElementById('sim_scope').innerHTML = "";
-  },
+  }, 
+
   /*
     * function called by the delay block to delay the simulation
     *  @param {int} delay: time in ms the simaultion should be paused

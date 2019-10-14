@@ -529,3 +529,65 @@ body{
 	background:#8bab42;
 	color:#000;
 }
+
+#robot_components_menu {
+    width: 75%;
+    height: 50%;
+    float: right;
+    padding: 10px;
+}
+
+.robot_components_item { 
+    margin: 5px;
+    width: 30%;
+    height: 100%;
+    float: left;
+    border-style: solid;
+}
+
+#rc_servo_img {
+    width: 100px;
+    height: 136px;
+    margin-right: 10px;
+    float: left;
+    background-image: url("../img/board/servo.png");
+    background-size: 100% 100%;
+    margin-bottom: 15px;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+#rc_led_img {
+    width: 100px;
+    height: 197px;
+    margin-right: 10px;
+    float: left;
+    background-image: url("../img/board/led.png");
+    background-size: 100% 100%;
+    margin-bottom: 15px;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+#rc_pir_img {
+    width: 100px;
+    height: 97px;
+    margin-right: 10px;
+    float: left;
+    background-image: url("../img/board/pir.png");
+    background-size: 100% 100%;
+    margin-bottom: 15px;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.sim_canvas{
+    width: 100%;
+    height: 100%;
+}
+
+.sim_element{
+    width: 100px;
+    height:100px;
+}
+
