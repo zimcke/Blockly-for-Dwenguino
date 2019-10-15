@@ -122,6 +122,8 @@ MSG.simulator = {
   scenario_moving: "Moving robot",
   scenario_wall: "Moving robot with wall",
   code: "Code",
+  pir: "PIR sensor",
+  led: "LED",
 };
 
 MSG.tutorials = {

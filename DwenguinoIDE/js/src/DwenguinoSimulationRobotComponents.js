@@ -1,7 +1,8 @@
 /**
  * Functions for interact.js to make the robot components
- * in the scenario draggable
- *  */ 
+ * in the scenario draggable within the simulation container.
+ * 
+ **/ 
 
 // target elements with the "draggable" class
 interact('.draggable')

@@ -80,7 +80,7 @@ Blockly.JavaScript['pir_sensor'] = function (block) {
   //define pir settings
 
   //  Assemble JavaScript into code variable.
-  var code = machine + "pir(" + value_trig +', ' + value_echo + ')';
+  var code = machine + "pir(" + value_trig + ')';
 
   return [code, Blockly.JavaScript.ORDER_NONE];
 };

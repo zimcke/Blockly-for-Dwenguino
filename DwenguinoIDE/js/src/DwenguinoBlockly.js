@@ -237,7 +237,7 @@ var DwenguinoBlockly = {
 
 
         // ONLY PUT THIS BACK WHEN ENABLING TUTORIALS
-        //tutorials = {};
+        // tutorials = {};
          $.each(tutorials, function(index, arrayElement){
            var newLi = $("<li>").attr("class", "dropdownmenuitem").attr("id", arrayElement.id).attr("role", "presentation").html(arrayElement.label);
            newLi.click(function(){

@@ -2,14 +2,17 @@ var DwenguinoSimulationRobotComponentsMenu = {
   maxNumberOfServos: 5,
   maxNumberOfLeds: 3,
   maxNumberOfPirs: 1,
+  socialRobotScenario: {},
 
   /** 
   * Initializes the robot components menu environment when loading 
   * the social robot scenario.
   */
-  setupEnvironment: function(socialRobotScenario) {
+  setupEnvironment: function(socialRobotScenario, containerIdSelector) {
+    this.socialRobotScenario = socialRobotScenario;
     DwenguinoSimulationRobotComponentsMenu.initMenu(socialRobotScenario);
     DwenguinoSimulationRobotComponentsMenu.translateRobotComponents();
+    socialRobotScenario.initSimulation(containerIdSelector);
   },
 
   /**
@@ -18,44 +21,37 @@ var DwenguinoSimulationRobotComponentsMenu = {
    */
   initMenu: function(socialRobotScenario) {
     $('#robot_components_menu').append('<div id="rc_servo" class="robot_components_item"></div>');
-    $('#rc_servo').append('<div id="rc_servo_tag"></div>');
+    $('#rc_servo').append('<div id="rc_servo_tag" class="rc_tag"></div>');
     $('#rc_servo').append('<div id="rc_servo_img"></div>');
     $('#rc_servo').append('<div id="rc_servo_options"></div>');
 
     $('#robot_components_menu').append('<div id="rc_led" class="robot_components_item"></div>');
-    $('#rc_led').append('<div id="rc_led_tag"></div>');
+    $('#rc_led').append('<div id="rc_led_tag" class="rc_tag"></div>');
     $('#rc_led').append('<div id="rc_led_img"></div>');
     $('#rc_led').append('<div id="rc_led_options"></div>');
 
     $('#robot_components_menu').append('<div id="rc_pir" class="robot_components_item"></div>');
-    $('#rc_pir').append('<div id="rc_pir_tag"></div>');
+    $('#rc_pir').append('<div id="rc_pir_tag" class="rc_tag"></div>');
     $('#rc_pir').append('<div id="rc_pir_img"></div>');
+    $('#rc_pir').append('<div id="rc_pir_button" class="sim_button"></div>');
+    $('#rc_pir').append('<div id="rc_pir_value"></div>');
     $('#rc_pir').append('<div id="rc_pir_options"></div>');
 
     DwenguinoSimulationRobotComponentsMenu.initButtons(socialRobotScenario);
   },
 
   /** 
-   * Add buttons to the robot components menu to add or remove components 
+   * Add buttons to the robot components menu to add or remove robot components 
    * in the scenario.
    */
   initButtons: function(socialRobotScenario) {
-  //  robotComponentPlusButton = "<div class=\"center\"> \
-  //  <div class=\"input-group\"> \
-  //  <span class=\"input-group-btn\"> \
-  //  <button type=\"button\" id=\"rc_servo_minus_button\" class=\"btn btn-default btn-number\" disabled=\"disabled\" data-type=\"minus\" data-field=\"quant[1]\"><span class=\"glyphicon glyphicon-minus\"></span></button></span> \
-  //  <div class=\"rc_input\"><input type=\"text\" name=\"quant[1]\" class=\"form-control input-number\" value=\"0\" min=\"0\" max=\"3\"></div> \
-  //  <span class=\"input-group-btn\"> \
-  //  <button type=\"button\" id=\"rc_servo_plus_button\" class=\"btn btn-default btn-number\" data-type=\"plus\" data-field=\"quant[1]\"> \
-  //  <span class=\"glyphicon glyphicon-plus\"></span></button></span></div></div>"
-  //  .append(robotComponentPlusButton);
   
   // TODO: rewrite this in a more readable way
   $('#rc_servo_options').append('<div class="center"><p></p><div class="input-group"><span class="input-group-btn"><button type="button" id="rc_servo_minus_button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[1]"><span class="glyphicon glyphicon-minus" id="rc_servo_minus_button"></span></button></span><input type="text" name="quant[1]" class="form-control input-number" value="0" min="0" max="3"><span class="input-group-btn"><button type="button" id="rc_servo_plus_button" class="btn btn-default btn-number" data-type="plus" data-field="quant[1]"><span class="glyphicon glyphicon-plus" id="rc_servo_plus_button"></span></button></span></div>');
 
-  $('#rc_led_options').append('<div class="center"><p></p><div class="input-group"><span class="input-group-btn"><button type="button" id="rc_led_minus_button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[2]"><span class="glyphicon glyphicon-minus" id="rc_led_minus_button"></span></button></span><input type="text" name="quant[2]" class="form-control input-number" value="0" min="0" max="5"><span class="input-group-btn"><button type="button" id="rc_led_plus_button" class="btn btn-default btn-number" data-type="plus" data-field="quant[2]"><span class="glyphicon glyphicon-plus" id="rc_led_plus_button"></span></button></span></div>');
+  $('#rc_led_options').append('<div class="center"><p></p><div class="input-group"><span class="input-group-btn"><button type="button" id="rc_led_minus_button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[2]"><span class="glyphicon glyphicon-minus" id="rc_led_minus_button"></span></button></span><input type="text" name="quant[2]" class="form-control input-number" value="0" min="0" max="9"><span class="input-group-btn"><button type="button" id="rc_led_plus_button" class="btn btn-default btn-number" data-type="plus" data-field="quant[2]"><span class="glyphicon glyphicon-plus" id="rc_led_plus_button"></span></button></span></div>');
 
-  $('#rc_pir_options').append('<div class="center"><p></p><div class="input-group"><span class="input-group-btn"><button type="button" id="rc_pir_minus_button" class="btn btn-default btn-number" disable="disabled" data-type="minus" data-field="quant[3]"><span class="glyphicon glyphicon-minus" id="rc_pir_plus_button"></span></button></span><input type="text" name="quant[3]" class="form-control input-number" value="0" min="0" max="1"><span class="input-group-btn"><button type="button" id="rc_pir_plus_button" class="btn btn-default btn-number" data-type="plus" data-field="quant[3]"><span class="glyphicon glyphicon-plus" id="rc_pir_plus_button"></span></button></span></div>');
+  $('#rc_pir_options').append('<div class="center"><p></p><div class="input-group"><span class="input-group-btn"><button type="button" id="rc_pir_minus_button" class="btn btn-default btn-number" disable="disabled" data-type="minus" data-field="quant[3]"><span class="glyphicon glyphicon-minus" id="rc_pir_plus_button"></span></button></span><input type="text" name="quant[3]" class="form-control input-number" value="0" min="0" max="1"><span class="input-group-btn"><button type="button" id="rc_pir_plus_button" class="btn btn-default btn-number" data-type="plus" data-field="quant[3]"><span class="glyphicon glyphicon-plus" id="rc_pir_plus_button"></span></button></span></div>'); 
 
     // Event handlers
     $('.btn-number').click(function(e){
@@ -70,8 +66,6 @@ var DwenguinoSimulationRobotComponentsMenu = {
               
               if(currentVal > input.attr('min')) {
                   input.val(currentVal - 1).change();
-                  console.log('e.target', e.target);
-                  console.log('e.target.id', e.target.id);
                   DwenguinoSimulationRobotComponentsMenu.removeRobotComponent(e.target.id, socialRobotScenario);
               } 
               if(parseInt(input.val()) == input.attr('min')) {
@@ -81,8 +75,6 @@ var DwenguinoSimulationRobotComponentsMenu = {
           } else if(type == 'plus') {
               if(currentVal < input.attr('max')) {
                   input.val(currentVal + 1).change();
-                  console.log('e.target', e.target);
-                  console.log('e.target.id', e.target.id);
                   DwenguinoSimulationRobotComponentsMenu.addRobotComponent(e.target.id, socialRobotScenario);
               }
               if(parseInt(input.val()) == input.attr('max')) {
@@ -136,6 +128,9 @@ var DwenguinoSimulationRobotComponentsMenu = {
     });
   },
 
+  /**
+   * This function translates the text of the robot components menu.
+   */
   translateRobotComponents: function() {
     document.getElementById('rc_servo_tag').textContent = MSG.simulator['servo'];
     document.getElementById('rc_led_tag').textContent = MSG.simulator['led'];
@@ -143,7 +138,7 @@ var DwenguinoSimulationRobotComponentsMenu = {
   },
 
   /*
-   * This functions adds the specified robot component to the 
+   * This function adds the specified robot component to the 
    * social robot scenario.
    */
   addRobotComponent: function(id, socialRobotScenario) {
@@ -180,7 +175,8 @@ var DwenguinoSimulationRobotComponentsMenu = {
       case "default":
         break;
     }
-  }
+  },
+
 };
 
  

@@ -134,6 +134,8 @@ MSG.simulator = {
   scenario_wall: "Bewegende robot met muur",
   scenario_spyrograph: "Spyrograaf",
   code: "Code",
+  pir: "PIR sensor",
+  led: "LED",
 };
 
 

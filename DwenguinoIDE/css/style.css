@@ -539,10 +539,12 @@ body{
 
 .robot_components_item { 
     margin: 5px;
-    width: 30%;
+    width: 25%;
     height: 100%;
     float: left;
     border-style: solid;
+    border-color: #B5C986;
+    background:#B5C986;
 }
 
 #rc_servo_img {
@@ -558,8 +560,8 @@ body{
 }
 
 #rc_led_img {
-    width: 100px;
-    height: 197px;
+    width: 60px;
+    height: 118px;
     margin-right: 10px;
     float: left;
     background-image: url("../img/board/led.png");
@@ -581,13 +583,49 @@ body{
     margin-left: 5px;
 }
 
+.rc_tag {
+    margin: 5px;
+}
+
 .sim_canvas{
     width: 100%;
     height: 100%;
 }
 
 .sim_element{
-    width: 100px;
-    height:100px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }
 
+.sim_element_led{
+    width: 40px;
+    height: 40px;
+}
+
+.sim_element_servo{
+    width: 200px;
+    height:150px;
+}
+
+.sim_element_pir{
+    width:100px;
+    height: 100px;
+}
+
+.servo_canvas{
+    margin-top: 20px
+}
+
+.pir_canvas{
+    width: 100px;
+    height: 97px;
+    margin-top: 20px;
+}
+
+#sim_container{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}

@@ -124,6 +124,8 @@ senario_default: "Papan biasa",
 scenario_moving: "Bergerak robot",
 scenario_wall: "Memindahkan robot dengan dinding",
 code: "Kod",
+pir: "PIR sensor",
+led: "LED",
 };
 
 MSG.tutorials = {

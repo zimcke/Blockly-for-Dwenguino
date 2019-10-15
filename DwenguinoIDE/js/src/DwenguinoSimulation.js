@@ -36,6 +36,7 @@ var DwenguinoSimulation = {
       blockMapping: {}
     }
   },
+
   /*
   * Initializes the environment when loading page
   */
@@ -287,9 +288,9 @@ var DwenguinoSimulation = {
    */
   loadSocialRobotSimulationPane: function(){
       
+    // Load the robot components menu
     $('#db_simulator_pane').append('<div id="robot_components_menu"></div>');
-
-    DwenguinoSimulationRobotComponentsMenu.setupEnvironment(DwenguinoSimulation.scenarios['socialrobot']);
+    DwenguinoSimulationRobotComponentsMenu.setupEnvironment(DwenguinoSimulation.scenarios['socialrobot'],DwenguinoSimulation.simulationViewContainerId);
   },
 
   /**
@@ -921,10 +922,16 @@ var DwenguinoSimulation = {
         }
         if (state === 'HIGH' || state === "1") {
           pin=== 13? DwenguinoSimulation.board.leds[8] = 1 : DwenguinoSimulation.board.leds[pin] = 1;
-          document.getElementById('sim_light_' + pin).className = "sim_light sim_light_on";
+          var sim_light =  document.getElementById('sim_light_' + pin);
+          if (typeof(sim_light) != 'undefined' && sim_light != null) {
+            sim_light.className = "sim_light sim_light_on";
+          }
         } else {
           pin === 13? DwenguinoSimulation.board.leds[8] = 0 : DwenguinoSimulation.board.leds[pin] = 0;
-          document.getElementById('sim_light_' + pin).className = "sim_light sim_light_off";
+          var sim_light =  document.getElementById('sim_light_' + pin);
+          if (typeof(sim_light) != 'undefined' && sim_light != null) {
+            sim_light.className = "sim_light sim_light_off";
+          }
         }
       }
     },
@@ -1143,6 +1150,26 @@ var DwenguinoSimulation = {
       //document.getElementById("sonar").checked = true;
       document.getElementById('sonar_input').value = DwenguinoSimulation.board.sonarDistance;
       return this.board.sonarDistance;
+    },
+
+    /**
+     * Returns the state of PIR sensor if it was added to the scenario. Otherwise it returns a low signal by default.
+     * Displays the pin number that is used by the PIR sensor as output.
+     * @param {int} trigPin 
+     */
+    pir: function(trigPin) {
+      var sim_pir = document.getElementById('rc_pir_value');
+      if (typeof(sim_pir) != 'undefined' && sim_pir != null) {
+          sim_pir.innerHTML = ' Pin ' + trigPin;
+      }
+      var sim_canvas = document.getElementById('sim_pir_canvas1');
+      if(typeof(sim_canvas) != 'undefined' && sim_canvas != null){
+        console.log(DwenguinoSimulation.scenarios['socialrobot'].robot.sim_pir_canvas1.state);
+        return DwenguinoSimulation.scenarios['socialrobot'].robot.sim_pir_canvas1.state;
+      } else {
+        console.log("return default 0");
+        return 0;
+      }
     },
 
     /*
