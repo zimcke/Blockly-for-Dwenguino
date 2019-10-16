@@ -57,7 +57,7 @@ DwenguinoDrawSimulationCanvas.prototype.drawServos = function(robot){
     var canvases = document.getElementsByClassName('sim_canvas servo_canvas');
     for(var i = 0; i < canvases.length; i++)
     {
-        this.drawServo(robot,canvases.item(i));       
+        this.drawServo(robot,canvases.item(i));   
     }
 }
 
@@ -67,10 +67,20 @@ DwenguinoDrawSimulationCanvas.prototype.drawServos = function(robot){
 DwenguinoDrawSimulationCanvas.prototype.drawServo = function(robot, canvas){
     if (canvas.getContext) {
         var id = canvas.id;
+
+        // in case the image isn't loaded yet.
+        var self = this;
+        robot[id].image.onload = function() {
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = robot[id].backgroundcolor;
+            ctx.fillRect(robot[id].x, robot[id].y, robot[id].width, robot[id].height);
+            self.drawRotatedServohead(ctx, robot[id]);
+        }
+
         var ctx = canvas.getContext('2d');
         ctx.fillStyle = robot[id].backgroundcolor;
         ctx.fillRect(robot[id].x, robot[id].y, robot[id].width, robot[id].height);
-        this.drawRotatedServohead(ctx, robot[id]);
+        self.drawRotatedServohead(ctx, robot[id]);
     } else {
         console.log(canvas, "This canvas has no context");
     }    
@@ -93,6 +103,14 @@ DwenguinoDrawSimulationCanvas.prototype.drawPirs = function(robot){
 DwenguinoDrawSimulationCanvas.prototype.drawPir = function(robot, canvas){
     if (canvas.getContext) {
         var id = canvas.id;
+
+        // in case the image isn't loaded yet.
+        var self = this;
+        robot[id].image.onload = function() {
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(robot[id].image,0,0,robot[id].width,robot[id].height); 
+        }
+
         var ctx = canvas.getContext('2d');
         ctx.drawImage(robot[id].image,0,0,robot[id].width,robot[id].height);
     } else {
