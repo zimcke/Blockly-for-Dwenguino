@@ -350,7 +350,7 @@
     },
 
     /**
-     * Helper function to get a single target DOM element. We will try to
+     * Helper function to find a DOM element with an identifier. We will try to
      * locate the DOM element through several ways, in the following order:
      *
      * 1) Passing the string into document.querySelector
@@ -390,6 +390,23 @@
       }
 
       return null;
+    },
+
+    /**
+     * Returns the container DOM element where bubble elements will be added
+     * as children. The container element can be specified by tourOpt.container
+     * as either a string identifier (ID/selector) or directly as a JavaScript
+     * DOM element. By default, or if the specified string identifier does not
+     * match an element, the document's body is used.
+     *
+     * @private
+     */
+    getContainer: function(tourOpt) {
+      if (tourOpt.container) {
+        return typeof tourOpt.container === 'string' ? utils.getElementByIdentifier(tourOpt.container) || document.body : tourOpt.container;
+      }
+
+      return document.body;
     },
 
     /**
@@ -617,6 +634,7 @@
           left,
           arrowOffset,
           verticalLeftPosition,
+          containerElementOffset,
           targetEl = utils.getStepTarget(step),
           el = this.element,
           arrowEl = this.arrowEl,
@@ -688,6 +706,20 @@
         top = boundingRect.top + targetEl.offsetHeight / 2 - bubbleBoundingHeight / 2;
       } else {
         top += utils.getPixelValue(step.yOffset);
+      }
+
+      // CONVERT TO CONTAINER COORDINATES
+      el.style.top = '0';
+      el.style.left = '0';
+
+      containerElementOffset = el.getBoundingClientRect();
+
+      top -= containerElementOffset.top;
+      left -= containerElementOffset.left;
+
+      if (!this.opt.fixedContainer) {
+        top -= utils.getScrollTop();
+        left -= utils.getScrollLeft();
       }
 
       // ADJUST TOP FOR SCROLL POSITION
@@ -1056,7 +1088,7 @@
           resizeCooldown = false,
           // for updating after window resize
       onWinResize,
-          _appendToBody2,
+          appendToContainer,
           children,
           numChildren,
           node,
@@ -1125,34 +1157,33 @@
       //Hide the bubble by default
       this.hide();
 
-      //Finally, append our new bubble to body once the DOM is ready.
+      //Finally, append our new bubble to the container once the DOM is ready.
       if (utils.documentIsReady()) {
-        document.body.appendChild(el);
+        utils.getContainer(opt).appendChild(el);
       } else {
         // Moz, webkit, Opera
         if (document.addEventListener) {
-          _appendToBody2 = function appendToBody() {
-            document.removeEventListener('DOMContentLoaded', _appendToBody2);
-            window.removeEventListener('load', _appendToBody2);
-
-            document.body.appendChild(el);
+          appendToContainer = function() {
+            document.removeEventListener('DOMContentLoaded', appendToContainer);
+            window.removeEventListener('load', appendToContainer);
+            utils.getContainer(opt).appendChild(el);
           };
 
-          document.addEventListener('DOMContentLoaded', _appendToBody2, false);
+          document.addEventListener('DOMContentLoaded', appendToContainer, false);
         }
         // IE
         else {
-            _appendToBody2 = function _appendToBody() {
+            appendToContainer = function() {
               if (document.readyState === 'complete') {
-                document.detachEvent('onreadystatechange', _appendToBody2);
-                window.detachEvent('onload', _appendToBody2);
-                document.body.appendChild(el);
+                document.detachEvent('onreadystatechange', appendToContainer);
+                window.detachEvent('onload', appendToContainer);
+                utils.getContainer(opt).appendChild(el);
               }
             };
 
-            document.attachEvent('onreadystatechange', _appendToBody2);
+            document.attachEvent('onreadystatechange', appendToContainer);
           }
-        utils.addEvtListener(window, 'load', _appendToBody2);
+        utils.addEvtListener(window, 'load', appendToContainer);
       }
     }
   };
@@ -1398,18 +1429,23 @@
     adjustWindowScroll = function adjustWindowScroll(cb) {
       var bubble = getBubble(),
 
+      // Calculate the current viewport top and bottom
+      windowTop = utils.getScrollTop(),
+      windowBottom = windowTop + utils.getWindowHeight(),
+
+      containerTop = utils.getContainer(opt).getBoundingClientRect().top + windowTop,
 
       // Calculate the bubble element top and bottom position
       bubbleEl = bubble.element,
-          bubbleTop = utils.getPixelValue(bubbleEl.style.top),
+          bubbleTop = utils.getPixelValue(bubbleEl.style.top) + containerTop,
           bubbleBottom = bubbleTop + utils.getPixelValue(bubbleEl.offsetHeight),
 
 
       // Calculate the target element top and bottom position
       targetEl = utils.getStepTarget(getCurrStep()),
           targetBounds = targetEl.getBoundingClientRect(),
-          targetElTop = targetBounds.top + utils.getScrollTop(),
-          targetElBottom = targetBounds.bottom + utils.getScrollTop(),
+          targetElTop = targetBounds.top + windowTop,
+          targetElBottom = targetBounds.bottom + windowTop,
 
 
       // The higher of the two: bubble or target
@@ -1418,12 +1454,6 @@
       // The lower of the two: bubble or target
       targetBottom = bubbleBottom > targetElBottom ? bubbleBottom : targetElBottom,
 
-
-      // Calculate the current viewport top and bottom
-      windowTop = utils.getScrollTop(),
-          windowBottom = windowTop + utils.getWindowHeight(),
-
-
       // This is our final target scroll value.
       scrollToVal = targetTop - getOption('scrollTopMargin'),
           scrollEl,
@@ -1431,7 +1461,6 @@
           yuiEase,
           direction,
           scrollIncr,
-          scrollTimeout,
           _scrollTimeoutFn;
 
       // Target and bubble are both visible in viewport
@@ -1772,7 +1801,7 @@
 
       bubble.render(step, stepNum, function (adjustScroll) {
         // when done adjusting window scroll, call showBubble helper fn
-        if (adjustScroll) {
+        if (adjustScroll && !getOption('fixedContainer')) {
           adjustWindowScroll(showBubble);
         } else {
           showBubble();
@@ -2421,7 +2450,7 @@
  */
 _.escape = function(str){
   if(customEscape){ return customEscape(str); }
-
+  
   if(str == null) return '';
   return ('' + str).replace(new RegExp('[&<>"\']', 'g'), function(match){
     if(match == '&'){ return '&amp;' }

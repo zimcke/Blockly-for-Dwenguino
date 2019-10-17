@@ -20,8 +20,10 @@ var tutorialTargets = {
   simulatorStopButton: "sim_stop",
   simulatorScenarioTag: "sim_scenarioTag",
   simulatorBottomPane: "db_simulator_bottom_pane",
-  simulatorScenarioTab: "robot_pane_tab",
-  simulatorScenarioSelection: "sim_scenario",
+  simulatorScenarioSocialRobot: "sim_scenario",
+  robotComponentsMenuLedPlusButton: "rc_led_plus_button",
+  robotComponentsMenuLedMinusButton: "rc_led_minus_button",
+  robotcomponentsMenuLedOptions: "rc_led_options",
 };
 
 /*

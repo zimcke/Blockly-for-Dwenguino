@@ -240,6 +240,7 @@ var DwenguinoBlockly = {
         // tutorials = {};
          $.each(tutorials, function(index, arrayElement){
            var newLi = $("<li>").attr("class", "dropdownmenuitem").attr("id", arrayElement.id).attr("role", "presentation").html(arrayElement.label);
+           $("#dropdownMenuTuts").append(newLi);
            newLi.click(function(){
              DwenguinoBlockly.tutorialId = arrayElement.id;
              DwenguinoBlockly.tutorialIdSetting = DwenguinoBlockly.tutorialId;
@@ -248,7 +249,6 @@ var DwenguinoBlockly = {
              hopscotch.startTour(arrayElement);
              DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("startTutorial", DwenguinoBlockly.tutorialIdSetting));
            });
-           $("#dropdownMenuTuts").append(newLi);
          });
 
          //following event listener is only a test --> remove later!

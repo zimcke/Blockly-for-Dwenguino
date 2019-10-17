@@ -107,6 +107,8 @@ var MSG = {
   create: "Maak",
   with_type: "met type",
   create_global: "Maak globaal",
+  next: "Volgende",
+  previous: "Vorige"
 };
 
 
@@ -147,6 +149,7 @@ MSG.tutorials = {
     hello_dwenguino: {},
     blink: {},
     hello_robot: {},
+    socialrobot: {},
 };
 
 
@@ -515,3 +518,28 @@ MSG.tutorials.lampOnOffWeGoSTEM = {
     "Is het gelukt om de code te verbeteren?",
   ],
 };
+
+MSG.tutorials.socialrobot['introduction'] = {};
+MSG.tutorials.socialrobot['introduction'].label = 'Ontwerp een robot';
+MSG.tutorials.socialrobot['introduction'].stepTitles = [
+  "Ontwerp een robot",
+  "Naar de simulator",
+  "Robot bouwblokken",
+  "Bouwblokken toevoegen",
+  "Jouw robot samenstellen",
+  "Bouwblokken verwijderen",
+  "Je robot aansturen",
+  "Je robot aansturen",
+  "Einde"
+];
+MSG.tutorials.socialrobot['introduction'].stepContents = [
+  "Tijdens deze tutorial ga je aan de slag om zelf een robot te ontwerpen. Je ontdekt wat er allemaal mogelijk is in DwenguinoBlockly. Daarna kan je de volgende tutorials bekijken om stap voor stap jouw persoonlijke robot te leren bouwen.",
+  "Vooraleer je begint met het ineen knutselen van je robot, is het zinvol om eens te fantaseren hoe die robot er moet uitzien. Daarvoor is er de simulator. Je opent en verbergt hem door op deze knop te klikken.",
+  "Je kan in de simulator niet alleen robots bouwen, daarom moet je hier nog klikken op de robot. Je krijgt dan andere bouwblokken te zien.",
+  "Hier zie je alle bouwblokken uit de simulator die je kan gebruiken om je robot te ontwerpen. Op dit moment kan je servo motors, LEDs en een PIR sensor toevoegen aan jouw robot. Klik eens op een + knop om een element aan je robot toevoegen. Zie je het onderaan verschijnen?",
+  "Nadat je robotblokken toegevoegd hebt, kan je ze hier verslepen naar een andere plaats. Zo kan je zelf bepalen hoe jouw robot eruitziet.",
+  "Als je een blok te veel toegevoegd hebt, kan je het laatst aangemaakte blok weer verwijderen met de - knop. Haal alle blokken van je robot weer weg. Is het gelukt?",
+  "Je weet nu hoe je een robot kan bouwen, maar je robot kan nog niet bewegen. Daarom moeten we de robot nog aansturen met een zelfgeschreven programma. Dit kan met de blokken uit de toolbox. ",
+  "Wanneer je blokken uit de toolbox sleept, komen ze in het Blockly codegebied. Hier komt het programma dat je gaat schrijven.",
+  "Je bent nu klaar om met de volgende tutorials te beginnen, waarin je de verschillende robotelementen leert gebruiken."
+];

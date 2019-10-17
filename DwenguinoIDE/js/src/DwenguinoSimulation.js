@@ -558,6 +558,7 @@ var DwenguinoSimulation = {
     });
 
     DwenguinoSimulation.debugger.debuggerjs.machine.on('error', function(err) {
+      console.log(err);
       console.error(err.message);
     });
 
@@ -1148,7 +1149,12 @@ var DwenguinoSimulation = {
     sonar: function(trigPin, echoPin) {
       DwenguinoSimulation.showSonar();
       //document.getElementById("sonar").checked = true;
-      document.getElementById('sonar_input').value = DwenguinoSimulation.board.sonarDistance;
+      var sim_sonar  = document.getElementById('sonar_input');
+      if(typeof(sim_sonar) != 'undefined' && sim_sonar != null){
+        sim_sonar.value = DwenguinoSimulation.board.sonarDistance;
+      } else {
+        console.log('Sonar input element is undefined');
+      }
       return this.board.sonarDistance;
     },
 
@@ -1164,10 +1170,8 @@ var DwenguinoSimulation = {
       }
       var sim_canvas = document.getElementById('sim_pir_canvas1');
       if(typeof(sim_canvas) != 'undefined' && sim_canvas != null){
-        console.log(DwenguinoSimulation.scenarios['socialrobot'].robot.sim_pir_canvas1.state);
         return DwenguinoSimulation.scenarios['socialrobot'].robot.sim_pir_canvas1.state;
       } else {
-        console.log("return default 0");
         return 0;
       }
     },

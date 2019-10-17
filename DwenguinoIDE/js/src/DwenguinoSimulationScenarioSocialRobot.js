@@ -44,8 +44,10 @@ function DwenguinoSimulationScenarioSocialRobot(){
 
     var self = this;
     $("#sim_stop").click(function() {
-      self.resetSocialRobot();
-      self.drawSimulationDisplay();
+      let timer = setTimeout(() => {
+        self.resetSocialRobot();
+        self.drawSimulationDisplay();
+      }, 500);
     });
   };
 
@@ -199,8 +201,8 @@ function DwenguinoSimulationScenarioSocialRobot(){
     $('#sim_servo' + id).append("<canvas id='sim_servo_canvas" +id+"' class='sim_canvas servo_canvas'></canvas>");
 
     this.robot['sim_servo_canvas' + id] = {};
-    this.robot['sim_servo_canvas' + id].width = 150;
-    this.robot['sim_servo_canvas' + id].height = 75;
+    this.robot['sim_servo_canvas' + id].width = 100;
+    this.robot['sim_servo_canvas' + id].height = 50;
     this.robot['sim_servo_canvas' + id].x = 0;
     this.robot['sim_servo_canvas' + id].y = 0;
     this.robot['sim_servo_canvas' + id].angle = 0;
@@ -223,6 +225,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.removeServo = function(){
 
   delete this.robot['sim_servo_canvas' + id];
   this.robot.numberOfServos -= 1;
+  this.drawSimulationDisplay();
 };
 
 /**
@@ -242,7 +245,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addLed = function(){
   $('#sim_led' + i).append("<canvas id='sim_led_canvas" +i+"' class='sim_canvas led_canvas'></canvas>");
 
   this.robot['sim_led_canvas' + i] = {};
-  this.robot['sim_led_canvas' + i].radius = 15;
+  this.robot['sim_led_canvas' + i].radius = 10;
   this.robot['sim_led_canvas' + i].x = 0;
   this.robot['sim_led_canvas' + i].y = 0;
   this.robot['sim_led_canvas' + i].oncolor = 'yellow';
@@ -274,8 +277,8 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addPir = function(){
   var id = this.robot.numberOfPirs;
 
   this.robot['sim_pir_canvas' + id] = {};
-  this.robot['sim_pir_canvas' + id].width = 100;
-  this.robot['sim_pir_canvas' + id].height = 100;
+  this.robot['sim_pir_canvas' + id].width = 50;
+  this.robot['sim_pir_canvas' + id].height = 50;
   this.robot['sim_pir_canvas' + id].image = new Image();
   this.robot['sim_pir_canvas' + id].image.src = this.robot.imgPir;
   this.robot['sim_pir_canvas' + id].state = 0;
@@ -310,7 +313,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addPir = function(){
  */
 DwenguinoSimulationScenarioSocialRobot.prototype.removePir = function(){
   var id = this.robot.numberOfPirs;
-  $("#sim_pir"+ id + "").remove();
+  $('#sim_pir'+ id).remove();
 
   delete this.robot['sim_pir_canvas' + id];
   this.robot.numberOfPirs -= 1;
