@@ -26,10 +26,13 @@ function DwenguinoSimulationScenarioSocialRobot(){
     // init superclass
     DwenguinoSimulationScenario.prototype.initSimulationState.call(this);
 
+    this.drawSimulation = new DwenguinoDrawSimulationCanvas();
+
     //Init robot state
     this.initSocialRobot();
+
+    this.checkLocalStorage();
     
-    this.drawSimulation = new DwenguinoDrawSimulationCanvas();
    }
   
   /* @brief Initializes the simulator social robot display.
@@ -53,9 +56,7 @@ function DwenguinoSimulationScenarioSocialRobot(){
 
 
   DwenguinoSimulationScenarioSocialRobot.prototype.initSimulation = function(containerIdSelector) {
-    // Reset the simulation state
-    this.initSimulationState();
-
+    
     console.log("init simulation display");
 
     // Load the simulation container
@@ -71,6 +72,10 @@ function DwenguinoSimulationScenarioSocialRobot(){
 
     container.empty();
     container.append(simulationContainer);
+
+    // Reset the simulation state
+    this.initSimulationState();
+
   }
 
   /**
@@ -157,6 +162,12 @@ function DwenguinoSimulationScenarioSocialRobot(){
    * 
    */
   DwenguinoSimulationScenarioSocialRobot.prototype.initSocialRobot = function(containerIdSelector){
+    /**
+     * TODO: implement: if local storage contains robot components adjust the menu to 
+     * display the current number of robot components of each type. 
+     * Additionally the robot components need to be addded again at a specific position
+     */
+
     console.log("init social robot");
     this.robot = {
       numberOfServos: 0,
@@ -193,27 +204,39 @@ function DwenguinoSimulationScenarioSocialRobot(){
  /**
   * Add a new servo to the simulation container.
   */
- DwenguinoSimulationScenarioSocialRobot.prototype.addServo = function(){
+ DwenguinoSimulationScenarioSocialRobot.prototype.addServo = function(draw = true, offsetLeft = 5, offsetTop = 5){
     this.robot.numberOfServos += 1;
     var id = this.robot.numberOfServos;
 
-    $('#sim_container').append("<div id='sim_servo"+id+"' class='sim_element sim_element_servo draggable'>"+MSG.simulator['servo']+" "+id+"</div>");
-    $('#sim_servo' + id).append("<canvas id='sim_servo_canvas" +id+"' class='sim_canvas servo_canvas'></canvas>");
+    if(draw){
+      $('#sim_container').append("<div id='sim_servo"+id+"' class='sim_element sim_element_servo draggable'>"+MSG.simulator['servo']+" "+id+"</div>");
+      $('#sim_servo' + id).append("<canvas id='sim_servo_canvas" +id+"' class='sim_canvas servo_canvas'></canvas>");
+    }
 
+    // console.log('transform in addservo');
+    // console.log(transformX);
+    // console.log(transformY);
     this.robot['sim_servo_canvas' + id] = {};
     this.robot['sim_servo_canvas' + id].width = 100;
     this.robot['sim_servo_canvas' + id].height = 50;
     this.robot['sim_servo_canvas' + id].x = 0;
     this.robot['sim_servo_canvas' + id].y = 0;
+    this.robot['sim_servo_canvas' + id].offsetLeft = offsetLeft;
+    this.robot['sim_servo_canvas' + id].offsetTop = offsetTop;
+    // this.robot['sim_servo_canvas' + id].transformX = transformX;
+    // this.robot['sim_servo_canvas' + id].transformY = transformY;
     this.robot['sim_servo_canvas' + id].angle = 0;
     this.robot['sim_servo_canvas' + id].prevAngle = 0;
     this.robot['sim_servo_canvas' + id].image = new Image();
     this.robot['sim_servo_canvas' + id].image.src = this.robot.imgServo;
     this.robot['sim_servo_canvas' + id].backgroundcolor = '#206499';
 
-    var canvas = document.getElementById('sim_servo_canvas'+id);
-    this.drawSimulation.configureCanvasDimensions(canvas);
-    this.drawSimulationDisplay();
+    console.log(this.robot['sim_servo_canvas' + id]);
+    if(draw){
+      var canvas = document.getElementById('sim_servo_canvas'+id);
+      this.drawSimulation.configureCanvasDimensions(canvas);
+      this.drawSimulationDisplay();
+    }
  };
 
  /**
@@ -231,7 +254,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.removeServo = function(){
 /**
  * Add a new LED to the simulation container.
  */
-DwenguinoSimulationScenarioSocialRobot.prototype.addLed = function(){
+DwenguinoSimulationScenarioSocialRobot.prototype.addLed = function(draw = true, x = 0, y = 0){
   this.robot.numberOfLeds += 1;
   var i = this.robot.numberOfLeds;
   var id = 0;
@@ -255,7 +278,10 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addLed = function(){
 
   var canvas = document.getElementById('sim_led_canvas'+i);
   this.drawSimulation.configureCanvasDimensions(canvas);
-  this.drawSimulationDisplay();
+  if(draw){
+    this.drawSimulationDisplay();
+  }
+
 };
 
 /**
@@ -272,7 +298,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.removeLed = function(){
 /**
  * Add a new PIR sensor to the simulation container.
  */
-DwenguinoSimulationScenarioSocialRobot.prototype.addPir = function(){
+DwenguinoSimulationScenarioSocialRobot.prototype.addPir = function(draw = true, x = 0, y = 0){
   this.robot.numberOfPirs += 1;
   var id = this.robot.numberOfPirs;
 
@@ -305,7 +331,9 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addPir = function(){
 
   var canvas = document.getElementById('sim_pir_canvas' +id);
   this.drawSimulation.configureCanvasDimensions(canvas);
-  this.drawSimulationDisplay();
+  if(draw){
+    this.drawSimulationDisplay();
+  }
 };
 
 /**
@@ -318,3 +346,130 @@ DwenguinoSimulationScenarioSocialRobot.prototype.removePir = function(){
   delete this.robot['sim_pir_canvas' + id];
   this.robot.numberOfPirs -= 1;
 };
+
+DwenguinoSimulationScenarioSocialRobot.prototype.checkLocalStorage = function(){
+  if (window.localStorage) {
+    var localStorage = window.localStorage;
+    var self = this;
+
+    if(localStorage.getItem('socialRobotScenario')){
+      // TODO unpack robot components and then save robot components
+      console.log('need to unpack robot components');
+      var servos = localStorage.getItem('servos');
+      servos = servos.split('+').map(e => e.split(','));
+      console.log(servos);
+      for(var i = 0; i < servos.length-1; i++){
+        this.addServo(false,servos[i][2], servos[i][3]);
+      }
+    }
+  }
+}
+
+
+/**
+ * Loads the robot components from the local storage
+ */
+DwenguinoSimulationScenarioSocialRobot.prototype.loadRobotComponents = function(){
+  if (window.localStorage) {
+    var localStorage = window.localStorage;
+    var self = this;
+
+    if(localStorage.getItem('socialRobotScenario')){
+      for(var i = 1; i <= self.robot.numberOfServos; i++){
+        $('#sim_container').append("<div id='sim_servo"+i+"' class='sim_element sim_element_servo draggable'>"+MSG.simulator['servo']+" "+i+"</div>");
+        
+        var topOffset = self.robot['sim_servo_canvas'+i].offsetTop;
+        var leftOffset = self.robot['sim_servo_canvas'+i].offsetLeft;
+
+        $('#sim_servo' + i).css('top', topOffset + 'px');
+        $('#sim_servo' + i).css('left', leftOffset + 'px');
+        
+        $('#sim_servo' + i).append("<canvas id='sim_servo_canvas" +i+"' class='sim_canvas servo_canvas'></canvas>");
+        
+        var canvas = document.getElementById('sim_servo_canvas'+i);
+        self.drawSimulation.configureCanvasDimensions(canvas);
+        self.drawSimulationDisplay();
+      }
+
+      this.saveRobotComponents();
+
+    } else {
+      // from now save current state
+      this.saveRobotComponents();
+    }
+  }
+}
+
+/**
+ * Periodically saves the current robot components to the local storage,
+ * so that when the page gets refreshed they can be reloaded.
+ */
+DwenguinoSimulationScenarioSocialRobot.prototype.saveRobotComponents = function(){
+  if (window.localStorage) {
+    var localStorage = window.localStorage;
+    var self = this;
+
+    // Try this
+    try {
+
+      // Set the interval and autosave every second
+      setInterval(function() {
+        
+        var servos = '';
+        for(var i = 1; i <= self.robot.numberOfServos; i++){
+          var leftOffset = 0;
+          if($('#sim_servo' + i).attr('data-x')){
+            leftOffset = parseFloat(self.robot['sim_servo_canvas' + i].offsetLeft) + parseFloat($('#sim_servo' + i).attr('data-x'));
+          } else {
+            leftOffset = parseFloat(self.robot['sim_servo_canvas' + i].offsetLeft);
+          }
+
+          var topOffset = 0;
+          if($('#sim_servo' + i).attr('data-x')){
+            topOffset = parseFloat(self.robot['sim_servo_canvas' + i].offsetTop) + parseFloat($('#sim_servo' + i).attr('data-y'));
+          } else {
+            topOffset = parseFloat(self.robot['sim_servo_canvas' + i].offsetTop);
+          }
+
+          servos = servos.concat("sim_servo",i,",", "sim_servo_canvas",i,",",leftOffset,",",topOffset, "+");  
+        }
+
+        var leds = "";
+        for(var i = 1; i <= self.robot.numberOfLeds; i++){
+          var element = document.getElementById('sim_led' +i);
+          if(element != undefined){
+            var rect = element.getBoundingClientRect();
+            leds = leds.concat("sim_led",i,",", "sim_led_canvas",i,",",rect.x,",",rect.y,";");
+          }
+        }
+
+        var pirs = "";
+        for(var i = 1; i <= self.robot.numberOfPirs; i++){
+          var element = document.getElementById('sim_pir' +i);
+          if(element != undefined){
+            var rect = element.getBoundingClientRect();
+            pirs = pirs.concat("sim_pir",i,",", "sim_pir_canvas",i,",",rect.x,",",rect.y,";");
+          }
+        }
+
+        localStorage.setItem('socialRobotScenario', 'saved');
+        localStorage.setItem('servos', servos);
+        localStorage.setItem('leds', leds);
+        localStorage.setItem('pirs', pirs);
+      }, 1000);
+
+    } catch (e) {
+
+      // If any errors, catch and alert the user
+      if (e == QUOTA_EXCEEDED_ERR) {
+        alert('Quota exceeded!');
+      }
+    }
+
+  } else {
+
+    console.log("No local storage");
+  }
+
+}
+

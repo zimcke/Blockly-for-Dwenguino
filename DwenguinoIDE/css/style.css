@@ -607,6 +607,8 @@ body{
 .sim_element_servo{
     width: 200px;
     height:150px;
+    top: 5px;
+    left: 5px;
 }
 
 .sim_element_pir{

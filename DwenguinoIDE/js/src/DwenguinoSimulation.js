@@ -287,7 +287,7 @@ var DwenguinoSimulation = {
    * are used by the Social Robot scenario.
    */
   loadSocialRobotSimulationPane: function(){
-      
+    console.log("load social robot simulation pane");
     // Load the robot components menu
     $('#db_simulator_pane').append('<div id="robot_components_menu"></div>');
     DwenguinoSimulationRobotComponentsMenu.setupEnvironment(DwenguinoSimulation.scenarios['socialrobot'],DwenguinoSimulation.simulationViewContainerId);

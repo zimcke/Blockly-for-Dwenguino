@@ -51,3 +51,25 @@ function dragMoveListener (event) {
 
 // this is used later in the resizing and gesture demos
 window.dragMoveListener = dragMoveListener
+
+function fireCustomEvent(eventName, element, data) {
+  'use strict';
+  var event;
+  data = data || {};
+  if (document.createEvent) {
+      event = document.createEvent("HTMLEvents");
+      event.initEvent(eventName, true, true);
+  } else {
+      event = document.createEventObject();
+      event.eventType = eventName;
+  }
+
+  event.eventName = eventName;
+  event = $.extend(event, data);
+
+  if (document.createEvent) {
+      element.dispatchEvent(event);
+  } else {
+      element.fireEvent("on" + event.eventType, event);
+  }
+}
