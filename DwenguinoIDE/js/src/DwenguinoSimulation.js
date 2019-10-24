@@ -261,6 +261,10 @@ var DwenguinoSimulation = {
    * Each time a different scenario is selected, this function will update the simulation pane.
    */
   initSimulationPane: function() {
+    // Reset custom changes from the social robot scenario
+    $('#db_simulator_top_pane').css('height', '50%');
+    $('#db_simulator_bottom_pane').css('height', '50%');
+
     $('#db_simulator_pane').children().remove();
 
     var option = DwenguinoSimulation.scenarioView;

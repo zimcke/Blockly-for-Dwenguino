@@ -28,8 +28,13 @@ function DwenguinoSimulationScenarioSocialRobot(){
 
     this.drawSimulation = new DwenguinoDrawSimulationCanvas();
 
+    this.scenarioUtils = new DwenguinoScenarioUtils(this);
+
     //Init robot state
     this.initSocialRobot();
+
+    $('#sim_container').css('background-image', this.robot.imgRobot);
+    $('#sim_container').css('background-size', '100% 100%');
 
     this.checkLocalStorage();
     
@@ -52,12 +57,31 @@ function DwenguinoSimulationScenarioSocialRobot(){
         self.drawSimulationDisplay();
       }, 500);
     });
-  };
+
+    var scenarioOptions = $("<div>").attr("id", "scenario_options");
+    $('#sim_container').append(scenarioOptions);
+    scenarioOptions.append("<div id='save_scenario'>Save</div>");
+    scenarioOptions.append("<div id='load_scenario'>Load</div>");
+
+    $("#save_scenario").click(function(){
+      var data = self.getScenarioData();
+      self.scenarioUtils.saveScenario(data);
+    });
+
+    $("#load_scenario").click(function(){
+      self.scenarioUtils.loadScenario();
+    });
+
+  }
 
 
   DwenguinoSimulationScenarioSocialRobot.prototype.initSimulation = function(containerIdSelector) {
     
     console.log("init simulation display");
+
+    // Make the bottom pane larger
+    $('#db_simulator_top_pane').css('height', '35%');
+    $('#db_simulator_bottom_pane').css('height', '65%');
 
     // Load the simulation container
     var container = $(containerIdSelector);
@@ -175,6 +199,7 @@ function DwenguinoSimulationScenarioSocialRobot(){
       numberOfPirs: 0,
       imgServo: './img/board/servo_movement.png',
       imgPir: './img/board/pir.png',
+      imgRobot: 'url("./img/socialrobot/robot1.svg")',
     };
  };
 
@@ -184,20 +209,23 @@ function DwenguinoSimulationScenarioSocialRobot(){
   */
  DwenguinoSimulationScenarioSocialRobot.prototype.resetSocialRobot = function(containerIdSelector){
     for(var i = 1; i <= this.robot.numberOfServos; i++){
-      this.robot['sim_servo_canvas' + i].x = 0;
-      this.robot['sim_servo_canvas' + i].y = 0;
-      this.robot['sim_servo_canvas' + i].angle = 0;
-      this.robot['sim_servo_canvas' + i].prevAngle = 0;
+      var servoCanvasId = 'sim_servo_canvas' + i;
+      this.robot[servoCanvasId].x = 0;
+      this.robot[servoCanvasId].y = 0;
+      this.robot[servoCanvasId].angle = 0;
+      this.robot[servoCanvasId].prevAngle = 0;
     }
 
     for(var i = 1; i <= this.robot.numberOfLeds; i++){
-      this.robot['sim_led_canvas' + i].x = 0;
-      this.robot['sim_led_canvas' + i].y = 0;
-      this.robot['sim_led_canvas' + i].state = 0;
+      var ledCanvasId = 'sim_led_canvas' + i;
+      this.robot[ledCanvasId].x = 0;
+      this.robot[ledCanvasId].y = 0;
+      this.robot[ledCanvasId].state = 0;
     }
 
     for(var i = 1; i <= this.robot.numberOfPirs; i++){
-      this.robot['sim_pir_canvas' + i].state = 0;
+      var pirCanvasId = 'sim_pir_canvas' + i;
+      this.robot[pirCanvasId].state = 0;
     }
  }
 
@@ -207,35 +235,30 @@ function DwenguinoSimulationScenarioSocialRobot(){
  DwenguinoSimulationScenarioSocialRobot.prototype.addServo = function(draw = true, offsetLeft = 5, offsetTop = 5){
     this.robot.numberOfServos += 1;
     var id = this.robot.numberOfServos;
+    var servoCanvasId = 'sim_servo_canvas' + id;
 
+    this.robot[servoCanvasId] = {};
+    this.robot[servoCanvasId].width = 100;
+    this.robot[servoCanvasId].height = 50;
+    this.robot[servoCanvasId].x = 0;
+    this.robot[servoCanvasId].y = 0;
+    this.robot[servoCanvasId].offsetLeft = offsetLeft;
+    this.robot[servoCanvasId].offsetTop = offsetTop;
+    this.robot[servoCanvasId].angle = 0;
+    this.robot[servoCanvasId].prevAngle = 0;
+    this.robot[servoCanvasId].image = new Image();
+    this.robot[servoCanvasId].image.src = this.robot.imgServo;
+    this.robot[servoCanvasId].backgroundcolor = '#206499';
+
+    $('#sim_container').append("<div id='sim_servo"+id+"' class='sim_element sim_element_servo draggable'>"+MSG.simulator['servo']+" "+id+"</div>");
+    $('#sim_servo' + id).css('top', offsetTop + 'px');
+    $('#sim_servo' + id).css('left', offsetLeft + 'px');
+    $('#sim_servo' + id).append("<canvas id='" + servoCanvasId + "' class='sim_canvas servo_canvas'></canvas>");
+    this.initializeCanvas(servoCanvasId);
     if(draw){
-      $('#sim_container').append("<div id='sim_servo"+id+"' class='sim_element sim_element_servo draggable'>"+MSG.simulator['servo']+" "+id+"</div>");
-      $('#sim_servo' + id).append("<canvas id='sim_servo_canvas" +id+"' class='sim_canvas servo_canvas'></canvas>");
-    }
-
-    // console.log('transform in addservo');
-    // console.log(transformX);
-    // console.log(transformY);
-    this.robot['sim_servo_canvas' + id] = {};
-    this.robot['sim_servo_canvas' + id].width = 100;
-    this.robot['sim_servo_canvas' + id].height = 50;
-    this.robot['sim_servo_canvas' + id].x = 0;
-    this.robot['sim_servo_canvas' + id].y = 0;
-    this.robot['sim_servo_canvas' + id].offsetLeft = offsetLeft;
-    this.robot['sim_servo_canvas' + id].offsetTop = offsetTop;
-    // this.robot['sim_servo_canvas' + id].transformX = transformX;
-    // this.robot['sim_servo_canvas' + id].transformY = transformY;
-    this.robot['sim_servo_canvas' + id].angle = 0;
-    this.robot['sim_servo_canvas' + id].prevAngle = 0;
-    this.robot['sim_servo_canvas' + id].image = new Image();
-    this.robot['sim_servo_canvas' + id].image.src = this.robot.imgServo;
-    this.robot['sim_servo_canvas' + id].backgroundcolor = '#206499';
-
-    console.log(this.robot['sim_servo_canvas' + id]);
-    if(draw){
-      var canvas = document.getElementById('sim_servo_canvas'+id);
-      this.drawSimulation.configureCanvasDimensions(canvas);
-      this.drawSimulationDisplay();
+      $('#sim_servo' + id).css('visibility', 'visible');
+    } else {
+      $('#sim_servo' + id).css('visibility', 'hidden');
     }
  };
 
@@ -254,34 +277,33 @@ DwenguinoSimulationScenarioSocialRobot.prototype.removeServo = function(){
 /**
  * Add a new LED to the simulation container.
  */
-DwenguinoSimulationScenarioSocialRobot.prototype.addLed = function(draw = true, x = 0, y = 0){
+DwenguinoSimulationScenarioSocialRobot.prototype.addLed = function(draw = true, offsetLeft = 5, offsetTop = 5){
   this.robot.numberOfLeds += 1;
   var i = this.robot.numberOfLeds;
-  var id = 0;
-  if(i < 9){
-    id = i-1;
-  } else {
-    id = 13;
-  }
+  var id = this.getLedId(i);
+  var ledCanvasId = 'sim_led_canvas' + i;
+
+  this.robot[ledCanvasId] = {};
+  this.robot[ledCanvasId].radius = 10;
+  this.robot[ledCanvasId].x = 0;
+  this.robot[ledCanvasId].y = 0;
+  this.robot[ledCanvasId].offsetLeft = offsetLeft;
+  this.robot[ledCanvasId].offsetTop = offsetTop;
+  this.robot[ledCanvasId].oncolor = 'yellow';
+  this.robot[ledCanvasId].offcolor = 'gray';
+  this.robot[ledCanvasId].bordercolor = 'black';
+  this.robot[ledCanvasId].state = 0;
 
   $('#sim_container').append("<div id='sim_led"+i+"' class='sim_element sim_element_led draggable'>"+MSG.simulator['led']+" "+id+"</div>");
-  $('#sim_led' + i).append("<canvas id='sim_led_canvas" +i+"' class='sim_canvas led_canvas'></canvas>");
-
-  this.robot['sim_led_canvas' + i] = {};
-  this.robot['sim_led_canvas' + i].radius = 10;
-  this.robot['sim_led_canvas' + i].x = 0;
-  this.robot['sim_led_canvas' + i].y = 0;
-  this.robot['sim_led_canvas' + i].oncolor = 'yellow';
-  this.robot['sim_led_canvas' + i].offcolor = 'gray';
-  this.robot['sim_led_canvas' + i].bordercolor = 'black';
-  this.robot['sim_led_canvas' + i].state = 0;
-
-  var canvas = document.getElementById('sim_led_canvas'+i);
-  this.drawSimulation.configureCanvasDimensions(canvas);
+  $('#sim_led' + i).css('top', offsetTop + 'px');
+  $('#sim_led' + i).css('left', offsetLeft + 'px');
+  $('#sim_led' + i).append("<canvas id='" +ledCanvasId+"' class='sim_canvas led_canvas'></canvas>");
+  this.initializeCanvas(ledCanvasId);
   if(draw){
-    this.drawSimulationDisplay();
+    $('#sim_led' + id).css('visibility', 'visible');
+  } else {
+    $('#sim_led' + id).css('visibility', 'hidden');
   }
-
 };
 
 /**
@@ -298,41 +320,30 @@ DwenguinoSimulationScenarioSocialRobot.prototype.removeLed = function(){
 /**
  * Add a new PIR sensor to the simulation container.
  */
-DwenguinoSimulationScenarioSocialRobot.prototype.addPir = function(draw = true, x = 0, y = 0){
+DwenguinoSimulationScenarioSocialRobot.prototype.addPir = function(draw = true, offsetLeft = 5, offsetTop = 5){
   this.robot.numberOfPirs += 1;
   var id = this.robot.numberOfPirs;
+  var pirCanvasId = 'sim_pir_canvas' + id;
 
-  this.robot['sim_pir_canvas' + id] = {};
-  this.robot['sim_pir_canvas' + id].width = 50;
-  this.robot['sim_pir_canvas' + id].height = 50;
-  this.robot['sim_pir_canvas' + id].image = new Image();
-  this.robot['sim_pir_canvas' + id].image.src = this.robot.imgPir;
-  this.robot['sim_pir_canvas' + id].state = 0;
+  this.robot[pirCanvasId] = {};
+  this.robot[pirCanvasId].width = 50;
+  this.robot[pirCanvasId].height = 50;
+  this.robot[pirCanvasId].offsetLeft = offsetLeft;
+  this.robot[pirCanvasId].offsetTop = offsetTop;
+  this.robot[pirCanvasId].image = new Image();
+  this.robot[pirCanvasId].image.src = this.robot.imgPir;
+  this.robot[pirCanvasId].state = 0;
 
   $('#sim_container').append("<div id='sim_pir"+id+"' class='sim_element sim_element_pir draggable'>"+MSG.simulator['pir']+" "+id+"</div>");
+  $('#sim_pir' + id).css('top', offsetTop + 'px');
+  $('#sim_pir' + id).css('left', offsetLeft + 'px');
   $('#sim_pir' + id).append("<canvas id='sim_pir_canvas" +id+"' class='sim_canvas pir_canvas'></canvas>"); 
-  
-  var self = this;
-
-  // Add PIR event handler here
-  $("#rc_pir_button").on('mousedown', function() {
-    if (document.getElementById('rc_pir_button').className === "sim_button") {
-      document.getElementById('rc_pir_button').className = "sim_button sim_button_pushed";
-      self.robot['sim_pir_canvas1'].state = 1;
-    }
-  });
-
-  $("#rc_pir_button").on('mouseup', function() {
-    if (document.getElementById('rc_pir_button').className === "sim_button sim_button_pushed") {
-      document.getElementById('rc_pir_button').className = "sim_button";
-      self.robot['sim_pir_canvas1'].state = 0;
-    }
-  });
-
-  var canvas = document.getElementById('sim_pir_canvas' +id);
-  this.drawSimulation.configureCanvasDimensions(canvas);
+  this.addPirEventHandler(pirCanvasId);
+  this.initializeCanvas(pirCanvasId);
   if(draw){
-    this.drawSimulationDisplay();
+    $('#sim_pir' + id).css('visibility', 'visible');
+  } else {
+    $('#sim_pir' + id).css('visibility', 'hidden');
   }
 };
 
@@ -350,16 +361,29 @@ DwenguinoSimulationScenarioSocialRobot.prototype.removePir = function(){
 DwenguinoSimulationScenarioSocialRobot.prototype.checkLocalStorage = function(){
   if (window.localStorage) {
     var localStorage = window.localStorage;
-    var self = this;
 
     if(localStorage.getItem('socialRobotScenario')){
-      // TODO unpack robot components and then save robot components
-      console.log('need to unpack robot components');
-      var servos = localStorage.getItem('servos');
-      servos = servos.split('+').map(e => e.split(','));
-      console.log(servos);
-      for(var i = 0; i < servos.length-1; i++){
-        this.addServo(false,servos[i][2], servos[i][3]);
+      var types = ['servos','leds','pirs'];
+
+      for (const t of types) {
+        var elements = localStorage.getItem(t);
+        elements = elements.split('+').map(e => e.split(','));
+        for(var i = 0; i < elements.length-1; i++){
+          switch(t) {
+            case 'servos':
+              this.addServo(false,elements[i][2], elements[i][3]);
+              DwenguinoSimulationRobotComponentsMenu.changeValue(t,1);
+              break;
+            case 'leds':
+              this.addLed(false,elements[i][2], elements[i][3]);
+              DwenguinoSimulationRobotComponentsMenu.changeValue(t,1);
+              break;
+            case 'pirs':
+              this.addPir(false,elements[i][2], elements[i][3]);
+              DwenguinoSimulationRobotComponentsMenu.changeValue(t,1);
+              break;
+          }
+        }
       }
     }
   }
@@ -376,19 +400,15 @@ DwenguinoSimulationScenarioSocialRobot.prototype.loadRobotComponents = function(
 
     if(localStorage.getItem('socialRobotScenario')){
       for(var i = 1; i <= self.robot.numberOfServos; i++){
-        $('#sim_container').append("<div id='sim_servo"+i+"' class='sim_element sim_element_servo draggable'>"+MSG.simulator['servo']+" "+i+"</div>");
-        
-        var topOffset = self.robot['sim_servo_canvas'+i].offsetTop;
-        var leftOffset = self.robot['sim_servo_canvas'+i].offsetLeft;
+        $('#sim_servo' + i ).css('visibility', 'visible');
+      }
 
-        $('#sim_servo' + i).css('top', topOffset + 'px');
-        $('#sim_servo' + i).css('left', leftOffset + 'px');
-        
-        $('#sim_servo' + i).append("<canvas id='sim_servo_canvas" +i+"' class='sim_canvas servo_canvas'></canvas>");
-        
-        var canvas = document.getElementById('sim_servo_canvas'+i);
-        self.drawSimulation.configureCanvasDimensions(canvas);
-        self.drawSimulationDisplay();
+      for(var i = 1; i <= self.robot.numberOfLeds; i++){
+        $('#sim_led' + i ).css('visibility', 'visible');
+      }
+
+      for(var i = 1; i <= self.robot.numberOfPirs; i++){
+        $('#sim_pir' + i ).css('visibility', 'visible');
       }
 
       this.saveRobotComponents();
@@ -434,22 +454,42 @@ DwenguinoSimulationScenarioSocialRobot.prototype.saveRobotComponents = function(
           servos = servos.concat("sim_servo",i,",", "sim_servo_canvas",i,",",leftOffset,",",topOffset, "+");  
         }
 
-        var leds = "";
+        var leds = '';
         for(var i = 1; i <= self.robot.numberOfLeds; i++){
-          var element = document.getElementById('sim_led' +i);
-          if(element != undefined){
-            var rect = element.getBoundingClientRect();
-            leds = leds.concat("sim_led",i,",", "sim_led_canvas",i,",",rect.x,",",rect.y,";");
+          var leftOffset = 0;
+          if($('#sim_led' + i).attr('data-x')){
+            leftOffset = parseFloat(self.robot['sim_led_canvas' + i].offsetLeft) + parseFloat($('#sim_led' + i).attr('data-x'));
+          } else {
+            leftOffset = parseFloat(self.robot['sim_led_canvas' + i].offsetLeft);
           }
+
+          var topOffset = 0;
+          if($('#sim_led' + i).attr('data-x')){
+            topOffset = parseFloat(self.robot['sim_led_canvas' + i].offsetTop) + parseFloat($('#sim_led' + i).attr('data-y'));
+          } else {
+            topOffset = parseFloat(self.robot['sim_led_canvas' + i].offsetTop);
+          }
+
+          leds = leds.concat("sim_led",i,",", "sim_led_canvas",i,",",leftOffset,",",topOffset, "+");  
         }
 
-        var pirs = "";
+        var pirs = '';
         for(var i = 1; i <= self.robot.numberOfPirs; i++){
-          var element = document.getElementById('sim_pir' +i);
-          if(element != undefined){
-            var rect = element.getBoundingClientRect();
-            pirs = pirs.concat("sim_pir",i,",", "sim_pir_canvas",i,",",rect.x,",",rect.y,";");
+          var leftOffset = 0;
+          if($('#sim_pir' + i).attr('data-x')){
+            leftOffset = parseFloat(self.robot['sim_pir_canvas' + i].offsetLeft) + parseFloat($('#sim_pir' + i).attr('data-x'));
+          } else {
+            leftOffset = parseFloat(self.robot['sim_pir_canvas' + i].offsetLeft);
           }
+
+          var topOffset = 0;
+          if($('#sim_pir' + i).attr('data-x')){
+            topOffset = parseFloat(self.robot['sim_pir_canvas' + i].offsetTop) + parseFloat($('#sim_pir' + i).attr('data-y'));
+          } else {
+            topOffset = parseFloat(self.robot['sim_pir_canvas' + i].offsetTop);
+          }
+
+          pirs = pirs.concat("sim_pir",i,",", "sim_pir_canvas",i,",",leftOffset,",",topOffset, "+");  
         }
 
         localStorage.setItem('socialRobotScenario', 'saved');
@@ -467,9 +507,116 @@ DwenguinoSimulationScenarioSocialRobot.prototype.saveRobotComponents = function(
     }
 
   } else {
-
     console.log("No local storage");
   }
+}
+
+/**
+ * Initialized the canvas with the given id (string) to the right dimensions and subsequently updates the simulation
+ */
+DwenguinoSimulationScenarioSocialRobot.prototype.initializeCanvas = function(canvasId){
+  var canvas = document.getElementById(canvasId);
+  this.drawSimulation.configureCanvasDimensions(canvas);
+  this.drawSimulationDisplay();
+}
+
+/**
+ * Returns the led id of the Dwenguino board based on the id of the canvas.
+ */
+DwenguinoSimulationScenarioSocialRobot.prototype.getLedId = function(i){
+  var id = 0;
+  if(i < 9){
+    id = i-1;
+  } else {
+    id = 13;
+  }
+  return id;
+}
+
+DwenguinoSimulationScenarioSocialRobot.prototype.addPirEventHandler = function(pirCanvasId){
+  var self = this;
+  // Add PIR event handler here
+  $("#rc_pir_button").on('mousedown', function() {
+    if (document.getElementById('rc_pir_button').className === "sim_button") {
+      document.getElementById('rc_pir_button').className = "sim_button sim_button_pushed";
+      self.robot[pirCanvasId].state = 1;
+    }
+  });
+
+  $("#rc_pir_button").on('mouseup', function() {
+    if (document.getElementById('rc_pir_button').className === "sim_button sim_button_pushed") {
+      document.getElementById('rc_pir_button').className = "sim_button";
+      self.robot[pirCanvasId].state = 0;
+    }
+  });
+}
+
+
+DwenguinoSimulationScenarioSocialRobot.prototype.getScenarioData = function(){
+  var data = '<xml xmlns="http://www.w3.org/1999/xhtml">';
+  if (window.localStorage) {
+    var localStorage = window.localStorage;
+
+    if(localStorage.getItem('socialRobotScenario')){
+      var types = ['servos','leds','pirs'];
+
+      for (const t of types) {
+        var elements = localStorage.getItem(t);
+        elements = elements.split('+').map(e => e.split(','));
+        for(var i = 0; i < elements.length-1; i++){
+          data = data.concat("<Item ");
+          data = data.concat(" Type='", t, "'");
+          data = data.concat(" Id='",elements[i][0], "'");
+          data = data.concat(" CanvasId='",elements[i][1], "'");
+          data = data.concat(" OffsetLeft='",elements[i][2], "'");
+          data = data.concat(" OffsetTop='",elements[i][3], "'>");
+          data = data.concat('</Item>');
+        }
+      }
+    }
+  }
+  data = data.concat('</xml>');
+  return data;
+}
+
+DwenguinoSimulationScenarioSocialRobot.prototype.loadFromXml = function(){
+  this.initSocialRobot();
+  var container = document.getElementById("sim_container");
+  var elements = container.getElementsByClassName("sim_element");
+  DwenguinoSimulationRobotComponentsMenu.resetButtons();
+
+  while (elements[0]) {
+      elements[0].parentNode.removeChild(elements[0]);
+  }
+
+  var data = this.scenarioUtils.textToDom(this.xml);
+
+  var childCount = data.childNodes.length;
+
+  for (var i = 0; i < childCount; i++) {
+    var xmlChild = data.childNodes[i];
+    var type = xmlChild.getAttribute('Type');
+    var offsetLeft = parseFloat(xmlChild.getAttribute('OffsetLeft'));
+    var offsetTop = parseFloat(xmlChild.getAttribute('OffsetTop'));
+
+    switch(type) {
+      case 'servos':
+        this.addServo(true,offsetLeft, offsetTop);
+        DwenguinoSimulationRobotComponentsMenu.changeValue(type,1);
+        break;
+      case 'leds':
+        this.addLed(true,offsetLeft, offsetTop);
+        DwenguinoSimulationRobotComponentsMenu.changeValue(type,1);
+        break;
+      case 'pirs':
+        this.addPir(true,offsetLeft, offsetTop);
+        DwenguinoSimulationRobotComponentsMenu.changeValue(type,1);
+        break;
+    }
+  }
+
+
+  console.log(data);
 
 }
 
