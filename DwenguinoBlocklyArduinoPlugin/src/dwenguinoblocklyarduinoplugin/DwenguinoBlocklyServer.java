@@ -75,6 +75,40 @@ public class DwenguinoBlocklyServer {
 
     /**
      * This method is called from javascript. It lets the user select a location
+     * where to save the scenario to and saves it.
+     *
+     * @param xml The xml structure of the created scenario.
+     */
+    public void saveScenario(String xml) {
+        
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(lastOpenedLocation));
+        fileChooser.setInitialFileName("scenario");
+        fileChooser.setTitle("Save");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("XML files", "*.xml")
+        );
+        File selectedFile = fileChooser.showSaveDialog(ownerWindow);
+        if (selectedFile != null) {
+            if (selectedFile.getName().matches("^.*\\.xml$")) {
+                // filename is OK as-is
+            } else {
+                selectedFile = new File(selectedFile.toString() + ".xml");  // append .xml if "foo.jpg.xml" is OK
+            }
+            lastOpenedLocation = selectedFile.getParent();
+            try {
+                BufferedWriter bWriter = new BufferedWriter(new FileWriter(selectedFile));
+                bWriter.write(xml);
+                bWriter.flush();
+                bWriter.close();
+            } catch (IOException ex) {
+                Logger.getLogger(DwenguinoBlocklyServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    /**
+     * This method is called from javascript. It lets the user select a location
      * where to save the generated code to and saves them.
      *
      * @param code The Arduino c code generated from the blocks.
@@ -223,6 +257,41 @@ public class DwenguinoBlocklyServer {
         }
 
         return blockData;
+    }
+
+        /**
+     * Loads an xml file in which the user saved his scenario layout.
+     *
+     * @return xml data for the scenario.
+     */
+    public String loadScenario() {
+        //System.out.println("loading blocks");
+        String scenarioData = "";
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(lastOpenedLocation));
+        fileChooser.setTitle("Open");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("XML files", "*.xml")
+        );
+        File selectedFile = fileChooser.showOpenDialog(ownerWindow);
+        //System.out.println("file selected");
+        if (selectedFile != null) {
+            lastOpenedLocation = selectedFile.getParent();
+            //System.out.println("saved last opened location");
+            try {
+                BufferedReader fReader = new BufferedReader(new FileReader(selectedFile));
+                scenarioData = fReader.lines().collect(Collectors.joining());
+                fReader.close();
+            } catch (FileNotFoundException ex) {
+                //System.out.println("filenotfoundexception");
+                Logger.getLogger(DwenguinoBlocklyServer.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                //System.out.println("ioexception");
+                Logger.getLogger(DwenguinoBlocklyServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+        return scenarioData;
     }
 
     public void discard() {

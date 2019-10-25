@@ -23,6 +23,9 @@ DwenguinoScenarioUtils.prototype.loadScenario = function(scenario){
     } else{
         if (window.File && window.FileReader && window.FileList && window.Blob) {
 
+            // reset form
+            $('div').remove('#dropzoneModal');
+
             $('#blocklyDiv').append('<div id="dropzoneModal" class="modal fade" role="dialog"></div>');
             $('#dropzoneModal').append('<div id="modalDialog" class="modal-dialog"></div>');
             $('#modalDialog').append('<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Upload</h4></div>');

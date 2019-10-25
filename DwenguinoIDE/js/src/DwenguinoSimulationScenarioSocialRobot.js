@@ -149,23 +149,19 @@ function DwenguinoSimulationScenarioSocialRobot(){
   DwenguinoSimulationScenarioSocialRobot.prototype.updateScenarioState = function(dwenguinoState){
     DwenguinoSimulationScenario.prototype.updateScenarioState.call(this, dwenguinoState);
 
-    // TODO rewrite this to a dynamic solution which can handle more leds and servos
-    if(this.robot['sim_led_canvas1'] !== undefined){
-      this.robot['sim_led_canvas1'].state = dwenguinoState.leds[0];
+    for(var i = 0; i < dwenguinoState.leds.length; i++){
+      var ledCanvasId = 'sim_led_canvas' + (i+1);
+      if(this.robot[ledCanvasId] !== undefined){
+        this.robot[ledCanvasId].state = dwenguinoState.leds[i];
+      }
     }
 
-    if(this.robot['sim_led_canvas2'] !== undefined){
-      this.robot['sim_led_canvas2'].state = dwenguinoState.leds[1];
-    }
-
-    if(this.robot['sim_servo_canvas1'] !== undefined){
-      this.robot['sim_servo_canvas1'].prevAngle = this.robot['sim_servo_canvas1'].angle;
-      this.robot['sim_servo_canvas1'].angle = dwenguinoState.servoAngles[0];
-    }
-
-    if(this.robot['sim_servo_canvas2'] !== undefined){
-      this.robot['sim_servo_canvas2'].prevAngle = this.robot['sim_servo_canvas2'].angle;
-      this.robot['sim_servo_canvas2'].angle = dwenguinoState.servoAngles[1];
+    for(var i = 0; i < dwenguinoState.servoAngles.length; i++){
+      var servoCanvasId = 'sim_servo_canvas' + (i+1);
+      if(this.robot[servoCanvasId] !== undefined){
+        this.robot[servoCanvasId].prevAngle = this.robot[servoCanvasId].angle;
+        this.robot[servoCanvasId].angle = dwenguinoState.servoAngles[i];
+      }
     }
 
     return dwenguinoState;
@@ -434,21 +430,22 @@ DwenguinoSimulationScenarioSocialRobot.prototype.saveRobotComponents = function(
 
       // Set the interval and autosave every second
       setInterval(function() {
-        
         var servos = '';
         for(var i = 1; i <= self.robot.numberOfServos; i++){
+          var servoId = '#sim_servo' + i;
+          var servoCanvasId = 'sim_servo_canvas' + i;
           var leftOffset = 0;
-          if($('#sim_servo' + i).attr('data-x')){
-            leftOffset = parseFloat(self.robot['sim_servo_canvas' + i].offsetLeft) + parseFloat($('#sim_servo' + i).attr('data-x'));
+          if($(servoId).attr('data-x')){
+            leftOffset = parseFloat(self.robot[servoCanvasId].offsetLeft) + parseFloat($(servoId).attr('data-x'));
           } else {
-            leftOffset = parseFloat(self.robot['sim_servo_canvas' + i].offsetLeft);
+            leftOffset = parseFloat(self.robot[servoCanvasId].offsetLeft);
           }
 
           var topOffset = 0;
-          if($('#sim_servo' + i).attr('data-x')){
-            topOffset = parseFloat(self.robot['sim_servo_canvas' + i].offsetTop) + parseFloat($('#sim_servo' + i).attr('data-y'));
+          if($(servoId).attr('data-y')){
+            topOffset = parseFloat(self.robot[servoCanvasId].offsetTop) + parseFloat($(servoId).attr('data-y'));
           } else {
-            topOffset = parseFloat(self.robot['sim_servo_canvas' + i].offsetTop);
+            topOffset = parseFloat(self.robot[servoCanvasId].offsetTop);
           }
 
           servos = servos.concat("sim_servo",i,",", "sim_servo_canvas",i,",",leftOffset,",",topOffset, "+");  
@@ -456,18 +453,20 @@ DwenguinoSimulationScenarioSocialRobot.prototype.saveRobotComponents = function(
 
         var leds = '';
         for(var i = 1; i <= self.robot.numberOfLeds; i++){
+          var ledId = '#sim_led' + i;
+          var ledCanvasId = 'sim_led_canvas' + i;
           var leftOffset = 0;
-          if($('#sim_led' + i).attr('data-x')){
-            leftOffset = parseFloat(self.robot['sim_led_canvas' + i].offsetLeft) + parseFloat($('#sim_led' + i).attr('data-x'));
+          if($(ledId).attr('data-x')){
+            leftOffset = parseFloat(self.robot[ledCanvasId].offsetLeft) + parseFloat($(ledId).attr('data-x'));
           } else {
-            leftOffset = parseFloat(self.robot['sim_led_canvas' + i].offsetLeft);
+            leftOffset = parseFloat(self.robot[ledCanvasId].offsetLeft);
           }
 
           var topOffset = 0;
-          if($('#sim_led' + i).attr('data-x')){
-            topOffset = parseFloat(self.robot['sim_led_canvas' + i].offsetTop) + parseFloat($('#sim_led' + i).attr('data-y'));
+          if($(ledId).attr('data-y')){
+            topOffset = parseFloat(self.robot[ledCanvasId].offsetTop) + parseFloat($(ledId).attr('data-y'));
           } else {
-            topOffset = parseFloat(self.robot['sim_led_canvas' + i].offsetTop);
+            topOffset = parseFloat(self.robot[ledCanvasId].offsetTop);
           }
 
           leds = leds.concat("sim_led",i,",", "sim_led_canvas",i,",",leftOffset,",",topOffset, "+");  
@@ -483,7 +482,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.saveRobotComponents = function(
           }
 
           var topOffset = 0;
-          if($('#sim_pir' + i).attr('data-x')){
+          if($('#sim_pir' + i).attr('data-y')){
             topOffset = parseFloat(self.robot['sim_pir_canvas' + i].offsetTop) + parseFloat($('#sim_pir' + i).attr('data-y'));
           } else {
             topOffset = parseFloat(self.robot['sim_pir_canvas' + i].offsetTop);
