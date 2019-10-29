@@ -58,22 +58,27 @@ function DwenguinoSimulationScenarioSocialRobot(){
       }, 500);
     });
 
+    this.initScenarioOptions();
+  }
+
+  DwenguinoSimulationScenarioSocialRobot.prototype.initScenarioOptions = function(){
+    var self = this;
+
     var scenarioOptions = $("<div>").attr("id", "scenario_options");
     $('#sim_container').append(scenarioOptions);
-    scenarioOptions.append("<div id='save_scenario'>Save</div>");
-    scenarioOptions.append("<div id='load_scenario'>Load</div>");
-
-    $("#save_scenario").click(function(){
-      var data = self.getScenarioData();
-      self.scenarioUtils.saveScenario(data);
-    });
+    scenarioOptions.append("<div id='load_scenario' class='glyphicon glyphicon-cloud-upload' alt='Load'></div>");
+    scenarioOptions.append("<div id='save_scenario' class='glyphicon glyphicon-cloud-download' alt='Save'></div>");
 
     $("#load_scenario").click(function(){
       self.scenarioUtils.loadScenario();
     });
 
+    $("#save_scenario").click(function(){
+      console.log("save");
+      var data = self.loadToXml();
+      self.scenarioUtils.saveScenario(data);
+    });
   }
-
 
   DwenguinoSimulationScenarioSocialRobot.prototype.initSimulation = function(containerIdSelector) {
     
@@ -193,9 +198,11 @@ function DwenguinoSimulationScenarioSocialRobot(){
       numberOfServos: 0,
       numberOfLeds: 0,
       numberOfPirs: 0,
+      numberOfDecorations: 0,
       imgServo: './img/board/servo_movement.png',
       imgPir: './img/board/pir.png',
       imgRobot: 'url("./img/socialrobot/robot1.svg")',
+      imgEye: './img/socialrobot/eye.svg',
     };
  };
 
@@ -228,7 +235,7 @@ function DwenguinoSimulationScenarioSocialRobot(){
  /**
   * Add a new servo to the simulation container.
   */
- DwenguinoSimulationScenarioSocialRobot.prototype.addServo = function(draw = true, offsetLeft = 5, offsetTop = 5){
+ DwenguinoSimulationScenarioSocialRobot.prototype.addServo = function(draw = true, offsetLeft = 5, offsetTop = 5, state = StatesEnum.plain){
     this.robot.numberOfServos += 1;
     var id = this.robot.numberOfServos;
     var servoCanvasId = 'sim_servo_canvas' + id;
@@ -244,9 +251,10 @@ function DwenguinoSimulationScenarioSocialRobot(){
     this.robot[servoCanvasId].prevAngle = 0;
     this.robot[servoCanvasId].image = new Image();
     this.robot[servoCanvasId].image.src = this.robot.imgServo;
-    this.robot[servoCanvasId].backgroundcolor = '#206499';
+    this.robot[servoCanvasId].state = state;
+    this.robot[servoCanvasId].backgroundColor = '#206499';
 
-    $('#sim_container').append("<div id='sim_servo"+id+"' class='sim_element sim_element_servo draggable'>"+MSG.simulator['servo']+" "+id+"</div>");
+    $('#sim_container').append("<div id='sim_servo"+id+"' class='sim_element sim_element_servo draggable'><div>"+MSG.simulator['servo']+" "+id+"</div></div>");
     $('#sim_servo' + id).css('top', offsetTop + 'px');
     $('#sim_servo' + id).css('left', offsetLeft + 'px');
     $('#sim_servo' + id).append("<canvas id='" + servoCanvasId + "' class='sim_canvas servo_canvas'></canvas>");
@@ -256,6 +264,8 @@ function DwenguinoSimulationScenarioSocialRobot(){
     } else {
       $('#sim_servo' + id).css('visibility', 'hidden');
     }
+
+    this.scenarioUtils.contextMenuServo();
  };
 
  /**
@@ -273,7 +283,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.removeServo = function(){
 /**
  * Add a new LED to the simulation container.
  */
-DwenguinoSimulationScenarioSocialRobot.prototype.addLed = function(draw = true, offsetLeft = 5, offsetTop = 5){
+DwenguinoSimulationScenarioSocialRobot.prototype.addLed = function(draw = true, offsetLeft = 5, offsetTop = 5, onColor = 'yellow'){
   this.robot.numberOfLeds += 1;
   var i = this.robot.numberOfLeds;
   var id = this.getLedId(i);
@@ -285,9 +295,9 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addLed = function(draw = true, 
   this.robot[ledCanvasId].y = 0;
   this.robot[ledCanvasId].offsetLeft = offsetLeft;
   this.robot[ledCanvasId].offsetTop = offsetTop;
-  this.robot[ledCanvasId].oncolor = 'yellow';
-  this.robot[ledCanvasId].offcolor = 'gray';
-  this.robot[ledCanvasId].bordercolor = 'black';
+  this.robot[ledCanvasId].onColor = onColor;
+  this.robot[ledCanvasId].offColor = 'gray';
+  this.robot[ledCanvasId].borderColor = 'black';
   this.robot[ledCanvasId].state = 0;
 
   $('#sim_container').append("<div id='sim_led"+i+"' class='sim_element sim_element_led draggable'>"+MSG.simulator['led']+" "+id+"</div>");
@@ -300,6 +310,8 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addLed = function(draw = true, 
   } else {
     $('#sim_led' + id).css('visibility', 'hidden');
   }
+
+  this.scenarioUtils.contextMenuLed();
 };
 
 /**
@@ -333,8 +345,10 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addPir = function(draw = true, 
   $('#sim_container').append("<div id='sim_pir"+id+"' class='sim_element sim_element_pir draggable'>"+MSG.simulator['pir']+" "+id+"</div>");
   $('#sim_pir' + id).css('top', offsetTop + 'px');
   $('#sim_pir' + id).css('left', offsetLeft + 'px');
+  var pirButtonId = 'sim_pir_button' + id;
   $('#sim_pir' + id).append("<canvas id='sim_pir_canvas" +id+"' class='sim_canvas pir_canvas'></canvas>"); 
-  this.addPirEventHandler(pirCanvasId);
+  $('#sim_pir' + id).append('<div id="' + pirButtonId + '" class="pir_button"></div>');
+  this.addPirEventHandler(pirButtonId, pirCanvasId);
   this.initializeCanvas(pirCanvasId);
   if(draw){
     $('#sim_pir' + id).css('visibility', 'visible');
@@ -354,6 +368,52 @@ DwenguinoSimulationScenarioSocialRobot.prototype.removePir = function(){
   this.robot.numberOfPirs -= 1;
 };
 
+ /**
+  * Add a new decoration component to the simulation container.
+  */
+ DwenguinoSimulationScenarioSocialRobot.prototype.addDecoration = function(draw = true, offsetLeft = 5, offsetTop = 5, state = 'hair'){
+  this.robot.numberOfDecorations += 1;
+  var id = this.robot.numberOfDecorations;
+  var decorationCanvasId = 'sim_decoration_canvas' + id;
+
+  this.robot[decorationCanvasId] = {};
+  this.robot[decorationCanvasId].width = 100;
+  this.robot[decorationCanvasId].height = 50;
+  this.robot[decorationCanvasId].x = 0;
+  this.robot[decorationCanvasId].y = 0;
+  this.robot[decorationCanvasId].offsetLeft = offsetLeft;
+  this.robot[decorationCanvasId].offsetTop = offsetTop;
+  this.robot[decorationCanvasId].state = state;
+
+  $('#sim_container').append("<div id='sim_decoration"+id+"' class='sim_element sim_element_decoration draggable'>Decoration</div>");
+  $('#sim_decoration' + id).css('top', offsetTop + 'px');
+  $('#sim_decoration' + id).css('left', offsetLeft + 'px');
+  $('#sim_decoration' + id).append("<canvas id='" + decorationCanvasId + "' class='sim_canvas decoration_canvas'></canvas>");
+  this.initializeCanvas(decorationCanvasId);
+  if(draw){
+    $('#sim_decoration' + id).css('visibility', 'visible');
+  } else {
+    $('#sim_decoration' + id).css('visibility', 'hidden');
+  }
+};
+
+/**
+* Remove the most recent created decoration element from the simulation container.
+*/
+DwenguinoSimulationScenarioSocialRobot.prototype.removeDecoration = function(){
+var id = this.robot.numberOfDecorations;
+$("#sim_decoration"+ id + "").remove();
+
+delete this.robot['sim_decoration_canvas' + id];
+this.robot.numberOfDecorations -= 1;
+this.drawSimulationDisplay();
+};
+
+/**
+ * Checks if the scenario was saved in the local storage. If this is the 
+ * case, the saved components are loaded into the simulation container.
+ * This function will be called when the social robot scenario is added to the list of scenarios.
+ */
 DwenguinoSimulationScenarioSocialRobot.prototype.checkLocalStorage = function(){
   if (window.localStorage) {
     var localStorage = window.localStorage;
@@ -371,7 +431,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.checkLocalStorage = function(){
               DwenguinoSimulationRobotComponentsMenu.changeValue(t,1);
               break;
             case 'leds':
-              this.addLed(false,elements[i][2], elements[i][3]);
+              this.addLed(false,elements[i][2], elements[i][3], elements[i][4]);
               DwenguinoSimulationRobotComponentsMenu.changeValue(t,1);
               break;
             case 'pirs':
@@ -387,7 +447,9 @@ DwenguinoSimulationScenarioSocialRobot.prototype.checkLocalStorage = function(){
 
 
 /**
- * Loads the robot components from the local storage
+ * Displays the robot components that were instantiated from the local storage. 
+ * Additionally it triggers saveRobotComponents to periodically save the current scenario
+ * state in the local storage.
  */
 DwenguinoSimulationScenarioSocialRobot.prototype.loadRobotComponents = function(){
   if (window.localStorage) {
@@ -425,7 +487,6 @@ DwenguinoSimulationScenarioSocialRobot.prototype.saveRobotComponents = function(
     var localStorage = window.localStorage;
     var self = this;
 
-    // Try this
     try {
 
       // Set the interval and autosave every second
@@ -469,7 +530,9 @@ DwenguinoSimulationScenarioSocialRobot.prototype.saveRobotComponents = function(
             topOffset = parseFloat(self.robot[ledCanvasId].offsetTop);
           }
 
-          leds = leds.concat("sim_led",i,",", "sim_led_canvas",i,",",leftOffset,",",topOffset, "+");  
+          var onColor = self.robot[ledCanvasId].onColor;
+
+          leds = leds.concat("sim_led",i,",", "sim_led_canvas",i,",",leftOffset,",",topOffset,",",onColor, "+");  
         }
 
         var pirs = '';
@@ -499,7 +562,6 @@ DwenguinoSimulationScenarioSocialRobot.prototype.saveRobotComponents = function(
 
     } catch (e) {
 
-      // If any errors, catch and alert the user
       if (e == QUOTA_EXCEEDED_ERR) {
         alert('Quota exceeded!');
       }
@@ -532,26 +594,52 @@ DwenguinoSimulationScenarioSocialRobot.prototype.getLedId = function(i){
   return id;
 }
 
-DwenguinoSimulationScenarioSocialRobot.prototype.addPirEventHandler = function(pirCanvasId){
+/**
+ * Changes the color of led canvas i to the given color.
+ */
+DwenguinoSimulationScenarioSocialRobot.prototype.setLedColor = function(i, color){
+  var ledCanvasId = 'sim_led_canvas' + i;
+  this.robot[ledCanvasId].onColor = color;
+}
+
+DwenguinoSimulationScenarioSocialRobot.prototype.setServoState = function(i, state){
+  var servoCanvasId = 'sim_servo_canvas' + i;
+  this.robot[servoCanvasId].state = state;
+  switch(state){
+    case StatesEnum.plain:
+        this.robot[servoCanvasId].image.src = this.robot.imgServo;
+        break;
+    case StatesEnum.eye:
+        this.robot[servoCanvasId].image.src = this.robot.imgEye;
+        break;
+  }
+  
+}
+
+
+DwenguinoSimulationScenarioSocialRobot.prototype.addPirEventHandler = function(pirButtonId, pirCanvasId){
   var self = this;
-  // Add PIR event handler here
-  $("#rc_pir_button").on('mousedown', function() {
-    if (document.getElementById('rc_pir_button').className === "sim_button") {
-      document.getElementById('rc_pir_button').className = "sim_button sim_button_pushed";
+
+  $("#" + pirButtonId).on('mousedown', function() {
+    if (document.getElementById(pirButtonId).className === "pir_button") {
+      document.getElementById(pirButtonId).className = "pir_button pir_button_pushed";
       self.robot[pirCanvasId].state = 1;
     }
   });
 
-  $("#rc_pir_button").on('mouseup', function() {
-    if (document.getElementById('rc_pir_button').className === "sim_button sim_button_pushed") {
-      document.getElementById('rc_pir_button').className = "sim_button";
+  $("#"+ pirButtonId).on('mouseup', function() {
+    if (document.getElementById(pirButtonId).className === "pir_button pir_button_pushed") {
+      document.getElementById(pirButtonId).className = "pir_button";
       self.robot[pirCanvasId].state = 0;
     }
   });
 }
 
 
-DwenguinoSimulationScenarioSocialRobot.prototype.getScenarioData = function(){
+/**
+ * Writes the current scenario state to an Xml document and return it.
+ */
+DwenguinoSimulationScenarioSocialRobot.prototype.loadToXml = function(){
   var data = '<xml xmlns="http://www.w3.org/1999/xhtml">';
   if (window.localStorage) {
     var localStorage = window.localStorage;
@@ -568,8 +656,11 @@ DwenguinoSimulationScenarioSocialRobot.prototype.getScenarioData = function(){
           data = data.concat(" Id='",elements[i][0], "'");
           data = data.concat(" CanvasId='",elements[i][1], "'");
           data = data.concat(" OffsetLeft='",elements[i][2], "'");
-          data = data.concat(" OffsetTop='",elements[i][3], "'>");
-          data = data.concat('</Item>');
+          data = data.concat(" OffsetTop='",elements[i][3], "'");
+          if(t === 'leds'){
+            data = data.concat(" OnColor='",elements[i][4], "'");
+          }
+          data = data.concat('></Item>');
         }
       }
     }
@@ -578,6 +669,10 @@ DwenguinoSimulationScenarioSocialRobot.prototype.getScenarioData = function(){
   return data;
 }
 
+/**
+ * Loads the current xml document and adds the specified robot components
+ * to the simulation container. It immediately displays the components on the screen.
+ */
 DwenguinoSimulationScenarioSocialRobot.prototype.loadFromXml = function(){
   this.initSocialRobot();
   var container = document.getElementById("sim_container");
@@ -591,7 +686,6 @@ DwenguinoSimulationScenarioSocialRobot.prototype.loadFromXml = function(){
   var data = this.scenarioUtils.textToDom(this.xml);
 
   var childCount = data.childNodes.length;
-
   for (var i = 0; i < childCount; i++) {
     var xmlChild = data.childNodes[i];
     var type = xmlChild.getAttribute('Type');
@@ -604,7 +698,8 @@ DwenguinoSimulationScenarioSocialRobot.prototype.loadFromXml = function(){
         DwenguinoSimulationRobotComponentsMenu.changeValue(type,1);
         break;
       case 'leds':
-        this.addLed(true,offsetLeft, offsetTop);
+        var onColor = xmlChild.getAttribute('OnColor');
+        this.addLed(true,offsetLeft, offsetTop, onColor);
         DwenguinoSimulationRobotComponentsMenu.changeValue(type,1);
         break;
       case 'pirs':
@@ -613,9 +708,5 @@ DwenguinoSimulationScenarioSocialRobot.prototype.loadFromXml = function(){
         break;
     }
   }
-
-
-  console.log(data);
-
 }
 

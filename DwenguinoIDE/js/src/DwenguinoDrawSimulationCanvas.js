@@ -38,12 +38,12 @@ DwenguinoDrawSimulationCanvas.prototype.drawLed = function(robot, canvas){
         ctx.beginPath();
         ctx.arc(canvas.width/2, canvas.height/2, robot[id].radius, 0, 2 * Math.PI);
         if (robot[id].state === 1) {
-            ctx.fillStyle = robot[id].oncolor;
+            ctx.fillStyle = robot[id].onColor;
         } else {
-            ctx.fillStyle = robot[id].offcolor;
+            ctx.fillStyle = robot[id].offColor;
         }
         ctx.fill();
-        ctx.fillStyle = robot[id].bordercolor;
+        ctx.fillStyle = robot[id].borderColor;
         ctx.stroke();
     } else {
         console.log(canvas, "This canvas has no context");
@@ -72,15 +72,23 @@ DwenguinoDrawSimulationCanvas.prototype.drawServo = function(robot, canvas){
         var self = this;
         robot[id].image.onload = function() {
             var ctx = canvas.getContext('2d');
-            ctx.fillStyle = robot[id].backgroundcolor;
+            ctx.fillStyle = robot[id].backgroundColor;
             ctx.fillRect(robot[id].x, robot[id].y, robot[id].width, robot[id].height);
             self.drawRotatedServohead(ctx, robot[id]);
         }
 
         var ctx = canvas.getContext('2d');
-        ctx.fillStyle = robot[id].backgroundcolor;
+        ctx.fillStyle = robot[id].backgroundColor;
         ctx.fillRect(robot[id].x, robot[id].y, robot[id].width, robot[id].height);
-        self.drawRotatedServohead(ctx, robot[id]);
+        switch(robot[id].state){
+            case StatesEnum.plain:
+                self.drawRotatedServohead(ctx, robot[id]);
+                break;
+            case StatesEnum.eye:
+                self.drawEye(ctx,robot[id]);
+                break;
+        }
+
     } else {
         console.log(canvas, "This canvas has no context");
     }    
@@ -146,6 +154,37 @@ DwenguinoDrawSimulationCanvas.prototype.drawRotatedServohead = function(ctx, ser
         ctx.rotate(-servo.angle * Math.PI / 180);
         ctx.translate(-servo.x-servo.width/2, -servo.y-servo.height/2); 
     }
+}
+
+DwenguinoDrawSimulationCanvas.prototype.drawEye = function(ctx, servo){
+    // TODO
+    // make the servo rotate stepwise
+    // var angle = 0;
+    // if((servo.angle-servo.prevAngle) != 0){
+    //     if ((servo.angle-servo.prevAngle) > 5) {
+    //         servo.prevAngle = servo.prevAngle + 5;
+    //     } else {
+    //         servo.prevAngle = servo.prevAngle + (servo.angle-servo.prevAngle);
+    //     }
+    //     angle = servo.prevAngle;
+    // } else {
+    //     angle = servo.angle
+    // }
+
+    // var verScale = 0;
+    // var horTranslation = 0;
+    // if(angle <= 90){
+    //     verScale = (0.01*angle)+0.1;
+    //     horTranslation = (servo.width/4)/90*angle;
+    // } else {
+    //     verScale = (-0.01*angle)-0.1;
+    //     horTranslation = (((servo.width/4) - (servo.width/2))/(90-180) * angle) + (((servo.width/4) - (servo.width/2))/(90-180) *(-180)) + (servo.width/2);
+    // }
+    
+    // console.log(verScale);
+    // ctx.transform(verScale, 0, 0, 1, horTranslation, 0);
+    // ctx.drawImage(servo.image,0,0,servo.width,servo.height);
+    // ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 /**

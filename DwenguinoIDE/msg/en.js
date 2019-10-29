@@ -129,6 +129,12 @@ MSG.simulator = {
   code: "Code",
   pir: "PIR sensor",
   led: "LED",
+  decoration: "Decoration",
+};
+
+MSG.socialrobot = {
+  eye: "Eye",
+  mouth: "Mouth",
 };
 
 

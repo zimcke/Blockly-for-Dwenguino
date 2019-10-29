@@ -1,3 +1,6 @@
+const StatesEnum = {"plain":0, "eye":1, "mouth":2};
+Object.freeze(StatesEnum);
+
 function DwenguinoScenarioUtils(scenario){
     this.scenario = scenario;
 }
@@ -104,3 +107,85 @@ DwenguinoScenarioUtils.prototype.textToDom = function(text){
     }
     return dom.firstChild;
 }
+
+DwenguinoScenarioUtils.prototype.contextMenuServo = function(){
+    var self = this;
+    $(function(){
+        $.contextMenu({
+            selector: '.sim_element_servo',
+            trigger: 'right', 
+            callback: function(itemKey, opt, e) {
+                var m = "global: " + itemKey;
+                window.console && console.log(m) || alert(m); 
+            },
+            items: {
+                "eye": {
+                    name: "Eye", 
+                    // superseeds "global" callback
+                    callback: function(itemKey, opt, e) {
+                        var simServoId = this.attr('id');
+                        var i = simServoId.replace(/\D/g,'');
+                        self.scenario.setServoState(i, StatesEnum.eye);
+                    }
+                },
+                "mouth": {name: "Mouth"},
+                "sep1": "---------",
+                "quit": {name: "Quit"}
+            }
+        });
+    });  
+
+}
+
+DwenguinoScenarioUtils.prototype.contextMenuLed = function(){
+    var self = this;
+    $(function(){
+        $.contextMenu.types.label = function(item, opt, root) {
+            // this === item.$node
+            $('<span>Color<ul>'
+                + '<li class="label1" title="yellow">yellow'
+                + '<li class="label2" title="red">red'
+                + '<li class="label3" title="blue">blue'
+                + '<li class="label4" title="green">green')
+                .appendTo(this)
+                .on('click', 'li', function() {
+                    // do some funky stuff
+                    //console.log('Clicked on ' + $(this).text());
+                    // hide the menu
+                    root.$menu.trigger('contextmenu:hide');
+                });
+    
+            this.addClass('labels').on('contextmenu:focus', function(e) {
+                // setup some awesome stuff
+            }).on('contextmenu:blur', function(e) {
+                // tear down whatever you did
+            }).on('keydown', function(e) {
+                // some funky key handling, maybe?
+            });
+        };
+    
+        /**************************************************
+         * Context-Menu with custom command "label"
+         **************************************************/
+        $.contextMenu({
+            selector: '.sim_element_led', 
+            callback: function(itemKey, opt, rootMenu, originalEvent) {
+            },
+            items: {
+                label: {
+                    type: "label", 
+                    customName: "Color",
+                    
+                    callback: function(itemKey, opt, e) {
+                        var simLedId = this.attr('id');
+                        var i = simLedId.replace(/\D/g,'');
+                        var color = $(e.target).text(); 
+                        self.scenario.setLedColor(i, color);
+                    }
+                }
+            }
+        });
+    });
+
+}
+
