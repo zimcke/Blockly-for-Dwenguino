@@ -30,6 +30,8 @@ interact('.draggable')
         (Math.sqrt(Math.pow(event.pageX - event.x0, 2) +
                    Math.pow(event.pageY - event.y0, 2) | 0))
           .toFixed(2) + 'px')
+
+      DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("moveRobotComponent", event.target.id));
     }
   })
 

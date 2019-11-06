@@ -145,6 +145,12 @@ body{
     height: 50%;
     width: 100%;
     position: relative;
+    display: flex;
+    flex-direction: row;
+}
+
+#db_simulator_menu{
+    flex: 0 0 100px;
 }
 
 /*#db_simulator_pane{
@@ -236,8 +242,10 @@ body{
 
 #sim_menu {
     width: 25%;
-    height: 15%;
+    height: 60px;
     float: left;
+    display: flex;
+    flex-direction: row;
 }
 
 #sim_menu * {
@@ -267,6 +275,7 @@ body{
 #sim_stop,
 #sim_step {
     font-size: 20px;
+    flex: 0 0 auto;
 }
 
 #sim_board {
@@ -294,7 +303,7 @@ body{
 }
 
 #sim_lcds.on{
-  background-color: rgb(83, 170, 31);
+  background-color: #53aa1f;
 }
 
 .sim_lcd {
@@ -397,7 +406,7 @@ body{
 }
 
 #sim_components_menu {
-    float:left;
+    /* float:left; */
     position:relative;
     padding: 5px;
     max-width: 100px;
@@ -409,6 +418,10 @@ body{
     left: 20%;
     height: 100px;
     width: 120px;
+}
+
+.input-group {
+    max-width: 150px;
 }
 
 #sim_scope_name {
@@ -475,9 +488,10 @@ body{
 
 .sim_menu_next_line {
     clear: left;
-    margin-top: -5px;
+    /* margin-top: -5px; */
     margin-left: 7px;
     width: 100px;
+    padding-left: 5px;
 }
 
 .sim_scenarioTag {
@@ -485,13 +499,14 @@ body{
   clear: left;
 }
 
-.scenario_radio_container > img {
+/* .scenario_radio_container > img {
   margin-top: -15px !important;
-}
+} */
 
 .sim_scenario {
   box-sizing: border-box;
   width: 100px;
+  height: 100%;
   float: left;
   clear: left;
 }
@@ -531,56 +546,92 @@ body{
 }
 
 #robot_components_menu {
-    width: 75%;
-    height: 50%;
-    float: right;
-    padding: 10px;
+    /* width: 75%;
+    height: 50%; */
+    /*float: right;*/
+    height: 90%;
+    margin-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 30px;
+    flex: 0 0 auto;
+}
+
+.scrolling-wrapper-flexbox {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.scrolling-wrapper-flexbox > .card {
+    flex: 0 0 auto;
+    padding: 5px;
 }
 
 .robot_components_item { 
     margin: 5px;
-    width: 20%;
-    height: 100%;
-    float: left;
     border-style: solid;
     border-color: #B5C986;
     background:#B5C986;
+    display: flex;
+    flex-direction: column;
 }
 
 #rc_servo_img {
-    width: 75px;
+    /* width: 75px;
     height: 102px;
     margin-right: 10px;
-    float: left;
-    background-image: url("../img/board/servo.png");
-    background-size: 100% 100%;
+    float: left; */
+    width: 100%;
+    height: 100%;
+    background-image: url("../img/socialrobot/servo.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    /* background-size: 100% 100%;
     margin-bottom: 15px;
     margin-top: 5px;
-    margin-left: 5px;
+    margin-left: 5px; */
 }
 
 #rc_led_img {
-    width: 52px;
+    /* width: 52px;
     height: 102px;
     margin-right: 10px;
-    float: left;
-    background-image: url("../img/board/led.png");
-    background-size: 100% 100%;
+    float: left; */
+    width: 100%;
+    height: 100%;
+    background-image: url("../img/socialrobot/led.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    /* background-size: 100% 100%;
     margin-bottom: 15px;
     margin-top: 5px;
-    margin-left: 5px;
+    margin-left: 5px; */
 }
 
 #rc_pir_img {
-    width: 100px;
+    /* width: 100px;
     height: 97px;
     margin-right: 10px;
-    float: left;
-    background-image: url("../img/board/pir.png");
-    background-size: 100% 100%;
+    float: left; */
+    width: 100%;
+    height: 100%;
+    background-image: url("../img/socialrobot/pir.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    /* background-size: 100% 100%;
     margin-bottom: 15px;
     margin-top: 5px;
-    margin-left: 5px;
+    margin-left: 5px; */
+}
+
+#rc_lcd_img {
+    width: 100%;
+    height: 100%;
+    background-image: url("../img/socialrobot/lcd.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 #rc_decoration_img {
@@ -647,6 +698,30 @@ body{
     left: 5px;
 }
 
+.sim_element_lcd{
+    width:150px;
+    height: 80px;
+}
+
+#sim_element_lcd_img{
+    width: 100%;
+    height: 100%;
+    background-image: url("../img/socialrobot/lcd.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.lcd{
+    height: 46%;
+    width: 100%;
+    padding: 8%;
+    font-size: 1.2vh;
+    font-family: lcd-matrix-font;
+    letter-spacing: 2px;
+    word-spacing: 4px;
+    position: absolute;
+    color: #FFFFFF;
+}
 .servo_canvas{
     margin-top: 20px
 }

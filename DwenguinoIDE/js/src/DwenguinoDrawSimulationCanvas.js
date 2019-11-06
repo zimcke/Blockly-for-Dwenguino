@@ -17,6 +17,14 @@ DwenguinoDrawSimulationCanvas.prototype.clearCanvases = function(){
     }
 }
 
+DwenguinoDrawSimulationCanvas.prototype.clearCanvas = function(canvasId){
+    var canvas = document.getElementById(canvasId);
+    if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+}
+
 /***
  * Draw all leds on led canvases with the states specified in robot.
  */
@@ -79,12 +87,14 @@ DwenguinoDrawSimulationCanvas.prototype.drawServo = function(robot, canvas){
 
         var ctx = canvas.getContext('2d');
         ctx.fillStyle = robot[id].backgroundColor;
-        ctx.fillRect(robot[id].x, robot[id].y, robot[id].width, robot[id].height);
+        
         switch(robot[id].state){
             case StatesEnum.plain:
+                ctx.fillRect(robot[id].x, robot[id].y, robot[id].width, robot[id].height);
                 self.drawRotatedServohead(ctx, robot[id]);
                 break;
             case StatesEnum.eye:
+                ctx.fillRect(robot[id].x+2, robot[id].y+10, robot[id].width, robot[id].height-20);
                 self.drawEye(ctx,robot[id]);
                 break;
         }
@@ -159,32 +169,42 @@ DwenguinoDrawSimulationCanvas.prototype.drawRotatedServohead = function(ctx, ser
 DwenguinoDrawSimulationCanvas.prototype.drawEye = function(ctx, servo){
     // TODO
     // make the servo rotate stepwise
-    // var angle = 0;
-    // if((servo.angle-servo.prevAngle) != 0){
-    //     if ((servo.angle-servo.prevAngle) > 5) {
-    //         servo.prevAngle = servo.prevAngle + 5;
-    //     } else {
-    //         servo.prevAngle = servo.prevAngle + (servo.angle-servo.prevAngle);
-    //     }
-    //     angle = servo.prevAngle;
-    // } else {
-    //     angle = servo.angle
-    // }
+    var angle = 0;
+    if((servo.angle-servo.prevAngle) != 0){
+        if ((servo.angle-servo.prevAngle) > 5) {
+            servo.prevAngle = servo.prevAngle + 5;
+        } else {
+            servo.prevAngle = servo.prevAngle + (servo.angle-servo.prevAngle);
+        }
+        angle = servo.prevAngle;
+    } else {
+        angle = servo.angle
+    }
 
-    // var verScale = 0;
-    // var horTranslation = 0;
-    // if(angle <= 90){
-    //     verScale = (0.01*angle)+0.1;
-    //     horTranslation = (servo.width/4)/90*angle;
-    // } else {
-    //     verScale = (-0.01*angle)-0.1;
-    //     horTranslation = (((servo.width/4) - (servo.width/2))/(90-180) * angle) + (((servo.width/4) - (servo.width/2))/(90-180) *(-180)) + (servo.width/2);
-    // }
+    console.log('angle', angle);
+    var verScale = 0;
+    var minWidth = 0.1*servo.width;
+    console.log('minWidth', minWidth);
     
-    // console.log(verScale);
-    // ctx.transform(verScale, 0, 0, 1, horTranslation, 0);
-    // ctx.drawImage(servo.image,0,0,servo.width,servo.height);
-    // ctx.setTransform(1, 0, 0, 1, 0, 0);
+    var maxWidth = servo.width;
+    console.log('maxWidth', maxWidth);
+
+    var horTranslation = 0;
+    if(angle <= 90){
+        verScale = (0.01*angle)+0.1;
+        //horTranslation = (servo.width/4)/90*angle;
+        horTranslation = ( ( ( ((servo.width/2) - (maxWidth/2)) - (minWidth/2) ) / (90) ) * angle ) + (minWidth/2)
+    } else {
+        verScale = (((1-0.1)/(91-180))*(angle-180))+0.1;
+        //horTranslation = (((servo.width/2) - (servo.width))/(91-180) * angle) + (((servo.width/2) - (servo.width))/(91-180) *(-180)) + (servo.width);
+        horTranslation = ( ( ( ((servo.width/2) - (maxWidth/2)) - (servo.width - (minWidth/2)) / (91 - 180) ) * (angle - 180) ) ) + (servo.width - (minWidth/2));
+    }
+    
+    console.log('verScale', verScale);
+    console.log('horTranslation', horTranslation);
+    ctx.transform(verScale, 0, 0, 1, horTranslation, 0);
+    ctx.drawImage(servo.image,0,0,servo.width,servo.height);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 /**

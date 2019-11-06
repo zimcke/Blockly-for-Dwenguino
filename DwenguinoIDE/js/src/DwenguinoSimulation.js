@@ -117,7 +117,7 @@ var DwenguinoSimulation = {
     // $('#sim_speed').append('<option id="sim_speed_realTime" value="realtime" selected>Real Time</option>');
 
 
-    $('#sim_menu').append('<div id="sim_menu_next_line" class="sim_menu_next_line"></div>');
+    $('#db_simulator_menu').append('<div id="sim_menu_next_line" class="sim_menu_next_line"></div>');
     $('#sim_menu_next_line').append('<div id="sim_scenarioTag"></div>');
     $('#sim_menu_next_line').append('<div id="sim_scenario"></div>');
 
@@ -203,7 +203,7 @@ var DwenguinoSimulation = {
       DwenguinoSimulation.scenarioView = $(this).val();
       DwenguinoSimulation.initSimulationPane();
       DwenguinoSimulation.translateSimulatorInterface();
-      // TODO check if currentScenario is set correctly
+
       DwenguinoSimulation.currentScenario = DwenguinoSimulation.scenarios[DwenguinoSimulation.scenarioView];
       DwenguinoSimulation.currentScenario.initSimulationDisplay(DwenguinoSimulation.simulationViewContainerId);
       DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("changedScenario", DwenguinoSimulation.scenarioView));
@@ -293,7 +293,7 @@ var DwenguinoSimulation = {
   loadSocialRobotSimulationPane: function(){
     console.log("load social robot simulation pane");
     // Load the robot components menu
-    $('#db_simulator_pane').append('<div id="robot_components_menu"></div>');
+    $('#db_simulator_pane').append('<div id="robot_components_menu" class="scrolling-wrapper-flexbox"></div>');
     DwenguinoSimulationRobotComponentsMenu.setupEnvironment(DwenguinoSimulation.scenarios['socialrobot'],DwenguinoSimulation.simulationViewContainerId);
   },
 
@@ -908,9 +908,11 @@ var DwenguinoSimulation = {
       document.getElementById('sim_lcd_row' + row).innerHTML.replace(/ /g, '&nbsp;');
       // repaint
       var element = document.getElementById("sim_lcds");
-      element.style.display = 'none';
-      element.offsetHeight;
-      element.style.display = 'block';
+      if(element !== null){
+        element.style.display = 'none';
+        element.offsetHeight;
+        element.style.display = 'block';
+      }
     },
 
     /*
