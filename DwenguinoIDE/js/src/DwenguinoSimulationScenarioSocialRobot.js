@@ -42,8 +42,8 @@ function DwenguinoSimulationScenarioSocialRobot(){
     //Init robot state
     this.initSocialRobot();
 
-    $('#sim_container').css('background-image', this.robot.imgRobot);
-    $('#sim_container').css('background-size', '100% 100%');
+    $('#sim_background').css('background-image', this.robot.imgRobot);
+    this.scenarioUtils.contextMenuBackground();
 
     this.checkLocalStorage();
     
@@ -110,6 +110,18 @@ function DwenguinoSimulationScenarioSocialRobot(){
 
     container.empty();
     container.append(simulationContainer);
+
+    var backgroundCanvasId = 'sim_background';
+
+    this.robot[backgroundCanvasId] = {};
+    this.robot[backgroundCanvasId].offset = {'left': 0, 'top': 0};
+    // this.robot[backgroundCanvasId].image = new Image();
+    // this.robot[backgroundCanvasId].image.src = this.robot.imgRobot;
+
+    $('#sim_container').append("<div id='sim_background' class='sim_element draggable'></div>");
+    $('#sim_background').css('top', 0 + 'px');
+    $('#sim_background').css('left', 0 + 'px');
+    
 
     // Reset the simulation state
     this.initSimulationState();
@@ -203,7 +215,7 @@ function DwenguinoSimulationScenarioSocialRobot(){
       numberOf: {},
       imgServo: './img/board/servo_movement.png',
       imgPir: './img/socialrobot/pir.png',
-      imgRobot: 'url("./img/socialrobot/robot1.svg")',
+      imgRobot: 'url("./img/socialrobot/robot1.png")',
       imgEye: './img/socialrobot/eye.svg',
     };
     
