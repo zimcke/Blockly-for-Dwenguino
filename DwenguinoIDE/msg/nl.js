@@ -143,6 +143,13 @@ MSG.simulator = {
   decoration: "Decoratie",
 };
 
+MSG.socialrobot = {
+  eye: "Oog",
+  mouth: "Mond",
+  righthand: "Rechterhand",
+  lefthand: "Linkerhand",
+};
+
 
 MSG.tutorials = {
     introduction: {},

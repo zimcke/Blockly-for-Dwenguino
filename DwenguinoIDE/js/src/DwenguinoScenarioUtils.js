@@ -11,8 +11,10 @@ function DwenguinoScenarioUtils(scenario){
  */
 DwenguinoScenarioUtils.prototype.saveScenario = function(data){
     if (window.dwenguinoBlocklyServer){
+        console.log('save scenario with server');
         window.dwenguinoBlocklyServer.saveScenario(data);
     } else {
+        console.log('save scenario');
         DwenguinoBlockly.download("scenario.xml", data);
     }
     DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("downloadScenarioClicked", ""));
@@ -21,9 +23,11 @@ DwenguinoScenarioUtils.prototype.saveScenario = function(data){
 DwenguinoScenarioUtils.prototype.loadScenario = function(scenario){
     var self = this; 
     if (window.dwenguinoBlocklyServer){
+        console.log('load scenario with server');
         this.scenario.xml = window.dwenguinoBlocklyServer.loadScenario();
         this.scenario.loadFromXml();
     } else{
+        console.log('load scenario');
         if (window.File && window.FileReader && window.FileList && window.Blob) {
 
             // reset form
@@ -202,7 +206,7 @@ DwenguinoScenarioUtils.prototype.contextMenuServo = function(){
             },
             items: {
                 "eye": {
-                    name: "Eye", 
+                    name: MSG.socialrobot['eye'], 
                     // superseeds "global" callback
                     callback: function(itemKey, opt, e) {
                         var simServoId = this.attr('id');
@@ -210,9 +214,9 @@ DwenguinoScenarioUtils.prototype.contextMenuServo = function(){
                         self.scenario.setServoState(i, StatesEnum.eye);
                     }
                 },
-                "mouth": {name: "Mouth"},
+                "mouth": {name: MSG.socialrobot['mouth'],},
                 "righthand": {
-                    name: "Right hand",
+                    name: MSG.socialrobot['righthand'],
                     callback: function(itemKey, opt, e) {
                         var simServoId = this.attr('id');
                         var i = simServoId.replace(/\D/g,'');
@@ -220,15 +224,15 @@ DwenguinoScenarioUtils.prototype.contextMenuServo = function(){
                     }
                 },
                 "lefthand": {
-                    name: "Left hand",
+                    name: MSG.socialrobot['lefthand'],
                     callback: function(itemKey, opt, e) {
                         var simServoId = this.attr('id');
                         var i = simServoId.replace(/\D/g,'');
                         self.scenario.setServoState(i, StatesEnum.lefthand);
                     }
-                },
-                "sep1": "---------",
-                "quit": {name: "Quit"}
+                }//,
+                //"sep1": "---------",
+                //"quit": {name: "Quit"}
             }
         });
     });  

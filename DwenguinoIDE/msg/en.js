@@ -137,6 +137,8 @@ MSG.simulator = {
 MSG.socialrobot = {
   eye: "Eye",
   mouth: "Mouth",
+  righthand: "Right hand",
+  lefthand: "Left hand",
 };
 
 
