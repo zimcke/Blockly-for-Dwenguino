@@ -1,4 +1,4 @@
-const StatesEnum = {"plain":0, "eye":1, "mouth":2};
+const StatesEnum = {"plain":0, "eye":1, "mouth":2, "righthand":3, "lefthand":4};
 Object.freeze(StatesEnum);
 
 function DwenguinoScenarioUtils(scenario){
@@ -211,6 +211,22 @@ DwenguinoScenarioUtils.prototype.contextMenuServo = function(){
                     }
                 },
                 "mouth": {name: "Mouth"},
+                "righthand": {
+                    name: "Right hand",
+                    callback: function(itemKey, opt, e) {
+                        var simServoId = this.attr('id');
+                        var i = simServoId.replace(/\D/g,'');
+                        self.scenario.setServoState(i, StatesEnum.righthand);
+                    }
+                },
+                "lefthand": {
+                    name: "Left hand",
+                    callback: function(itemKey, opt, e) {
+                        var simServoId = this.attr('id');
+                        var i = simServoId.replace(/\D/g,'');
+                        self.scenario.setServoState(i, StatesEnum.lefthand);
+                    }
+                },
                 "sep1": "---------",
                 "quit": {name: "Quit"}
             }

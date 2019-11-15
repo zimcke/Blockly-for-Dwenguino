@@ -128,6 +128,7 @@ MSG.simulator = {
   scenario_socialrobot:"Social robot",
   code: "Code",
   pir: "PIR sensor",
+  sonar: "Sonar",
   led: "LED",
   lcd: "LCD screen",
   decoration: "Decoration",

@@ -2,6 +2,7 @@ const TypesEnum = {
   SERVO: 'servo', 
   LED: 'led', 
   PIR: 'pir',
+  SONAR: 'sonar',
   LCD: 'lcd',
   DECORATION: 'decoration'
 };
@@ -132,10 +133,12 @@ function DwenguinoSimulationScenarioSocialRobot(){
    * This function draws the current robot components in the simulation container
    */
   DwenguinoSimulationScenarioSocialRobot.prototype.drawSimulationDisplay = function() {
+    console.log('draw Simulation display');
     this.drawSimulation.clearCanvases();
     this.drawSimulation.drawLeds(this.robot);
     this.drawSimulation.drawServos(this.robot);
     this.drawSimulation.drawPirs(this.robot);
+    this.drawSimulation.drawSonars(this.robot);
   };
   
   /* @brief updates the simulation state and display
@@ -215,8 +218,11 @@ function DwenguinoSimulationScenarioSocialRobot(){
       numberOf: {},
       imgServo: './img/board/servo_movement.png',
       imgPir: './img/socialrobot/pir.png',
+      imgSonar: './img/board/sonar.png',
       imgRobot: 'url("./img/socialrobot/robot1.png")',
       imgEye: './img/socialrobot/eye.svg',
+      imgRightHand: './img/socialrobot/righthand.png',
+      imgLeftHand: './img/socialrobot/lefthand.png'
     };
     
     for (const [type, t] of Object.entries(TypesEnum)) {
@@ -232,9 +238,10 @@ function DwenguinoSimulationScenarioSocialRobot(){
     for(var i = 1; i <= this.robot.numberOf[TypesEnum.SERVO]; i++){
       var servoCanvasId = 'sim_servo_canvas' + i;
       this.robot[servoCanvasId].x = 0;
-      this.robot[servoCanvasId].y = 0;
+      this.robot[servoCanvasId].y = 30;
       this.robot[servoCanvasId].angle = 0;
       this.robot[servoCanvasId].prevAngle = 0;
+
     }
 
     for(var i = 1; i <= this.robot.numberOf[TypesEnum.LED]; i++){
@@ -268,10 +275,11 @@ function DwenguinoSimulationScenarioSocialRobot(){
     this.robot[servoCanvasId].width = 100;
     this.robot[servoCanvasId].height = 50;
     this.robot[servoCanvasId].x = 0;
-    this.robot[servoCanvasId].y = 0;
+    this.robot[servoCanvasId].y = 30;
     this.robot[servoCanvasId].offset = {'left': offsetLeft, 'top': offsetTop};
     this.robot[servoCanvasId].angle = 0;
     this.robot[servoCanvasId].prevAngle = 0;
+    this.robot[servoCanvasId].angleOffset = 0;
     this.robot[servoCanvasId].image = new Image();
     this.robot[servoCanvasId].image.src = this.robot.imgServo;
     this.robot[servoCanvasId].state = state;
@@ -395,6 +403,50 @@ DwenguinoSimulationScenarioSocialRobot.prototype.removePir = function(){
   this.robot.numberOf[TypesEnum.PIR] -= 1;
 };
 
+/**
+ * Add a new SONAR sensor to the simulation container.
+ */
+DwenguinoSimulationScenarioSocialRobot.prototype.addSonar = function(draw = true, offsetLeft = 5, offsetTop = 5){
+  DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("addRobotComponent", TypesEnum.SONAR));
+  this.robot.numberOf[TypesEnum.SONAR] += 1;
+  var id = this.robot.numberOf[TypesEnum.SONAR];
+  var sonarCanvasId = 'sim_sonar_canvas' + id;
+
+  this.robot[sonarCanvasId] = {};
+  this.robot[sonarCanvasId].width = 80;
+  this.robot[sonarCanvasId].height = 40;
+  this.robot[sonarCanvasId].offset = {'left': offsetLeft, 'top': offsetTop};
+  this.robot[sonarCanvasId].image = new Image();
+  this.robot[sonarCanvasId].image.src = this.robot.imgSonar;
+
+  $('#sim_container').append("<div id='sim_sonar"+id+"' class='sim_element sim_element_sonar draggable'>"+MSG.simulator['sonar']+" "+id+"</div>");
+  $('#sim_sonar' + id).css('top', offsetTop + 'px');
+  $('#sim_sonar' + id).css('left', offsetLeft + 'px');
+  var pirButtonId = 'sim_sonar_button' + id;
+  $('#sim_sonar' + id).append("<canvas id='sim_sonar_canvas" +id+"' class='sim_canvas sonar_canvas'></canvas>"); 
+  // $('#sim_sonar' + id).append('<div id="' + sonarButtonId + '" class="sonar_button"></div>');
+  // this.addPirEventHandler(pirButtonId, pirCanvasId);
+  this.initializeCanvas(sonarCanvasId);
+  if(draw){
+    $('#sim_sonar' + id).css('visibility', 'visible');
+  } else {
+    $('#sim_sonar' + id).css('visibility', 'hidden');
+  }
+};
+
+/**
+ * Remove the most recent created SONAR sensor from the simulation container.
+ */
+DwenguinoSimulationScenarioSocialRobot.prototype.removeSonar = function(){
+  DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("removeRobotComponent", TypesEnum.SONAR));
+  var id = this.robot.numberOf[TypesEnum.SONAR];
+  $('#sim_sonar'+ id).remove();
+
+  delete this.robot['sim_sonar_canvas' + id];
+  this.robot.numberOf[TypesEnum.SONAR] -= 1;
+};
+
+
  /**
   * Add a new decoration component to the simulation container.
   */
@@ -516,12 +568,35 @@ DwenguinoSimulationScenarioSocialRobot.prototype.setServoState = function(i, sta
         this.robot[servoCanvasId].image.src = this.robot.imgServo;
         this.robot[servoCanvasId].width = 100;
         this.robot[servoCanvasId].height = 50;
+        document.getElementById(servoCanvasId).classList.remove('hand_canvas');
         break;
     case StatesEnum.eye:
+        console.log('eye');
         this.drawSimulation.clearCanvas(servoCanvasId);
         this.robot[servoCanvasId].image.src = this.robot.imgEye;
         this.robot[servoCanvasId].width = 50;
         this.robot[servoCanvasId].height = 50;
+        document.getElementById(servoCanvasId).classList.remove('hand_canvas');
+        break;
+    case StatesEnum.righthand:
+        console.log('right hand');
+        this.drawSimulation.clearCanvas(servoCanvasId);
+        this.robot[servoCanvasId].image.src = this.robot.imgRightHand;
+        this.robot[servoCanvasId].width = 64;
+        this.robot[servoCanvasId].height = 149;
+        this.robot[servoCanvasId].angleOffset = 0;
+        document.getElementById(servoCanvasId).classList.add('hand_canvas');
+        this.initializeCanvas(servoCanvasId);
+        this.drawSimulation.drawServo(this.robot, document.getElementById(servoCanvasId));
+        break;
+    case StatesEnum.lefthand:
+        console.log('left hand');
+        this.drawSimulation.clearCanvas(servoCanvasId);
+        this.robot[servoCanvasId].image.src = this.robot.imgLeftHand;
+        this.robot[servoCanvasId].width = 64;
+        this.robot[servoCanvasId].height = 149;
+        document.getElementById(servoCanvasId).classList.add('hand_canvas');
+        this.initializeCanvas(servoCanvasId);
         break;
   }
 }
@@ -573,6 +648,9 @@ DwenguinoSimulationScenarioSocialRobot.prototype.checkLocalStorage = function(){
                 break;
               case TypesEnum.PIR:
                 this.addPir(false,elements[i][2], elements[i][3]);
+                break;
+              case TypesEnum.SONAR:
+                this.addSonar(false, elements[i][2], elements[i][3]);
                 break;
               case TypesEnum.LCD:
                 this.addLcd(false, elements[i][2], elements[i][3]);
@@ -738,6 +816,9 @@ DwenguinoSimulationScenarioSocialRobot.prototype.loadFromXml = function(){
         break;
       case TypesEnum.PIR:
         this.addPir(true,offsetLeft, offsetTop);
+        break;
+      case TypesEnum.SONAR:
+        this.addSonar(true, offsetLeft, offsetTop);
         break;
     }
     DwenguinoSimulationRobotComponentsMenu.changeValue(type,1);

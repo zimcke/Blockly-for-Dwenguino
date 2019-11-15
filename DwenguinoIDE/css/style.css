@@ -555,6 +555,7 @@ body{
     height: 50%; */
     /*float: right;*/
     height: 90%;
+    width: 90%;
     margin-right: 10px;
     padding-left: 10px;
     padding-right: 10px;
@@ -631,6 +632,14 @@ body{
     margin-left: 5px; */
 }
 
+#rc_sonar_img {
+    width: 100%;
+    height: 100%;
+    background-image: url("../img/board/sonar.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
 #rc_lcd_img {
     width: 100%;
     height: 100%;
@@ -656,8 +665,8 @@ body{
 }
 
 .sim_canvas{
-    width: 100%;
-    height: 100%;
+    /* width: 100%;
+    height: 100%; */
 }
 
 .sim_element{
@@ -673,7 +682,7 @@ body{
 }
 
 .sim_element_servo{
-    width: 200px;
+    width: 100px;
     height:150px;
     top: 5px;
     left: 5px;
@@ -682,6 +691,11 @@ body{
 .sim_element_pir{
     width:100px;
     height: 60px;
+}
+
+.sim_element_sonar{
+    width: 80px;
+    height: 50px;
 }
 
 .pir_button {
@@ -728,12 +742,31 @@ body{
     color: #FFFFFF;
 }
 .servo_canvas{
-    margin-top: 20px
+    margin-top: 0px;
+    width: 100px;
+    height: 120px;
+}
+
+.hand_canvas{
+    margin-top: 0px;
+    width: 120px;
+    height: 200px;
 }
 
 .pir_canvas{
     width: 50px;
     height: 50px;
+    margin-top: 10px;
+}
+
+.led_canvas{
+    width: 40px;
+    height: 40px;
+}
+
+.sonar_canvas{
+    width: 80px;
+    height: 40px;
     margin-top: 10px;
 }
 

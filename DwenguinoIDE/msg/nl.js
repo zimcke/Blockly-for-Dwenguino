@@ -137,6 +137,7 @@ MSG.simulator = {
   scenario_spyrograph: "Spyrograaf",
   code: "Code",
   pir: "PIR sensor",
+  sonar: "Sonar",
   led: "LED",
   lcd: "LCD-scherm",
   decoration: "Decoratie",

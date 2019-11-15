@@ -75,30 +75,53 @@ DwenguinoDrawSimulationCanvas.prototype.drawServos = function(robot){
 DwenguinoDrawSimulationCanvas.prototype.drawServo = function(robot, canvas){
     if (canvas.getContext) {
         var id = canvas.id;
-
         // in case the image isn't loaded yet.
         var self = this;
         robot[id].image.onload = function() {
             var ctx = canvas.getContext('2d');
             ctx.fillStyle = robot[id].backgroundColor;
-            ctx.fillRect(robot[id].x, robot[id].y, robot[id].width, robot[id].height);
-            self.drawRotatedServohead(ctx, robot[id]);
+            switch(robot[id].state){
+                case StatesEnum.plain:
+                    console.log(robot[id],'plain');
+                    ctx.fillRect(robot[id].x, robot[id].y, robot[id].width, robot[id].height);
+                    self.drawRotatedServohead(ctx, robot[id]);
+                    break;
+                case StatesEnum.eye:
+                    console.log(robot[id],'eye');
+                    ctx.fillRect(robot[id].x+2, robot[id].y-15, robot[id].width, robot[id].height-20);
+                    self.drawEye(ctx,robot[id]);
+                    break;
+                case StatesEnum.righthand:
+                    ctx.fillRect(robot[id].x+100, robot[id].y+30, robot[id].width-100, robot[id].height-60);
+                    self.drawRightHand(ctx,robot[id]);
+                    break;
+                case StatesEnum.lefthand:
+                    ctx.fillRect(robot[id].x+10, robot[id].y+30, robot[id].width-28, robot[id].height-60);
+                    self.drawLeftHand(ctx,robot[id]);
+                    break;
+            }
         }
 
         var ctx = canvas.getContext('2d');
         ctx.fillStyle = robot[id].backgroundColor;
-        
         switch(robot[id].state){
             case StatesEnum.plain:
                 ctx.fillRect(robot[id].x, robot[id].y, robot[id].width, robot[id].height);
                 self.drawRotatedServohead(ctx, robot[id]);
                 break;
             case StatesEnum.eye:
-                ctx.fillRect(robot[id].x+2, robot[id].y+10, robot[id].width, robot[id].height-20);
+                ctx.fillRect(robot[id].x+2, robot[id].y-15, robot[id].width, robot[id].height-20);
                 self.drawEye(ctx,robot[id]);
                 break;
+            case StatesEnum.righthand:
+                ctx.fillRect(robot[id].x+100, robot[id].y+30, robot[id].width-100, robot[id].height-60);
+                self.drawRightHand(ctx,robot[id]);
+                break;
+            case StatesEnum.lefthand:
+                ctx.fillRect(robot[id].x+10, robot[id].y+30, robot[id].width-28, robot[id].height-60);
+                self.drawLeftHand(ctx,robot[id]);
+                break;
         }
-
     } else {
         console.log(canvas, "This canvas has no context");
     }    
@@ -137,13 +160,52 @@ DwenguinoDrawSimulationCanvas.prototype.drawPir = function(robot, canvas){
 }
 
 /**
+ * Draw all sonar sensors on sonar canvases with the image specified in robot.
+ */
+DwenguinoDrawSimulationCanvas.prototype.drawSonars = function(robot){
+    var canvases = document.getElementsByClassName('sim_canvas sonar_canvas');
+    for(var i = 0; i < canvases.length; i++)
+    {
+        this.drawSonar(robot,canvases.item(i));
+    }
+}
+
+/**
+ * Draw a sonar sensor on the given canvas with the image specified in robot.
+ */
+DwenguinoDrawSimulationCanvas.prototype.drawSonar = function(robot, canvas){
+    if (canvas.getContext) {
+        var id = canvas.id;
+
+        // in case the image isn't loaded yet.
+        var self = this;
+        robot[id].image.onload = function() {
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(robot[id].image,0,0,robot[id].width,robot[id].height); 
+        }
+
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(robot[id].image,0,0,robot[id].width,robot[id].height);
+    } else {
+        console.log(canvas, "This canvas has no context");
+    }       
+}
+
+/**
  * Draws the servohead of the given servo at the correct angle on the given context
  */
 DwenguinoDrawSimulationCanvas.prototype.drawRotatedServohead = function(ctx, servo){
     // make the servo rotate stepwise
+    var direction = 0;
+    if((servo.angle-servo.prevAngle) > 0) {
+        direction = 1;
+    } else {
+        direction = -1
+    }
+
     if((servo.angle-servo.prevAngle) != 0){
-        if ((servo.angle-servo.prevAngle) > 5) {
-            servo.prevAngle = servo.prevAngle + 5;
+        if (((servo.angle-servo.prevAngle) > 5) || ((servo.angle-servo.prevAngle) < -5)) {
+            servo.prevAngle = servo.prevAngle + (5 * direction);
             ctx.translate(servo.x+servo.width/2,servo.y+servo.height/2);
             ctx.rotate(servo.prevAngle * Math.PI / 180);
             ctx.drawImage(servo.image,-servo.width/2,-servo.height/2,servo.width,servo.height);
@@ -205,6 +267,100 @@ DwenguinoDrawSimulationCanvas.prototype.drawEye = function(ctx, servo){
     ctx.transform(verScale, 0, 0, 1, horTranslation, 0);
     ctx.drawImage(servo.image,0,0,servo.width,servo.height);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+}
+
+/**
+ * Draws the servohead of the given servo at the correct angle on the given context
+ */
+DwenguinoDrawSimulationCanvas.prototype.drawRightHand = function(ctx, servo){
+    var diff = servo.angle-servo.prevAngle;
+    if(diff > 0) {
+        this.drawDown(ctx, servo);
+    } else if(diff < 0) {
+        this.drawUp(ctx, servo);
+    } else {
+        ctx.translate(servo.x+servo.width/2+50,servo.y+servo.height/2);
+        ctx.rotate(-servo.angle * Math.PI / 180);
+        ctx.drawImage(servo.image,-servo.width/2,-servo.height/2,servo.width,servo.height);
+        ctx.rotate(servo.angle * Math.PI / 180);
+        ctx.translate(-servo.x-servo.width/2-50, -servo.y-servo.height/2); 
+    }
+}
+
+DwenguinoDrawSimulationCanvas.prototype.drawDown = function(ctx, servo){
+    var diff2 = (servo.angle-servo.prevAngle);
+    if ( diff2 >= 5 ) {
+        servo.prevAngle = servo.prevAngle + 5;
+        ctx.translate(servo.x+servo.width/2+50,servo.y+servo.height/2);
+        ctx.rotate(-servo.prevAngle * Math.PI / 180);
+        ctx.drawImage(servo.image,-servo.width/2,-servo.height/2,servo.width,servo.height);
+        ctx.rotate(servo.prevAngle * Math.PI / 180);
+        ctx.translate(-servo.x-servo.width/2-50, -servo.y-servo.height/2);
+    } else {
+        servo.prevAngle = servo.prevAngle + diff2;
+        ctx.translate(servo.x+servo.width/2+50,servo.y+servo.height/2);
+        ctx.rotate(-servo.angle * Math.PI / 180);
+        ctx.drawImage(servo.image,-servo.width/2,-servo.height/2,servo.width,servo.height);
+        ctx.rotate(servo.angle * Math.PI / 180);
+        ctx.translate(-servo.x-servo.width/2-50, -servo.y-servo.height/2);       
+    }
+}
+
+DwenguinoDrawSimulationCanvas.prototype.drawUp = function(ctx, servo){
+    var diff3 = servo.prevAngle - servo.angle;
+    if ( diff3 >= 5)  {
+        servo.prevAngle = servo.prevAngle - 5;
+        ctx.translate(servo.x+servo.width/2+50,servo.y+servo.height/2);
+        ctx.rotate(-servo.prevAngle * Math.PI / 180);
+        ctx.drawImage(servo.image,-servo.width/2,-servo.height/2,servo.width,servo.height);
+        ctx.rotate(servo.prevAngle * Math.PI / 180);
+        ctx.translate(-servo.x-servo.width/2-50, -servo.y-servo.height/2); 
+    } else {
+        servo.prevAngle = servo.prevAngle - diff3;
+        ctx.translate(servo.x+servo.width/2+50,servo.y+servo.height/2);
+        ctx.rotate(-servo.angle * Math.PI / 180);
+        ctx.drawImage(servo.image,-servo.width/2,-servo.height/2,servo.width,servo.height);
+        ctx.rotate(servo.angle * Math.PI / 180);
+        ctx.translate(-servo.x-servo.width/2-50, -servo.y-servo.height/2); 
+    }
+}
+
+/**
+ * Draws the servohead of the given servo at the correct angle on the given context
+ */
+DwenguinoDrawSimulationCanvas.prototype.drawLeftHand = function(ctx, servo){
+    // make the servo rotate stepwise
+    console.log('drawHand');
+    var direction = 0;
+    if((servo.angle-servo.prevAngle) > 0) {
+        direction = 1;
+    } else {
+        direction = -1
+    }
+
+    if((servo.angle-servo.prevAngle) != 0){
+        if (((servo.angle-servo.prevAngle) > 5) || ((servo.angle-servo.prevAngle) < -5)) {
+            servo.prevAngle = servo.prevAngle + (5 * direction);
+            ctx.translate(servo.x+servo.width/2,servo.y+servo.height/2);
+            ctx.rotate(-servo.prevAngle * Math.PI / 180);
+            ctx.drawImage(servo.image,-servo.width/2,-servo.height/2,servo.width,servo.height);
+            ctx.rotate(servo.prevAngle * Math.PI / 180);
+            ctx.translate(-servo.x-servo.width/2, -servo.y-servo.height/2); 
+        } else {
+            servo.prevAngle = servo.prevAngle + (servo.angle-servo.prevAngle);
+            ctx.translate(servo.x+servo.width/2,servo.y+servo.height/2);
+            ctx.rotate(-servo.angle * Math.PI / 180);
+            ctx.drawImage(servo.image,-servo.width/2,-servo.height/2,servo.width,servo.height);
+            ctx.rotate(servo.angle * Math.PI / 180);
+            ctx.translate(-servo.x-servo.width/2, -servo.y-servo.height/2); 
+        }
+    } else {
+        ctx.translate(servo.x+servo.width/2,servo.y+servo.height/2);
+        ctx.rotate(-servo.angle * Math.PI / 180);
+        ctx.drawImage(servo.image,-servo.width/2,-servo.height/2,servo.width,servo.height);
+        ctx.rotate(servo.angle * Math.PI / 180);
+        ctx.translate(-servo.x-servo.width/2, -servo.y-servo.height/2); 
+    }
 }
 
 /**
