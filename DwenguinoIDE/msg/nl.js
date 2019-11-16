@@ -110,8 +110,10 @@ var MSG = {
   create_global: "Maak globaal",
   next: "Volgende",
   previous: "Vorige",
-  socialrobotWaveArmesBlock: "Zwaai armen %1 %2 %3 %4 %5 %6",
-  socialRobotArmsDownBlock: "Doe armen naar beneden %1 %2 %3 %4 %5 %6",
+  socialrobotWaveArmesBlock: "Zwaai armen %1 %2 Servo rechterhand %3 %4 Servo linkerhand %5 %6",
+  socialRobotArmsDownBlock: "Doe armen naar beneden %1 %2 Servo rechterhand %3 %4 Servo linkerhand %5 %6",
+  socialRobotServoRightHand: "Servo rechterhand",
+  socialRobotServoLeftHand: "Servo linkerhand",
 };
 
 
