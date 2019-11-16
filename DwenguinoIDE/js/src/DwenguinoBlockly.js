@@ -701,7 +701,7 @@ var DwenguinoBlockly = {
         }*/
 
         var categories = ['catLogic', 'catLoops', 'catMath', 'catText', 'catLists',
-            'catColour', 'catVariables', 'catFunctions', 'catBoardIO', 'catDwenguino', 'catArduino'];
+            'catColour', 'catVariables', 'catFunctions', 'catBoardIO', 'catDwenguino', 'catSocialRobot', 'catArduino'];
         for (var i = 0, cat; cat = categories[i]; i++) {
             var element = document.getElementById(cat);
             if (element) {

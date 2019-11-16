@@ -413,8 +413,8 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addSonar = function(draw = true
   var sonarCanvasId = 'sim_sonar_canvas' + id;
 
   this.robot[sonarCanvasId] = {};
-  this.robot[sonarCanvasId].width = 80;
-  this.robot[sonarCanvasId].height = 40;
+  this.robot[sonarCanvasId].width = 100;
+  this.robot[sonarCanvasId].height = 58;
   this.robot[sonarCanvasId].offset = {'left': offsetLeft, 'top': offsetTop};
   this.robot[sonarCanvasId].image = new Image();
   this.robot[sonarCanvasId].image.src = this.robot.imgSonar;

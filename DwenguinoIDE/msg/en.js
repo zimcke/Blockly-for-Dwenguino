@@ -19,6 +19,7 @@ var MSG = {
   catVariables: "Variables",
   catFunctions: "Functions",
   catDwenguino: "Dwenguino",
+  catSocialRobot: "Social robot",
   catBoardIO: "IO",
   listVariable: "list",
   textVariable: "text",
@@ -100,6 +101,8 @@ var MSG = {
   create: "Create",
   with_type: "with type",
   create_global: "Create global",
+  socialrobotWaveArmesBlock: "Wave arms %1 %2 %3 %4 %5 %6",
+  socialRobotArmsDownBlock: "Put arms down %1 %2 %3 %4 %5 %6",
 };
 
 

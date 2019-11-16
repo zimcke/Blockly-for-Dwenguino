@@ -243,6 +243,32 @@
           <block type="dwenguino_led_pins"></block>
           <block type="dwenguino_on_off"></block>
       </category>
+      <category id="catSocialRobot" colour="200" name='SocialRobot'>
+        <block type="socialrobot_wave_arms">
+            <value name="servo_right_hand">
+                <block type="math_number" id="200">
+                    <field name="NUM">1</field>
+                </block>
+            </value>
+            <value name="servo_left_hand">
+                <block type="math_number" id="201">
+                    <field name="NUM">2</field>
+                </block>
+            </value>
+        </block>
+        <block type="socialrobot_arms_down">
+            <value name="servo_right_hand1">
+                <block type="math_number" id="202">
+                    <field name="NUM">1</field>
+                </block>
+            </value>
+            <value name="servo_left_hand1">
+                <block type="math_number" id="203">
+                    <field name="NUM">2</field>
+                </block>
+            </value>
+        </block>
+    </category>
 
     </xml>
 
@@ -355,7 +381,9 @@
     <script src="../blockly/blocks/variables.js"></script>
     <script src="../blockly/blocks/procedures.js"></script>
     <script src="../blockly/blocks/dwenguino_new.js"></script>
+    <script src="../blockly/blocks/socialrobot.js"></script>
     <script src="../blockly/blocks/arduino.js"></script>
+    
 
     <!-- Blockly translators to c++ code -->
 
@@ -366,6 +394,7 @@
     <script src="../blockly/generators/arduino/variables.js"></script>
     <script src="../blockly/generators/arduino/procedures.js"></script>
     <script src="../blockly/generators/arduino/dwenguino.js"></script>
+    <script src="../blockly/generators/arduino/socialrobot.js"></script>
     <script src="../blockly/generators/arduino/arduino.js"></script>
     <!-- <script src="../../generators/arduino/base.js"></script> -->
 
@@ -378,6 +407,7 @@
     <script src="../blockly/generators/javascript/variables.js"></script>
     <script src="../blockly/generators/javascript/procedures.js"></script>
     <script src="../blockly/generators/javascript/dwenguino.js"></script>
+    <script src="../blockly/generators/javascript/socialrobot.js"></script>
 
     <!-- extra javascript libs -->
 

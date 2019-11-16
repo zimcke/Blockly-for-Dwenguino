@@ -694,8 +694,8 @@ body{
 }
 
 .sim_element_sonar{
-    width: 80px;
-    height: 50px;
+    width: 100px;
+    height: 58px;
 }
 
 .pir_button {
@@ -765,8 +765,8 @@ body{
 }
 
 .sonar_canvas{
-    width: 80px;
-    height: 40px;
+    width: 100px;
+    height: 58px;
     margin-top: 10px;
 }
 

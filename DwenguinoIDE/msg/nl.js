@@ -19,6 +19,7 @@ var MSG = {
   catFunctions: "Functies",
   catArduino: "Arduino",
   catDwenguino: "Dwenguino",
+  catSocialRobot: "Sociale robot",
   catBoardIO: "IO",
   listVariable: "lijst",
   textVariable: "tekst",
@@ -108,7 +109,9 @@ var MSG = {
   with_type: "met type",
   create_global: "Maak globaal",
   next: "Volgende",
-  previous: "Vorige"
+  previous: "Vorige",
+  socialrobotWaveArmesBlock: "Zwaai armen %1 %2 %3 %4 %5 %6",
+  socialRobotArmsDownBlock: "Doe armen naar beneden %1 %2 %3 %4 %5 %6",
 };
 
 
