@@ -1,4 +1,11 @@
-const StatesEnum = {"plain":0, "eye":1, "mouth":2, "righthand":3, "lefthand":4};
+//const StatesEnum = {"plain":0, "eye":1, "mouth":2, "righthand":3, "lefthand":4};
+const StatesEnum = {
+    PLAIN: 'plain', 
+    EYE: 'eye', 
+    MOUTH: 'mouth',
+    RIGHTHAND: 'righthand',
+    LEFTHAND: 'lefthand'
+  };
 Object.freeze(StatesEnum);
 
 function DwenguinoScenarioUtils(scenario){
@@ -211,7 +218,7 @@ DwenguinoScenarioUtils.prototype.contextMenuServo = function(){
                     callback: function(itemKey, opt, e) {
                         var simServoId = this.attr('id');
                         var i = simServoId.replace(/\D/g,'');
-                        self.scenario.setServoState(i, StatesEnum.eye);
+                        self.scenario.setServoState(i, StatesEnum.EYE);
                     }
                 },
                 "mouth": {name: MSG.socialrobot['mouth'],},
@@ -220,7 +227,7 @@ DwenguinoScenarioUtils.prototype.contextMenuServo = function(){
                     callback: function(itemKey, opt, e) {
                         var simServoId = this.attr('id');
                         var i = simServoId.replace(/\D/g,'');
-                        self.scenario.setServoState(i, StatesEnum.righthand);
+                        self.scenario.setServoState(i, StatesEnum.RIGHTHAND);
                     }
                 },
                 "lefthand": {
@@ -228,7 +235,7 @@ DwenguinoScenarioUtils.prototype.contextMenuServo = function(){
                     callback: function(itemKey, opt, e) {
                         var simServoId = this.attr('id');
                         var i = simServoId.replace(/\D/g,'');
-                        self.scenario.setServoState(i, StatesEnum.lefthand);
+                        self.scenario.setServoState(i, StatesEnum.LEFTHAND);
                     }
                 }//,
                 //"sep1": "---------",

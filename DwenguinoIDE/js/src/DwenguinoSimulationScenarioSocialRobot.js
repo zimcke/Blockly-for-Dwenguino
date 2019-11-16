@@ -264,7 +264,7 @@ function DwenguinoSimulationScenarioSocialRobot(){
  /**
   * Add a new servo to the simulation container.
   */
- DwenguinoSimulationScenarioSocialRobot.prototype.addServo = function(draw = true, offsetLeft = 5, offsetTop = 5, state = StatesEnum.plain){
+ DwenguinoSimulationScenarioSocialRobot.prototype.addServo = function(draw = true, offsetLeft = 5, offsetTop = 5, state = StatesEnum.PLAIN, width = 100, height = 50, image = this.robot.imgServo, classes = 'sim_canvas servo_canvas'){
     DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("addRobotComponent", TypesEnum.SERVO));
 
     this.robot.numberOf[TypesEnum.SERVO] += 1;
@@ -272,23 +272,23 @@ function DwenguinoSimulationScenarioSocialRobot(){
     var servoCanvasId = 'sim_servo_canvas' + id;
 
     this.robot[servoCanvasId] = {};
-    this.robot[servoCanvasId].width = 100;
-    this.robot[servoCanvasId].height = 50;
+    this.robot[servoCanvasId].width = width;
+    this.robot[servoCanvasId].height = height;
     this.robot[servoCanvasId].x = 0;
     this.robot[servoCanvasId].y = 30;
     this.robot[servoCanvasId].offset = {'left': offsetLeft, 'top': offsetTop};
     this.robot[servoCanvasId].angle = 0;
     this.robot[servoCanvasId].prevAngle = 0;
-    this.robot[servoCanvasId].angleOffset = 0;
     this.robot[servoCanvasId].image = new Image();
-    this.robot[servoCanvasId].image.src = this.robot.imgServo;
+    this.robot[servoCanvasId].image.src = image;
     this.robot[servoCanvasId].state = state;
     this.robot[servoCanvasId].backgroundColor = '#206499';
 
+    console.log(this.robot[servoCanvasId]);
     $('#sim_container').append("<div id='sim_servo"+id+"' class='sim_element sim_element_servo draggable'><div>"+MSG.simulator['servo']+" "+id+"</div></div>");
     $('#sim_servo' + id).css('top', offsetTop + 'px');
     $('#sim_servo' + id).css('left', offsetLeft + 'px');
-    $('#sim_servo' + id).append("<canvas id='" + servoCanvasId + "' class='sim_canvas servo_canvas'></canvas>");
+    $('#sim_servo' + id).append("<canvas id='" + servoCanvasId + "' class='" + classes + "'></canvas>");
     this.initializeCanvas(servoCanvasId);
     if(draw){
       $('#sim_servo' + id).css('visibility', 'visible');
@@ -563,14 +563,16 @@ DwenguinoSimulationScenarioSocialRobot.prototype.setLedColor = function(i, color
 DwenguinoSimulationScenarioSocialRobot.prototype.setServoState = function(i, state){
   var servoCanvasId = 'sim_servo_canvas' + i;
   this.robot[servoCanvasId].state = state;
+
   switch(state){
-    case StatesEnum.plain:
+    case StatesEnum.PLAIN:
+        console.log('plain');
         this.robot[servoCanvasId].image.src = this.robot.imgServo;
         this.robot[servoCanvasId].width = 100;
         this.robot[servoCanvasId].height = 50;
         document.getElementById(servoCanvasId).classList.remove('hand_canvas');
         break;
-    case StatesEnum.eye:
+    case StatesEnum.EYE:
         console.log('eye');
         this.drawSimulation.clearCanvas(servoCanvasId);
         this.robot[servoCanvasId].image.src = this.robot.imgEye;
@@ -578,18 +580,17 @@ DwenguinoSimulationScenarioSocialRobot.prototype.setServoState = function(i, sta
         this.robot[servoCanvasId].height = 50;
         document.getElementById(servoCanvasId).classList.remove('hand_canvas');
         break;
-    case StatesEnum.righthand:
+    case StatesEnum.RIGHTHAND:
         console.log('right hand');
         this.drawSimulation.clearCanvas(servoCanvasId);
         this.robot[servoCanvasId].image.src = this.robot.imgRightHand;
         this.robot[servoCanvasId].width = 64;
         this.robot[servoCanvasId].height = 149;
-        this.robot[servoCanvasId].angleOffset = 0;
         document.getElementById(servoCanvasId).classList.add('hand_canvas');
         this.initializeCanvas(servoCanvasId);
         this.drawSimulation.drawServo(this.robot, document.getElementById(servoCanvasId));
         break;
-    case StatesEnum.lefthand:
+    case StatesEnum.LEFTHAND:
         console.log('left hand');
         this.drawSimulation.clearCanvas(servoCanvasId);
         this.robot[servoCanvasId].image.src = this.robot.imgLeftHand;
@@ -641,7 +642,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.checkLocalStorage = function(){
           for(var i = 0; i < elements.length-1; i++){
             switch(t) {
               case TypesEnum.SERVO:
-                this.addServo(false,elements[i][2], elements[i][3]);
+                this.addServo(false,elements[i][2], elements[i][3], elements[i][4], parseFloat(elements[i][5]), parseFloat(elements[i][6]), elements[i][7], elements[i][8]);
                 break;
               case TypesEnum.LED:
                 this.addLed(false,elements[i][2], elements[i][3], elements[i][4]);
@@ -723,10 +724,17 @@ DwenguinoSimulationScenarioSocialRobot.prototype.saveRobotComponents = function(
             } else {
               topOffset = parseFloat(self.robot[canvasId].offset['top']);
             }
-            
+
             if(t === TypesEnum.LED){
               var onColor = self.robot[canvasId].onColor;
               saveState = saveState.concat("sim_" + t,i,",", "sim_"+ t + "_canvas",i,",",leftOffset,",",topOffset,",",onColor, "+");  
+            } else if(t === TypesEnum.SERVO) {
+              var width = parseFloat(self.robot[canvasId].width);
+              var height = parseFloat(self.robot[canvasId].height);
+              var image = self.robot[canvasId].image.src;
+              var state = self.robot[canvasId].state;
+              var classes = document.getElementById(canvasId).className;
+              saveState = saveState.concat("sim_" + t,i,",", "sim_"+ t + "_canvas",i,",",leftOffset,",",topOffset, ",", state, ",", width, ",", height, ",", image, ",", classes, "+");
             } else {
               saveState = saveState.concat("sim_" + t,i,",", "sim_"+ t + "_canvas",i,",",leftOffset,",",topOffset, "+");
             }         
@@ -758,19 +766,27 @@ DwenguinoSimulationScenarioSocialRobot.prototype.loadToXml = function(){
   var data = '<xml xmlns="http://www.w3.org/1999/xhtml">';
   if (window.localStorage) {
     var localStorage = window.localStorage;
-
+    var canvasId = '';
     if(localStorage.getItem('socialRobotScenario')){
 
       for (const [type, t] of Object.entries(TypesEnum)) {
         var elements = localStorage.getItem(t);
         elements = elements.split('+').map(e => e.split(','));
         for(var i = 0; i < elements.length-1; i++){
+          canvasId = elements[i][1];
           data = data.concat("<Item ");
           data = data.concat(" Type='", t, "'");
           data = data.concat(" Id='",elements[i][0], "'");
           data = data.concat(" CanvasId='",elements[i][1], "'");
           data = data.concat(" OffsetLeft='",elements[i][2], "'");
           data = data.concat(" OffsetTop='",elements[i][3], "'");
+          if(t === TypesEnum.SERVO){
+            data = data.concat(" State='", elements[i][4], "'");
+            data = data.concat(" Width='", elements[i][5], "'");
+            data = data.concat(" Height='", elements[i][6], "'"); 
+            data = data.concat(" Image='", elements[i][7], "'");
+            data = data.concat(" Classes='", elements[i][8], "'");
+          }
           if(t === TypesEnum.LED){
             data = data.concat(" OnColor='",elements[i][4], "'");
           }
@@ -797,6 +813,11 @@ DwenguinoSimulationScenarioSocialRobot.prototype.loadFromXml = function(){
       elements[0].parentNode.removeChild(elements[0]);
   }
 
+  $('#sim_container').append("<div id='sim_background' class='sim_element draggable'></div>");
+  $('#sim_background').css('top', 0 + 'px');
+  $('#sim_background').css('left', 0 + 'px');
+  $('#sim_background').css('background-image', this.robot.imgRobot);
+
   var data = this.scenarioUtils.textToDom(this.xml);
 
   var childCount = data.childNodes.length;
@@ -808,7 +829,13 @@ DwenguinoSimulationScenarioSocialRobot.prototype.loadFromXml = function(){
 
     switch(type) {
       case TypesEnum.SERVO:
-        this.addServo(true,offsetLeft, offsetTop);
+        var width = parseFloat(xmlChild.getAttribute('Width'));
+        var height = parseFloat(xmlChild.getAttribute('Height'));
+        var image = xmlChild.getAttribute('Image');
+        var state = xmlChild.getAttribute('State');
+        console.log(state);
+        var classes = xmlChild.getAttribute('Classes');
+        this.addServo(true,offsetLeft, offsetTop, state, width, height, image, classes);
         break;
       case TypesEnum.LED:
         var onColor = xmlChild.getAttribute('OnColor');

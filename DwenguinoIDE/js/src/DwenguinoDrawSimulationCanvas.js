@@ -40,6 +40,7 @@ DwenguinoDrawSimulationCanvas.prototype.drawLeds = function(robot){
  * Draw an led on the given canvas with the state specified in robot.
  */
 DwenguinoDrawSimulationCanvas.prototype.drawLed = function(robot, canvas){
+    console.log('draw Led');
     if (canvas.getContext) {
         var id = canvas.id;
         var ctx = canvas.getContext('2d');
@@ -80,22 +81,24 @@ DwenguinoDrawSimulationCanvas.prototype.drawServo = function(robot, canvas){
         robot[id].image.onload = function() {
             var ctx = canvas.getContext('2d');
             ctx.fillStyle = robot[id].backgroundColor;
+            console.log(robot[id].state);
             switch(robot[id].state){
-                case StatesEnum.plain:
+                case 'plain':
                     console.log(robot[id],'plain');
                     ctx.fillRect(robot[id].x, robot[id].y, robot[id].width, robot[id].height);
                     self.drawRotatedServohead(ctx, robot[id]);
                     break;
-                case StatesEnum.eye:
+                case 'eye':
                     console.log(robot[id],'eye');
                     ctx.fillRect(robot[id].x+2, robot[id].y-15, robot[id].width, robot[id].height-20);
                     self.drawEye(ctx,robot[id]);
                     break;
-                case StatesEnum.righthand:
+                case 'righthand':
+                    console.log('draw right hand');
                     ctx.fillRect(robot[id].x+100, robot[id].y+30, robot[id].width-100, robot[id].height-60);
                     self.drawRightHand(ctx,robot[id]);
                     break;
-                case StatesEnum.lefthand:
+                case 'lefthand':
                     ctx.fillRect(robot[id].x+10, robot[id].y+30, robot[id].width-28, robot[id].height-60);
                     self.drawLeftHand(ctx,robot[id]);
                     break;
@@ -104,20 +107,23 @@ DwenguinoDrawSimulationCanvas.prototype.drawServo = function(robot, canvas){
 
         var ctx = canvas.getContext('2d');
         ctx.fillStyle = robot[id].backgroundColor;
+        console.log(robot[id].state)
         switch(robot[id].state){
-            case StatesEnum.plain:
+            case 'plain':
+                console.log(robot[id],'plain');
                 ctx.fillRect(robot[id].x, robot[id].y, robot[id].width, robot[id].height);
                 self.drawRotatedServohead(ctx, robot[id]);
                 break;
-            case StatesEnum.eye:
+            case 'eye':
                 ctx.fillRect(robot[id].x+2, robot[id].y-15, robot[id].width, robot[id].height-20);
                 self.drawEye(ctx,robot[id]);
                 break;
-            case StatesEnum.righthand:
+            case 'righthand':
+                    console.log('draw right hand');
                 ctx.fillRect(robot[id].x+100, robot[id].y+30, robot[id].width-100, robot[id].height-60);
                 self.drawRightHand(ctx,robot[id]);
                 break;
-            case StatesEnum.lefthand:
+            case 'lefthand':
                 ctx.fillRect(robot[id].x+10, robot[id].y+30, robot[id].width-28, robot[id].height-60);
                 self.drawLeftHand(ctx,robot[id]);
                 break;
