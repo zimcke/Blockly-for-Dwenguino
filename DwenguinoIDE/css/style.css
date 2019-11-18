@@ -143,6 +143,7 @@ body{
 
 #db_simulator_top_pane{
     height: 50%;
+    min-height: 280px;
     width: 100%;
     position: relative;
     display: flex;
@@ -903,6 +904,7 @@ cursor: pointer;
 
 .draggable:hover {
     font-weight: bold;
+    color: #000000;
   }
 
 span.grippy {

@@ -608,24 +608,26 @@ DwenguinoSimulationScenarioSocialRobot.prototype.setServoState = function(i, sta
   switch(state){
     case StatesEnum.PLAIN:
         console.log('plain');
+        this.drawSimulation.clearCanvas(servoCanvasId);
+        document.getElementById(servoCanvasId).classList.remove('hand_canvas');
         this.robot[servoCanvasId].image.src = this.robot.imgServo;
         this.robot[servoCanvasId].width = 100;
         this.robot[servoCanvasId].height = 50;
-        document.getElementById(servoCanvasId).classList.remove('hand_canvas');
         this.initializeCanvas(servoCanvasId);
         break;
     case StatesEnum.EYE:
         console.log('eye');
         this.drawSimulation.clearCanvas(servoCanvasId);
+        document.getElementById(servoCanvasId).classList.remove('hand_canvas');
         this.robot[servoCanvasId].image.src = this.robot.imgEye;
         this.robot[servoCanvasId].width = 50;
         this.robot[servoCanvasId].height = 50;
-        document.getElementById(servoCanvasId).classList.remove('hand_canvas');
         this.initializeCanvas(servoCanvasId);
         break;
     case StatesEnum.RIGHTHAND:
         console.log('right hand');
         this.drawSimulation.clearCanvas(servoCanvasId);
+        document.getElementById(servoCanvasId).classList.remove('hand_canvas');
         this.robot[servoCanvasId].image.src = this.robot.imgRightHand;
         this.robot[servoCanvasId].width = 64;
         this.robot[servoCanvasId].height = 149;
@@ -635,6 +637,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.setServoState = function(i, sta
     case StatesEnum.LEFTHAND:
         console.log('left hand');
         this.drawSimulation.clearCanvas(servoCanvasId);
+        document.getElementById(servoCanvasId).classList.remove('hand_canvas');
         this.robot[servoCanvasId].image.src = this.robot.imgLeftHand;
         this.robot[servoCanvasId].width = 64;
         this.robot[servoCanvasId].height = 149;
