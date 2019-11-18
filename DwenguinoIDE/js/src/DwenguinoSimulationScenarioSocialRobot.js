@@ -220,6 +220,7 @@ function DwenguinoSimulationScenarioSocialRobot(){
       numberOf: {},
       imgServo: './img/board/servo_movement.png',
       imgPir: './img/socialrobot/pir.png',
+      imgPirOn: './img/socialrobot/pir_on.png',
       imgSonar: './img/board/sonar.png',
       imgRobot: 'url("./img/socialrobot/robot1.png")',
       imgEye: './img/socialrobot/eye.svg',
@@ -452,7 +453,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addSonar = function(draw = true
   var sonarSliderId = 'sonar_slider' + id;
   if(!document.getElementById(sonarSliderId)){
     console.log('make slider');
-    $('#sensor_options').append("<div id='" + sliderLabel + "' class='' alt='Load'>" + MSG.sonarSliderLabel + "</div>");
+    $('#sensor_options').append("<div id='" + sliderLabel + "' class='' alt='Load'>" + MSG.sonarSliderLabel + " " + id + "</div>");
     $('#sensor_options').append("<div id='" + sliderId + "' class='sonar_slider slidecontainer' alt='Load'></div>");
     $('#' + sliderId).append("<input type='range' min='0' max='200' value='100' class='slider' id='" + sonarSliderId + "'></input>");
     
@@ -647,6 +648,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addPirEventHandler = function(p
     console.log('pir button clicked');
     if (document.getElementById(pirButtonId).className === "pir_button") {
       document.getElementById(pirButtonId).className = "pir_button pir_button_pushed";
+      self.robot[pirCanvasId].image.src = self.robot.imgPirOn;
       self.robot[pirCanvasId].state = 1;
     }
   });
@@ -654,6 +656,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addPirEventHandler = function(p
   $("#"+ pirButtonId).on('mouseup', function() {
     if (document.getElementById(pirButtonId).className === "pir_button pir_button_pushed") {
       document.getElementById(pirButtonId).className = "pir_button";
+      self.robot[pirCanvasId].image.src = self.robot.imgPir;
       self.robot[pirCanvasId].state = 0;
     }
   });
