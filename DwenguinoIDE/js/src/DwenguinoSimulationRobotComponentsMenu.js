@@ -2,7 +2,7 @@ var DwenguinoSimulationRobotComponentsMenu = {
   maxNumberOfServos: 5,
   maxNumberOfLeds: 3,
   maxNumberOfPirs: 1,
-  maxNumberOfSonars: 2,
+  maxNumberOfSonars: 1,
   maxNumberOfLcds: 1,
   maxNumberOfDecorations: 10,
   socialRobotScenario: {},

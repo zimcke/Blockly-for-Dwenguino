@@ -88,6 +88,7 @@ function DwenguinoSimulationScenarioSocialRobot(){
       var data = self.loadToXml();
       self.scenarioUtils.saveScenario(data);
     });
+
   }
 
   DwenguinoSimulationScenarioSocialRobot.prototype.initSimulation = function(containerIdSelector) {
@@ -102,6 +103,8 @@ function DwenguinoSimulationScenarioSocialRobot(){
     var container = $(containerIdSelector);
     var simulationContainer = $("<div>").attr("id", "sim_container");
 
+    var sensorOptions = $("<div>").attr("id", "sensor_options");
+    $('#sim_container').append(sensorOptions);
     // Add resize listerner to the conainer and update width and height accordingly
     var self = this;
     new ResizeSensor(simulationContainer, function() {
@@ -119,10 +122,9 @@ function DwenguinoSimulationScenarioSocialRobot(){
     // this.robot[backgroundCanvasId].image = new Image();
     // this.robot[backgroundCanvasId].image.src = this.robot.imgRobot;
 
-    $('#sim_container').append("<div id='sim_background' class='sim_element draggable'></div>");
+    $('#sim_container').append("<div id='sim_background' class='sim_element'></div>");
     $('#sim_background').css('top', 0 + 'px');
     $('#sim_background').css('left', 0 + 'px');
-    
 
     // Reset the simulation state
     this.initSimulationState();
@@ -379,10 +381,19 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addPir = function(draw = true, 
   $('#sim_container').append("<div id='sim_pir"+id+"' class='sim_element sim_element_pir draggable'>"+MSG.simulator['pir']+" "+id+"</div>");
   $('#sim_pir' + id).css('top', offsetTop + 'px');
   $('#sim_pir' + id).css('left', offsetLeft + 'px');
-  var pirButtonId = 'sim_pir_button' + id;
   $('#sim_pir' + id).append("<canvas id='sim_pir_canvas" +id+"' class='sim_canvas pir_canvas'></canvas>"); 
-  $('#sim_pir' + id).append('<div id="' + pirButtonId + '" class="pir_button"></div>');
-  this.addPirEventHandler(pirButtonId, pirCanvasId);
+
+  var buttonLabel = 'button' + id + '_label';
+  var pirButtonId = 'pir_button' + id;
+  if(!document.getElementById(pirButtonId)){
+    console.log('make button');
+    $('#sensor_options').append("<div id='" + buttonLabel + "' class='' alt='Load'>" + MSG.pirButtonLabel + ' ' + id + "</div>");
+    $('#sensor_options').append("<div id='" + pirButtonId + "' class='pir_button' alt='Load'></div>");
+    
+    // TODO
+    this.addPirEventHandler(pirButtonId, pirCanvasId);
+  }
+
   this.initializeCanvas(pirCanvasId);
   if(draw){
     $('#sim_pir' + id).css('visibility', 'visible');
@@ -398,6 +409,11 @@ DwenguinoSimulationScenarioSocialRobot.prototype.removePir = function(){
   DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("removeRobotComponent", TypesEnum.PIR));
   var id = this.robot.numberOf[TypesEnum.PIR];
   $('#sim_pir'+ id).remove();
+
+  var buttonLabel = '#button' + id + '_label';
+  var pirButtonId = '#pir_button' + id;
+  $(buttonLabel).remove();
+  $(pirButtonId).remove();
 
   delete this.robot['sim_pir_canvas' + id];
   this.robot.numberOf[TypesEnum.PIR] -= 1;
@@ -422,16 +438,38 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addSonar = function(draw = true
   $('#sim_container').append("<div id='sim_sonar"+id+"' class='sim_element sim_element_sonar draggable'>"+MSG.simulator['sonar']+" "+id+"</div>");
   $('#sim_sonar' + id).css('top', offsetTop + 'px');
   $('#sim_sonar' + id).css('left', offsetLeft + 'px');
-  var pirButtonId = 'sim_sonar_button' + id;
   $('#sim_sonar' + id).append("<canvas id='sim_sonar_canvas" +id+"' class='sim_canvas sonar_canvas'></canvas>"); 
-  // $('#sim_sonar' + id).append('<div id="' + sonarButtonId + '" class="sonar_button"></div>');
-  // this.addPirEventHandler(pirButtonId, pirCanvasId);
+  
   this.initializeCanvas(sonarCanvasId);
   if(draw){
     $('#sim_sonar' + id).css('visibility', 'visible');
   } else {
     $('#sim_sonar' + id).css('visibility', 'hidden');
   }
+
+  var sliderId = 'slider' + id;
+  var sliderLabel = 'slider' + id + '_label';
+  var sonarSliderId = 'sonar_slider' + id;
+  if(!document.getElementById(sonarSliderId)){
+    console.log('make slider');
+    $('#sensor_options').append("<div id='" + sliderLabel + "' class='' alt='Load'>" + MSG.sonarSliderLabel + "</div>");
+    $('#sensor_options').append("<div id='" + sliderId + "' class='sonar_slider slidecontainer' alt='Load'></div>");
+    $('#' + sliderId).append("<input type='range' min='0' max='200' value='100' class='slider' id='" + sonarSliderId + "'></input>");
+    
+    var self = this;
+    var slider = document.getElementById(sonarSliderId);
+    slider.oninput =function(){
+      console.log(this.value);
+      self.changeSonarDistance(this.value);
+    };
+  }
+};
+
+/**
+ * Remove the most recent created SONAR sensor from the simulation container.
+ */
+DwenguinoSimulationScenarioSocialRobot.prototype.changeSonarDistance = function(value){
+  DwenguinoSimulation.board.sonarDistance = value;
 };
 
 /**
@@ -604,8 +642,9 @@ DwenguinoSimulationScenarioSocialRobot.prototype.setServoState = function(i, sta
 
 DwenguinoSimulationScenarioSocialRobot.prototype.addPirEventHandler = function(pirButtonId, pirCanvasId){
   var self = this;
-
+  console.log(pirButtonId);
   $("#" + pirButtonId).on('mousedown', function() {
+    console.log('pir button clicked');
     if (document.getElementById(pirButtonId).className === "pir_button") {
       document.getElementById(pirButtonId).className = "pir_button pir_button_pushed";
       self.robot[pirCanvasId].state = 1;
@@ -630,6 +669,11 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addPirEventHandler = function(p
  * This function will be called when the social robot scenario is added to the list of scenarios.
  */
 DwenguinoSimulationScenarioSocialRobot.prototype.checkLocalStorage = function(){
+  var sensorOptions = $("<div>").attr("id", "sensor_options");
+  $('#sim_container').append(sensorOptions);
+
+  console.log('sim container', $('#sim_container'));
+  
   if (window.localStorage) {
     var localStorage = window.localStorage;
 
@@ -813,7 +857,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.loadFromXml = function(){
       elements[0].parentNode.removeChild(elements[0]);
   }
 
-  $('#sim_container').append("<div id='sim_background' class='sim_element draggable'></div>");
+  $('#sim_container').append("<div id='sim_background' class='sim_element'></div>");
   $('#sim_background').css('top', 0 + 'px');
   $('#sim_background').css('left', 0 + 'px');
   $('#sim_background').css('background-image', this.robot.imgRobot);

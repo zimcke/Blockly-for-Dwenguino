@@ -105,6 +105,8 @@ var MSG = {
   socialRobotArmsDownBlock: "Put arms down %1 %2 Servo right hand %3 %4 Servo left hand %5 %6",
   socialRobotServoRightHand: "Servo right hand",
   socialRobotServoLeftHand: "Servo left hand",
+  sonarSliderLabel: "Sonar distance",
+  pirButtonLabel: "PIR button",
 };
 
 
