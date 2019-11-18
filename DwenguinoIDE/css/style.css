@@ -744,13 +744,14 @@ body{
     color: #FFFFFF;
 }
 .servo_canvas{
+    margin-left: 25px;
     margin-top: 0px;
     width: 100px;
     height: 120px;
 }
 
 .hand_canvas{
-    margin-left: 25px;
+    margin-left: 0px;
     margin-top: 0px;
     width: 120px;
     height: 200px;
