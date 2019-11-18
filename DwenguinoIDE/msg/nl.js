@@ -151,6 +151,7 @@ MSG.simulator = {
 };
 
 MSG.socialrobot = {
+  plain: "Lege servo",
   eye: "Oog",
   mouth: "Mond",
   righthand: "Rechterhand",

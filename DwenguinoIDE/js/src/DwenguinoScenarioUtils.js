@@ -212,16 +212,24 @@ DwenguinoScenarioUtils.prototype.contextMenuServo = function(){
                 window.console && console.log(m) || alert(m); 
             },
             items: {
-                "eye": {
-                    name: MSG.socialrobot['eye'], 
-                    // superseeds "global" callback
+                "plain": {
+                    name: MSG.socialrobot['plain'],
                     callback: function(itemKey, opt, e) {
                         var simServoId = this.attr('id');
                         var i = simServoId.replace(/\D/g,'');
-                        self.scenario.setServoState(i, StatesEnum.EYE);
+                        self.scenario.setServoState(i, StatesEnum.PLAIN);
                     }
                 },
-                "mouth": {name: MSG.socialrobot['mouth'],},
+                // "eye": {
+                //     name: MSG.socialrobot['eye'], 
+                //     // superseeds "global" callback
+                //     callback: function(itemKey, opt, e) {
+                //         var simServoId = this.attr('id');
+                //         var i = simServoId.replace(/\D/g,'');
+                //         self.scenario.setServoState(i, StatesEnum.EYE);
+                //     }
+                // },
+                // "mouth": {name: MSG.socialrobot['mouth'],},
                 "righthand": {
                     name: MSG.socialrobot['righthand'],
                     callback: function(itemKey, opt, e) {
