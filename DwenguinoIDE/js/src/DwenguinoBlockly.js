@@ -524,7 +524,7 @@ var DwenguinoBlockly = {
 
     setDifficultyLevel: function(level){
         DwenguinoBlockly.difficultyLevel = level;
-        $("#toolbox").load("levels/lvl" + level + ".xml", function(){
+        $("#toolbox").load("DwenguinoIDE/levels/lvl" + level + ".xml", function(){
             DwenguinoBlockly.doTranslation();
             DwenguinoBlockly.workspace.updateToolbox(document.getElementById("toolbox"));
         });
@@ -578,7 +578,7 @@ var DwenguinoBlockly = {
         DwenguinoBlockly.workspace = Blockly.inject(blocklyDiv,
             {
                 toolbox: document.getElementById('toolbox'),
-                media: "./img/",
+                media: "DwenguinoIDE/img/",
                 zoom: {controls: true, wheel: true}
             });
         window.addEventListener('resize', DwenguinoBlockly.onresize, false);

@@ -90,7 +90,7 @@ var DwenguinoSimulation = {
       if (value == DwenguinoSimulation.scenarioView){
         newOpt.attr("checked", "checked");
       }
-      var image = $("<img></img>").attr("class", "scenario_image").attr("src", "img/scenarios/scenario_" + value + ".png");
+      var image = $("<img></img>").attr("class", "scenario_image").attr("src", "DwenguinoIDE/img/scenarios/scenario_" + value + ".png");
       container.append(newOpt);
       container.append(image);
       $("#sim_scenario").append(container);
