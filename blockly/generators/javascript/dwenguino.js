@@ -164,7 +164,7 @@ Blockly.JavaScript.dwenguino_set_led = function(){
     var led_state = Blockly.JavaScript.valueToCode(this, "LED_STATE", Blockly.JavaScript.ORDER_ATOMIC);
     //Blockly.JavaScript.setups_['setup_output_'+pin_number] = 'pinMode('+pin_number+', OUTPUT);';
 
-    var code = machine + 'digitalWrite("' + pin_number + '", "' + led_state + '");\n';
+    var code = machine + 'digitalWrite(' + pin_number + ', ' + led_state + ');\n';
     return code;
 };
 

@@ -150,6 +150,8 @@ Blockly.Arduino.init = function(workspace) {
             Blockly.Arduino.variableDB_.reset();
     }
 
+    Blockly.Arduino.variableDB_.setVariableMap(workspace.getVariableMap());
+
 };
 
 

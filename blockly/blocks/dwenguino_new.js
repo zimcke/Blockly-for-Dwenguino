@@ -23,7 +23,6 @@
 goog.provide('Blockly.Blocks.dwenguino');
 
 goog.require('Blockly.Blocks');
-goog.require('Blockly.Arduino');
 
 
 var DwenguinoHelpUrl = "http://www.dwengo.org/blockly";
@@ -49,7 +48,7 @@ var setup_loop_json = {
       "name": "LOOP"
     }
   ],
-  "colour": Blockly.Blocks.dwenguino.HUE,
+  "colour": Blockly.Msg.DWENGUINO_HUE,
   "tooltip": MSG.dwenguino_main_program_structure,
   "helpUrl": DwenguinoHelpUrl,
   "data": "testdatastring"
@@ -65,7 +64,7 @@ Blockly.Blocks['setup_loop_structure'] = {
 Blockly.Blocks['dwenguino_delay'] = {
   init: function() {
     this.setHelpUrl(DwenguinoHelpUrl);
-    this.setColour(Blockly.Blocks.dwenguino.HUE);
+    this.setColour(Blockly.Msg.DWENGUINO_HUE);
     this.appendValueInput("DELAY_TIME", 'Number')
         .appendField(MSG.delay)
         .setCheck('Number');
@@ -92,7 +91,7 @@ var dwenguino_wait_for_switch = {
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour": Blockly.Blocks.dwenguino.HUE,
+    "colour": Blockly.Msg.DWENGUINO_HUE,
     "tooltip": MSG.digitalReadSwitchTooltip,
     "helpUrl": "http://www.dwengo.org/tutorials"
 };
@@ -109,7 +108,7 @@ var clear_lcd_json = {
   "args0": [],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": Blockly.Blocks.dwenguino.HUE,
+  "colour": Blockly.Msg.DWENGUINO_HUE,
   "tooltip": "",
   "helpUrl": DwenguinoHelpUrl
 };
@@ -155,7 +154,7 @@ var dwenguino_lcd_json = {
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": Blockly.Blocks.dwenguino.HUE,
+  "colour": Blockly.Msg.DWENGUINO_HUE,
   "tooltip": "",
   "helpUrl": DwenguinoHelpUrl
 };
@@ -169,7 +168,7 @@ Blockly.Blocks['dwenguino_lcd'] = {
 Blockly.Blocks['dwenguino_pins'] = {
   helpUrl: 'DwenguinoHelpUrl',
   init: function() {
-    this.setColour(Blockly.Blocks.dwenguino.HUE);
+    this.setColour(Blockly.Msg.DWENGUINO_HUE);
     this.appendDummyInput()
         .appendField(MSG.pin)
         .appendField(new Blockly.FieldDropdown(profile.dwenguino.digital), 'PIN')
@@ -181,7 +180,7 @@ Blockly.Blocks['dwenguino_pins'] = {
 Blockly.Blocks['dwenguino_tone_on_pin'] = {
   helpUrl: 'DwenguinoHelpUrl',
   init: function() {
-    this.setColour(Blockly.Blocks.dwenguino.HUE);
+    this.setColour(Blockly.Msg.DWENGUINO_HUE);
     this.appendValueInput("PIN", "Pin")
         .appendField(MSG.toneOnPin)
         .setCheck("Number");
@@ -197,7 +196,7 @@ Blockly.Blocks['dwenguino_tone_on_pin'] = {
 
 Blockly.Blocks['dwenguino_no_tone_on_pin'] = {
   init: function() {
-    this.setColour(Blockly.Blocks.dwenguino.HUE);
+    this.setColour(Blockly.Msg.DWENGUINO_HUE);
     this.appendValueInput("PIN", "Pin")
         .appendField(MSG.noToneOnPin)
         .setCheck("Number");
@@ -220,7 +219,7 @@ var char_type_json = {
     ],
     "inputsInline": true,
     "output": "Number",
-    "colour": Blockly.Blocks.math.HUE,
+    "colour": Blockly.Msg.MATH_HUE,
     "tooltip": "",
     "helpUrl": DwenguinoHelpUrl
 };
@@ -260,7 +259,7 @@ var sonar_sensor_json = {
     }
   ],
   "output": "Number",
-  "colour": Blockly.Blocks.dwenguino.HUE,
+  "colour": Blockly.Msg.DWENGUINO_HUE,
   "tooltip": MSG.sonarTooltip,
   "helpUrl": DwenguinoHelpUrl
 };
@@ -275,7 +274,7 @@ Blockly.Blocks['sonar_sensor'] = {
 Blockly.Blocks['dwenguino_digital_read'] = {
   init: function() {
     this.setHelpUrl(DwenguinoHelpUrl);
-    this.setColour(Blockly.Blocks.dwenguino.HUE);
+    this.setColour(Blockly.Msg.DWENGUINO_HUE);
     this.appendValueInput('PIN', 'PIN')
             .appendField(MSG.digitalRead)
             .setCheck("Number");
@@ -297,7 +296,7 @@ var dwenguino_digital_read_switch = {
         }
     ],
     "output": "Number",
-    "colour": Blockly.Blocks.dwenguino.HUE,
+    "colour": Blockly.Msg.DWENGUINO_HUE,
     "tooltip": MSG.digitalReadSwitchTooltip,
     "helpUrl": "http://www.dwengo.org/tutorials"
 };
@@ -312,7 +311,7 @@ Blockly.Blocks['dwenguino_digital_read_switch'] = {
 Blockly.Blocks['dwenguino_digital_write'] = {
     init: function(){
         this.setHelpUrl(DwenguinoHelpUrl);
-        this.setColour(Blockly.Blocks.dwenguino.HUE);
+        this.setColour(Blockly.Msg.DWENGUINO_HUE);
         this.appendValueInput('PIN', 'PIN')
             .appendField(MSG.digitalWriteToPin)
             .setCheck("Number");
@@ -329,7 +328,7 @@ Blockly.Blocks['dwenguino_digital_write'] = {
 Blockly.Blocks['dwenguino_highlow'] = {
   init: function() {
     this.setHelpUrl(DwenguinoHelpUrl);
-    this.setColour(Blockly.Blocks.dwenguino.HUE);
+    this.setColour(Blockly.Msg.DWENGUINO_HUE);
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([[MSG.high, "HIGH"], [MSG.low, "LOW"]]), 'BOOL')
     this.setOutput(true, 'Number');
@@ -340,7 +339,7 @@ Blockly.Blocks['dwenguino_highlow'] = {
 Blockly.Blocks['dwenguino_pressed'] = {
   init: function() {
     this.setHelpUrl(DwenguinoHelpUrl);
-    this.setColour(Blockly.Blocks.dwenguino.HUE);
+    this.setColour(Blockly.Msg.DWENGUINO_HUE);
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([[MSG.pressed, "PRESSED"], [MSG.notPressed, "NOT_PRESSED"]]), 'BOOL')
     this.setOutput(true, 'Number');
@@ -378,7 +377,7 @@ var dc_motor_json = {
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": Blockly.Blocks.dwenguino.HUE,
+  "colour": Blockly.Msg.DWENGUINO_HUE,
   "tooltip": MSG.dwenguinoDCMotorBlockTooltip,
   "helpUrl": "http://www.dwengo.org/tutorials"
 };
@@ -413,7 +412,7 @@ var dwenguino_servo_json = {
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": Blockly.Blocks.dwenguino.HUE,
+  "colour": Blockly.Msg.DWENGUINO_HUE,
   "tooltip": MSG.dwenguinoServoBlockTooltip,
   "helpUrl": "http://www.dwengo.org/tutorials"
 };
@@ -450,7 +449,7 @@ var dwenguino_set_led = {
     "inputsInline": true,
     "previousStatement": null,
     "nextStatement": null,
-    "colour": Blockly.Blocks.dwenguino.HUE,
+    "colour": Blockly.Msg.DWENGUINO_HUE,
     "tooltip": MSG.setLedStateTooltip,
     "helpUrl": "http://www.dwengo.org/tutorials"
 };
@@ -472,7 +471,7 @@ var dwenguino_led_pins = {
       }
     ],
     "output": "Number",
-    "colour": Blockly.Blocks.dwenguino.HUE,
+    "colour": Blockly.Msg.DWENGUINO_HUE,
     "tooltip": MSG.ledPinsTooltip,
     "helpUrl": "http://www.dwengo.org/tutorials"
 };
@@ -495,7 +494,7 @@ var dwenguino_on_off = {
       }
     ],
     "output": "Number",
-    "colour": Blockly.Blocks.dwenguino.HUE,
+    "colour": Blockly.Msg.DWENGUINO_HUE,
     "tooltip": MSG.dwenguinoOnOffTooltip,
     "helpUrl": "http://www.dwengo.org/tutorials"
 };
@@ -524,7 +523,7 @@ var dwenguino_analog_write = {
     "inputsInline": true,
     "previousStatement": null,
     "nextStatement": null,
-    "colour": Blockly.Blocks.dwenguino.HUE,
+    "colour": Blockly.Msg.DWENGUINO_HUE,
     "tooltip": MSG.dwenguinoAnalogWriteTooltip,
     "helpUrl": "http://www.dwengo.org/tutorials"
 };
@@ -546,7 +545,7 @@ var dwenguino_analog_read = {
         }
     ],
     "output": "Number",
-    "colour": Blockly.Blocks.dwenguino.HUE,
+    "colour": Blockly.Msg.DWENGUINO_HUE,
     "tooltip": MSG.dwenguinoAnalogWriteTooltip,
     "helpUrl": "http://www.dwengo.org/tutorials"
 };
@@ -568,7 +567,7 @@ var dwenguino_leds_reg = {
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour": Blockly.Blocks.dwenguino.HUE,
+    "colour": Blockly.Msg.DWENGUINO_HUE,
     "tooltip": MSG.dwenguinoLedsRegTooltip,
     "helpUrl": "http://www.dwengo.org/tutorials"
 };
