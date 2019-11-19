@@ -29,7 +29,7 @@ Blockly.JavaScript['setup_loop_structure'] = function (block) {
 
 Blockly.JavaScript['set_leds'] = function (block) {
     var value_register_value = Blockly.JavaScript.valueToCode(block, 'register value', Blockly.JavaScript.ORDER_ATOMIC);
-    var code = machine + 'setLeds("' + value_register_value + '");\n';
+    var code = machine + 'setLeds(' + value_register_value + ');\n';
     return code;
 };
 
@@ -204,8 +204,9 @@ Blockly.JavaScript.dwenguino_wait_for_switch = function(){
 
 Blockly.JavaScript.dwenguino_leds_reg = function(){
     var bitmask = Blockly.JavaScript.valueToCode(this, "MASK", Blockly.JavaScript.ORDER_ATOMIC);
-    var code = machine + 'setLeds("' + bitmask + '");\n';
-
+    var code = "";
+    code = machine + 'setLeds(' + bitmask + ');\n';
+    
     return code;
 };
 

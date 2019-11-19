@@ -791,9 +791,24 @@ var DwenguinoSimulation = {
     * @param {String} bin "0b00000000" to turn all lights off, "0b11111111" to turn all lights on
     */
     setLeds: function(bin) {
-      for (var i = 2; i < 10; i++) {
-        DwenguinoSimulation.digitalWrite(i+30, bin[i]);
+      //Convert number to binary string
+      bin = bin.toString(2);
+
+      // Turn all leds off
+      for (var i = 0 ; i < 8 ; i++){
+        DwenguinoSimulation.digitalWrite(32+i, 0);
       }
+      // Turn on the respective leds
+      var diff = 8 - bin.length;
+      if (diff < 0){
+        diff = 0
+      }
+      for (var i = 0 ; i < Math.min(bin.length, 8) ; i++){
+        DwenguinoSimulation.digitalWrite(39 - (diff + i), bin[i]);
+      }
+      
+
+      
     },
 
     /*
