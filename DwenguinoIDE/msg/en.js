@@ -20,6 +20,7 @@ var MSG = {
   catFunctions: "Functions",
   catDwenguino: "Dwenguino",
   catBoardIO: "IO",
+  createVar: "Create variable",
   listVariable: "list",
   textVariable: "text",
   httpRequestError: "There was a problem with the request.",

@@ -25,6 +25,8 @@ var DwenguinoBlockly = {
     simulatorState: "off",
     xmlLoadedFromFile: "",
 
+    
+
     initDwenguinoBlockly: function(){
         //set keypress event listerner to show test environment window
         var keys = {};
@@ -46,6 +48,9 @@ var DwenguinoBlockly = {
         $(document).keyup(function (e) {
             delete keys[e.which];
         });
+
+
+        
 
         //code to init the bootstrap modal dialog
         $("#submit_modal_dialog_button").click(function(){
@@ -80,7 +85,7 @@ var DwenguinoBlockly = {
         $( "#db_menu_item_difficulty_slider" ).slider({
             value:0,
             min: 0,
-            max: 2,
+            max: 1,
             step: 1,
             slide: function( event, ui ) {
                 DwenguinoBlockly.setDifficultyLevel(ui.value);
@@ -524,7 +529,7 @@ var DwenguinoBlockly = {
 
     setDifficultyLevel: function(level){
         DwenguinoBlockly.difficultyLevel = level;
-        $("#toolbox").load("DwenguinoIDE/levels/lvl" + level + ".xml", function(){
+        $("#toolbox").load("./levels/lvl" + level + ".xml", function(){
             DwenguinoBlockly.doTranslation();
             DwenguinoBlockly.workspace.updateToolbox(document.getElementById("toolbox"));
         });
@@ -585,6 +590,56 @@ var DwenguinoBlockly = {
         DwenguinoBlockly.onresize();
         Blockly.svgResize(DwenguinoBlockly.workspace);
         DwenguinoBlockly.workspace.addChangeListener(DwenguinoBlockly.renderCode);
+
+        // Init the callback for the dynamic creation of the toolbox
+        /**
+         * Construct the blocks required by the flyout for the colours category.
+         * @param {!Blockly.Workspace} workspace The workspace this flyout is for.
+         * @return {!Array.<!Element>} Array of XML block elements.
+         */
+        var variablesFlyoutCallback = function(workspace) {
+          var variables = DwenguinoBlockly.workspace.getAllVariables();
+          var block_texts = []
+          //block_texts.push('<button text="' + MSG['createVar'] + '" callbackKey="createVariableCallback"></button>')
+          block_texts.push('<block type="variables_declare_set_int"></block>');
+          block_texts.push('<block type="variables_get_int"></block>');
+          block_texts.push('<block type="variables_declare_set_string"></block>');
+          block_texts.push('<block type="variables_get_string"></block>');
+          
+          console.log(variables)
+          for (var i = 0 ; i < variables.length ; i++){
+            var type = "int";
+            if (variables[i]["type"] == "Number"){
+              type = "int";
+            } else if (variables[i]["type"] == "String"){
+              type = "string";
+            }
+            
+            var blockXml = '<block type="variables_get_' + type + '"><field name="VAR" id="';
+            blockXml = blockXml + variables[i]["id_"] + '" variabletype="';
+            blockXml = blockXml + variables[i]["type"] + '">';
+            blockXml = blockXml + variables[i]["name"] + '</field></block>';
+            console.log(blockXml);
+            block_texts.push(blockXml);
+          }
+          var blocks = []
+          for (var i = 0 ; i < block_texts.length ; i++){
+            blocks.push(Blockly.Xml.textToDom(block_texts[i]))
+          }
+          return blocks;
+        }
+
+        var createVariableCallback = function(btn){
+            console.log("Creating new variable");
+        };
+
+        DwenguinoBlockly.workspace.registerButtonCallback(
+          "createVariableCallback", createVariableCallback
+        );
+
+        DwenguinoBlockly.workspace.registerToolboxCategoryCallback(
+          "DWB_VARIABLES", variablesFlyoutCallback
+        );
     },
 
     changeLanguage: function() {

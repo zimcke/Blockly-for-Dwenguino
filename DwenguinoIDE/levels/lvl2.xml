@@ -5,11 +5,10 @@
     <block type="logic_negate"></block>
     <block type="logic_boolean"></block>
 </category>
-<category id="catFunctions" colour="270">
-    <block type="procedures_defnoreturn_typed_params"></block>
-    <block type="procedures_defreturn_typed_params"></block>
+<category id="catFunctions" colour="270" custom="PROCEDURE">
+    <block type="procedures_defnoreturn"></block>
+    <block type="procedures_defreturn"></block>
     <block type="procedures_callreturn"></block>
-
 </category>
 <category id="catLoops" colour="180" name="Loops">
   <block type="controls_for">
@@ -41,14 +40,9 @@
 <category id="catText" colour="225" name="Text">
     <block type="text"></block>
     <block type="text_join"></block>
-    <block type="char"></block>
 </category>
-<category id="catVariables" colour="90" name='Math'>
-    <block type="variables_declare"></block>
-    <block type="variables_declare_global"></block>
-    <block type="variables_set"></block>
-    <block type="variables_get"></block>
-</category>
+<category id="catVariables" colour="90" name='Math' custom="DWB_VARIABLES">
+
 <category id="catDwenguino" colour="315" name='Dwenguino'>
     <block type="setup_loop_structure"></block>
     <block type="dwenguino_delay">

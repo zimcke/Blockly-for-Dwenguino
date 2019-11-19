@@ -746,7 +746,7 @@ var DwenguinoSimulation = {
         if (pin >= 32 && pin <= 39) {
           pin -= 32;
         }
-        if (state === 'HIGH' || state === "1") {
+        if (state === 'HIGH' || state == 1) {
           pin=== 13? DwenguinoSimulation.board.leds[8] = 1 : DwenguinoSimulation.board.leds[pin] = 1;
           document.getElementById('sim_light_' + pin).className = "sim_light sim_light_on";
         } else {
