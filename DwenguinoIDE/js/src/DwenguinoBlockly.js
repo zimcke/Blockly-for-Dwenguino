@@ -529,7 +529,7 @@ var DwenguinoBlockly = {
 
     setDifficultyLevel: function(level){
         DwenguinoBlockly.difficultyLevel = level;
-        $("#toolbox").load("./levels/lvl" + level + ".xml", function(){
+        $("#toolbox").load("./DwenguinoIDE/levels/lvl" + level + ".xml", function(){
             DwenguinoBlockly.doTranslation();
             DwenguinoBlockly.workspace.updateToolbox(document.getElementById("toolbox"));
         });

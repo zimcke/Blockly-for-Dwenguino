@@ -1,5 +1,6 @@
 <category id="catLogic" colour="0" name='Logic'>
     <block type="controls_if"></block>
+    <block type="controls_if"><mutation else="1"/></block>
     <block type="logic_compare"></block>
     <block type="logic_operation"></block>
     <block type="logic_negate"></block>
