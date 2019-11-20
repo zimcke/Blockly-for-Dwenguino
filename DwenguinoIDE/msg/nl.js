@@ -109,7 +109,6 @@ var MSG = {
   create: "Maak",
   with_type: "met type",
   create_global: "Maak globaal",
-<<<<<<< HEAD
   next: "Volgende",
   previous: "Vorige",
   socialrobotWaveArmesBlock: "Zwaai armen %1 %2 Servo rechterhand %3 %4 Servo linkerhand %5 %6",
@@ -119,8 +118,6 @@ var MSG = {
   socialRobotServoLeftHand: "Servo linkerhand",
   sonarSliderLabel: "Afstand sonar",
   pirButtonLabel: "Knop PIR",
-=======
->>>>>>> origin/dwenguinoblocklyonline
 };
 
 
@@ -183,15 +180,6 @@ MSG.tutorials.general = {
 };
 
 
-<<<<<<< HEAD
-=======
-MSG.tutorials.general = {
-  sureTitle: "Ben je zeker?",
-  sureText: "Wanneer je op 'Volgende' klikt dan worden de blokken op het werkblad vervangen.",
-};
-
-
->>>>>>> origin/dwenguinoblocklyonline
 MSG.tutorials.introduction = {
   stepTitles: [
     "Welkom bij DwenguinoBlockly",
@@ -551,7 +539,6 @@ MSG.tutorials.lampOnOffWeGoSTEM = {
     "Is het gelukt om de code te verbeteren?",
   ],
 };
-<<<<<<< HEAD
 
 MSG.tutorials.socialrobot['introduction'] = {};
 MSG.tutorials.socialrobot['introduction'].label = 'Ontwerp een robot';
@@ -577,5 +564,3 @@ MSG.tutorials.socialrobot['introduction'].stepContents = [
   "Wanneer je blokken uit de toolbox sleept, komen ze in het Blockly codegebied. Hier komt het programma dat je gaat schrijven.",
   "Je bent nu klaar om met de volgende tutorials te beginnen, waarin je de verschillende robotelementen leert gebruiken."
 ];
-=======
->>>>>>> origin/dwenguinoblocklyonline
