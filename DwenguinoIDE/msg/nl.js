@@ -1,3 +1,5 @@
+/* dutch translation file */
+
 var MSG = {
   title: "DwenguinoBlockly",
   blocks: "Blokken",
