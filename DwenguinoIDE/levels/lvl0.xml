@@ -141,6 +141,13 @@
             </block>
         </value>
     </block>
+     <block type="pir_sensor">
+            <value name="trig">
+                <block type="char_type" id="pir_sensor_pin"> 
+                  <field name="BITMASK">11</field>
+                </block>
+            </value>
+        </block>
     <block type="dwenguino_set_led">
         <value name="LED">
             <block type="dwenguino_led_pins">

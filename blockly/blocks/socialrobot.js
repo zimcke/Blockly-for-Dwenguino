@@ -43,7 +43,7 @@ var socialrobot_arms_down_json = {
       {
       "type": "field_label_serializable",
       "name": "NAME",
-      "text": "Servo right hand"
+      "text": ""
       },
       {
       "type": "input_value",
@@ -54,7 +54,7 @@ var socialrobot_arms_down_json = {
       {
       "type": "field_label_serializable",
       "name": "NAME",
-      "text": "Servo left hand"
+      "text": ""
       },
       {
       "type": "input_value",
@@ -90,7 +90,7 @@ var socialrobot_wave_arms_json = {
         {
         "type": "field_label_serializable",
         "name": "NAME",
-        "text": "Servo right hand"
+        "text": ""
         },
         {
         "type": "input_value",
@@ -101,7 +101,7 @@ var socialrobot_wave_arms_json = {
         {
         "type": "field_label_serializable",
         "name": "NAME",
-        "text": "Servo left hand"
+        "text": ""
         },
         {
         "type": "input_value",
