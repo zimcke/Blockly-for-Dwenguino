@@ -103,6 +103,7 @@ var MSG = {
   create_global: "Create global",
   socialrobotWaveArmesBlock: "Wave arms %1 %2 Servo right hand %3 %4 Servo left hand %5 %6",
   socialRobotArmsDownBlock: "Put arms down %1 %2 Servo right hand %3 %4 Servo left hand %5 %6",
+  socialrobotReadPinBlock: "Read value of pin %1 %2",
   socialRobotServoRightHand: "Servo right hand",
   socialRobotServoLeftHand: "Servo left hand",
   sonarSliderLabel: "Sonar distance",
@@ -138,6 +139,7 @@ MSG.simulator = {
   sonar: "Sonar",
   led: "LED",
   lcd: "LCD screen",
+  button: "Button",
   decoration: "Decoration",
 };
 

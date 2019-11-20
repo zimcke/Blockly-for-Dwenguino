@@ -61,3 +61,11 @@ Blockly.Arduino['socialrobot_wave_arms'] = function(block) {
   return code;
 
 }
+
+Blockly.Arduino['socialrobot_read_pin'] = function(block){
+    var pin_number = Blockly.Arduino.valueToCode(this, "PIN", Blockly.Arduino.ORDER_ATOMIC);
+    //Blockly.Arduino.setups_['setup_input_' + pin_number] = 'pinMode(' + pin_number + ', INPUT);';
+
+    var code = 'DigitalRead(' + pin_number + ')';
+    return [code, Blockly.Arduino.ORDER_ATOMIC];
+};

@@ -4,6 +4,7 @@ const TypesEnum = {
   PIR: 'pir',
   SONAR: 'sonar',
   LCD: 'lcd',
+  //BUTTON: 'button',
   DECORATION: 'decoration'
 };
 Object.freeze(TypesEnum);
@@ -567,6 +568,54 @@ DwenguinoSimulationScenarioSocialRobot.prototype.removeLcd = function(){
   this.drawSimulationDisplay();
 };
 
+/**
+ * Add a new PIR sensor to the simulation container.
+ */
+DwenguinoSimulationScenarioSocialRobot.prototype.addButton = function(draw = true, offsetLeft = 5, offsetTop = 5){
+  DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("addRobotComponent", TypesEnum.BUTTON));
+  this.robot.numberOf[TypesEnum.BUTTON] += 1;
+  var id = this.robot.numberOf[TypesEnum.BUTTON];
+  var buttonId = 'sim_button_canvas' + id;
+
+  this.robot[buttonId] = {};
+  this.robot[buttonId].pin = id;
+  this.robot[buttonId].width = 50;
+  this.robot[buttonId].height = 50;
+  this.robot[buttonId].offset = {'left': offsetLeft, 'top': offsetTop};
+  this.robot[buttonId].image = new Image();
+  this.robot[buttonId].state = 0;
+
+  $('#sim_container').append("<div id='sim_button"+id+"' class='sim_element sim_element_button draggable'><div><span class='grippy'></span>"+MSG.simulator['button']+" pin "+id+"</div></div>");
+  $('#sim_button' + id).css('top', offsetTop + 'px');
+  $('#sim_button' + id).css('left', offsetLeft + 'px');
+  $('#sim_button' + id).append("<div id='sim_button_canvas" +id+"' class='sim_canvas button_canvas sim_button'></canvas>"); 
+
+  // if(!document.getElementById(buttonId)){
+  //   $('#sensor_options').append("<div id='" + buttonLabel + "' class='sensor_options_label' alt='Load'>" + MSG.pirButtonLabel + ' ' + id + "</div>");
+  //   $('#sensor_options').append("<div id='" + pirButtonId + "' class='pir_button' alt='Load'></div>");
+    
+  this.addButtonEventHandler(buttonId);
+  // }
+
+  this.initializeCanvas(buttonId);
+  if(draw){
+    $('#sim_button' + id).css('visibility', 'visible');
+  } else {
+    $('#sim_button' + id).css('visibility', 'hidden');
+  }
+};
+
+/**
+ * Remove the most recent created PIR sensor from the simulation container.
+ */
+DwenguinoSimulationScenarioSocialRobot.prototype.removeButton = function(){
+  DwenguinoBlockly.recordEvent(DwenguinoBlockly.createEvent("removeRobotComponent", TypesEnum.BUTTON));
+  var id = this.robot.numberOf[TypesEnum.PIR];
+  $('#sim_button'+ id).remove();
+
+  delete this.robot['sim_button_canvas' + id];
+  this.robot.numberOf[TypesEnum.BUTTON] -= 1;
+};
 
 
 /**
@@ -663,6 +712,31 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addPirEventHandler = function(p
       document.getElementById(pirButtonId).className = "pir_button";
       self.robot[pirCanvasId].image.src = self.robot.imgPir;
       self.robot[pirCanvasId].state = 0;
+    }
+  });
+}
+
+DwenguinoSimulationScenarioSocialRobot.prototype.addButtonEventHandler = function(buttonId){
+  var self = this;
+  console.log(buttonId);
+  $("#" + buttonId).on('mousedown', function() {
+    console.log('button clicked');
+    console.log(buttonId);
+    if (document.getElementById(buttonId).classList.contains('sim_button')) {
+      console.log(document.getElementById(buttonId));
+      document.getElementById(buttonId).className = "sim_button sim_button_pushed";
+      DwenguinoSimulation.digitalWrite(self.robot[buttonId].pin, 'LOW');
+      // self.robot[pirCanvasId].image.src = self.robot.imgPirOn;
+      // self.robot[pirCanvasId].state = 1;
+    }
+  });
+
+  $("#"+ buttonId).on('mouseup', function() {
+    if (document.getElementById(buttonId).classList.contains('sim_button_pushed')) {
+      document.getElementById(buttonId).className = "sim_button";
+      DwenguinoSimulation.digitalWrite(self.robot[buttonId].pin, 'HIGH');
+      // self.robot[pirCanvasId].image.src = self.robot.imgPir;
+      // self.robot[pirCanvasId].state = 0;
     }
   });
 }

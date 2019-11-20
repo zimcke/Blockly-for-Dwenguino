@@ -42,3 +42,15 @@ Blockly.JavaScript['socialrobot_wave_arms'] = function(block) {
   console.log(code);
   return code;
 }
+
+Blockly.JavaScript['socialrobot_read_pin'] = function(block){
+  // var pin_number = Blockly.JavaScript.valueToCode(this, "PIN", Blockly.JavaScript.ORDER_ATOMIC);
+  var pin_number = this.getFieldValue('PIN');
+  //Blockly.JavaScript.setups_['setup_input_' + pin_number] = 'pinMode(' + pin_number + ', INPUT);';
+
+  var code = machine + 'digitalRead("' + pin_number + '")';
+  console.log(pin_number);
+  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+};
+
+

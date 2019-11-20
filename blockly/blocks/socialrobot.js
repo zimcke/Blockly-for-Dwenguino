@@ -123,3 +123,29 @@ var socialrobot_wave_arms_json = {
       this.jsonInit(socialrobot_wave_arms_json);
     }
   };
+
+
+  var socialrobot_read_pin_json = {
+    "id": "socialrobot_read_pin",
+    "message0": MSG.socialrobotReadPinBlock,
+    "args0": [
+        {
+        "type": "input_dummy"
+        },
+        {
+            "type": "input_value",
+            "name": "PIN",
+            "check": "Number"
+        }
+    ],
+    "output": "Number",
+    "colour": Blockly.Blocks.socialrobot.HUE,
+    "tooltip": "Read pin",
+    "helpUrl": "http://www.dwengo.org/tutorials"
+};
+
+Blockly.Blocks['socialrobot_read_pin'] = {
+    init: function(){
+        this.jsonInit(socialrobot_read_pin_json);
+    }
+};

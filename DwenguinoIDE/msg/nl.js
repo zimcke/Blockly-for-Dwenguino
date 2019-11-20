@@ -112,6 +112,7 @@ var MSG = {
   previous: "Vorige",
   socialrobotWaveArmesBlock: "Zwaai armen %1 %2 Servo rechterhand %3 %4 Servo linkerhand %5 %6",
   socialRobotArmsDownBlock: "Doe armen naar beneden %1 %2 Servo rechterhand %3 %4 Servo linkerhand %5 %6",
+  socialrobotReadPinBlock: "Lees de waarde pin %1 %2",
   socialRobotServoRightHand: "Servo rechterhand",
   socialRobotServoLeftHand: "Servo linkerhand",
   sonarSliderLabel: "Afstand sonar",
@@ -148,6 +149,7 @@ MSG.simulator = {
   led: "LED",
   lcd: "LCD-scherm",
   decoration: "Decoratie",
+  button: "Knop",
 };
 
 MSG.socialrobot = {

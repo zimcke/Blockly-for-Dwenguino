@@ -650,6 +650,14 @@ body{
     background-repeat: no-repeat;
 }
 
+#rc_button_img {
+    width: 50%;
+    height: 50%;
+    background-image: url("../img/board/button.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
 #rc_decoration_img {
     width: 52px;
     height: 102px;
@@ -679,6 +687,11 @@ body{
 }
 
 .sim_element_led{
+    width: 65px;
+    height: 30px;
+}
+
+.sim_element_button{
     width: 65px;
     height: 30px;
 }
