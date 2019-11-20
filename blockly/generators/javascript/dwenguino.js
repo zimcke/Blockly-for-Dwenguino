@@ -23,13 +23,13 @@ Blockly.JavaScript['setup_loop_structure'] = function (block) {
     // Assemble JavaScript into code variable.
     //Blockly.JavaScript.setups_['userSetupCode'] = 'DwenguinoSimulation.initDwenguino();\n' + statements_setup + "\nloop0();\n";
     Blockly.JavaScript.setups_['userSetupCode'] = statements_setup.trim() + "\n";
-    
+
     return statements_loop;
 };
 
 Blockly.JavaScript['set_leds'] = function (block) {
     var value_register_value = Blockly.JavaScript.valueToCode(block, 'register value', Blockly.JavaScript.ORDER_ATOMIC);
-    var code = machine + 'setLeds("' + value_register_value + '");\n';
+    var code = machine + 'setLeds(' + value_register_value + ');\n';
     return code;
 };
 
@@ -68,7 +68,7 @@ Blockly.JavaScript['sonar_sensor'] = function (block) {
     var value_trig = Blockly.JavaScript.valueToCode(block, 'trig', Blockly.JavaScript.ORDER_NONE);
     var value_echo = Blockly.JavaScript.valueToCode(block, 'echo', Blockly.JavaScript.ORDER_NONE);
     //define sonar settings
-   
+
     //  Assemble JavaScript into code variable.
     var code = machine + "sonar(" + value_trig +', ' + value_echo + ')';
 
@@ -164,7 +164,7 @@ Blockly.JavaScript.dwenguino_set_led = function(){
     var led_state = Blockly.JavaScript.valueToCode(this, "LED_STATE", Blockly.JavaScript.ORDER_ATOMIC);
     //Blockly.JavaScript.setups_['setup_output_'+pin_number] = 'pinMode('+pin_number+', OUTPUT);';
 
-    var code = machine + 'digitalWrite("' + pin_number + '", "' + led_state + '");\n';
+    var code = machine + 'digitalWrite(' + pin_number + ', ' + led_state + ');\n';
     return code;
 };
 
@@ -194,9 +194,19 @@ Blockly.JavaScript.dwenguino_digital_read_switch = function(){
 };
 
 
+Blockly.JavaScript.dwenguino_wait_for_switch = function(){
+    var switch_number = this.getFieldValue('SWITCH');
+    var code = 'while(' + machine + 'digitalRead("' + switch_number + '")){}\n';
+
+    return code
+};
+
+
 Blockly.JavaScript.dwenguino_leds_reg = function(){
     var bitmask = Blockly.JavaScript.valueToCode(this, "MASK", Blockly.JavaScript.ORDER_ATOMIC);
-    var code = machine + 'setLeds("' + bitmask + '");\n';
-
+    var code = "";
+    code = machine + 'setLeds(' + bitmask + ');\n';
+    
     return code;
 };
+

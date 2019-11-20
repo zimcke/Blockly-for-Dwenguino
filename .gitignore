@@ -2,3 +2,5 @@ Blockly/DwenguinoBlockly/blockly/nbproject/*
 Blockly/DwenguinoBlockly/nbproject/*
 Blockly/nbproject/*
 notes/*
+/DwenguinoBlocklyArduinoPlugin/build/
+/DwenguinoBlocklyArduinoPlugin/dist/

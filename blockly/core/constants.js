@@ -1,9 +1,6 @@
 /**
  * @license
- * Visual Blocks Editor
- *
- * Copyright 2016 Google Inc.
- * https://developers.google.com/blockly/
+ * Copyright 2016 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +23,17 @@
 
 goog.provide('Blockly.constants');
 
+/**
+ * The multiplier for scroll wheel deltas using the line delta mode.
+ * @type {number}
+ */
+Blockly.LINE_MODE_MULTIPLIER = 40;
+
+/**
+ * The multiplier for scroll wheel deltas using the page delta mode.
+ * @type {number}
+ */
+Blockly.PAGE_MODE_MULTIPLIER = 125;
 
 /**
  * Number of pixels the mouse must move before a drag starts.
@@ -33,14 +41,45 @@ goog.provide('Blockly.constants');
 Blockly.DRAG_RADIUS = 5;
 
 /**
+ * Number of pixels the mouse must move before a drag/scroll starts from the
+ * flyout.  Because the drag-intention is determined when this is reached, it is
+ * larger than Blockly.DRAG_RADIUS so that the drag-direction is clearer.
+ */
+Blockly.FLYOUT_DRAG_RADIUS = 10;
+
+/**
  * Maximum misalignment between connections for them to snap together.
  */
-Blockly.SNAP_RADIUS = 20;
+Blockly.SNAP_RADIUS = 28;
+
+/**
+ * Maximum misalignment between connections for them to snap together,
+ * when a connection is already highlighted.
+ */
+Blockly.CONNECTING_SNAP_RADIUS = Blockly.SNAP_RADIUS;
+
+/**
+ * How much to prefer staying connected to the current connection over moving to
+ * a new connection.  The current previewed connection is considered to be this
+ * much closer to the matching connection on the block than it actually is.
+ */
+Blockly.CURRENT_CONNECTION_PREFERENCE = 8;
+
+/**
+ * The main colour of insertion markers, in hex.  The block is rendered a
+ * transparent grey by changing the fill opacity in CSS.
+ */
+Blockly.INSERTION_MARKER_COLOUR = '#000000';
 
 /**
  * Delay in ms between trigger and bumping unconnected block out of alignment.
  */
 Blockly.BUMP_DELAY = 250;
+
+/**
+ * Maximum randomness in workspace units for bumping a block.
+ */
+Blockly.BUMP_RANDOMNESS = 10;
 
 /**
  * Number of characters to truncate a collapsed block to.
@@ -54,9 +93,15 @@ Blockly.LONGPRESS = 750;
 
 /**
  * Prevent a sound from playing if another sound preceded it within this many
- * miliseconds.
+ * milliseconds.
  */
 Blockly.SOUND_LIMIT = 100;
+
+/**
+ * When dragging a block out of a stack, split the stack in two (true), or drag
+ * out the block healing the stack (false).
+ */
+Blockly.DRAG_STACK = true;
 
 /**
  * The richness of block colours, regardless of the hue.
@@ -80,18 +125,6 @@ Blockly.SPRITE = {
 };
 
 // Constants below this point are not intended to be changed.
-
-/**
- * Required name space for SVG elements.
- * @const
- */
-Blockly.SVG_NS = 'http://www.w3.org/2000/svg';
-
-/**
- * Required name space for HTML elements.
- * @const
- */
-Blockly.HTML_NS = 'http://www.w3.org/1999/xhtml';
 
 /**
  * ENUM for a right-facing value input.  E.g. 'set item to' or 'return'.
@@ -200,3 +233,62 @@ Blockly.TOOLBOX_AT_LEFT = 2;
  * @const
  */
 Blockly.TOOLBOX_AT_RIGHT = 3;
+
+/**
+ * ENUM representing that an event is not in any delete areas.
+ * Null for backwards compatibility reasons.
+ * @const
+ */
+Blockly.DELETE_AREA_NONE = null;
+
+/**
+ * ENUM representing that an event is in the delete area of the trash can.
+ * @const
+ */
+Blockly.DELETE_AREA_TRASH = 1;
+
+/**
+ * ENUM representing that an event is in the delete area of the toolbox or
+ * flyout.
+ * @const
+ */
+Blockly.DELETE_AREA_TOOLBOX = 2;
+
+/**
+ * String for use in the "custom" attribute of a category in toolbox XML.
+ * This string indicates that the category should be dynamically populated with
+ * variable blocks.
+ * @const {string}
+ */
+Blockly.VARIABLE_CATEGORY_NAME = 'VARIABLE';
+/**
+ * String for use in the "custom" attribute of a category in toolbox XML.
+ * This string indicates that the category should be dynamically populated with
+ * variable blocks.
+ * @const {string}
+ */
+Blockly.VARIABLE_DYNAMIC_CATEGORY_NAME = 'VARIABLE_DYNAMIC';
+
+/**
+ * String for use in the "custom" attribute of a category in toolbox XML.
+ * This string indicates that the category should be dynamically populated with
+ * procedure blocks.
+ * @const {string}
+ */
+Blockly.PROCEDURE_CATEGORY_NAME = 'PROCEDURE';
+
+/**
+ * String for use in the dropdown created in field_variable.
+ * This string indicates that this option in the dropdown is 'Rename
+ * variable...' and if selected, should trigger the prompt to rename a variable.
+ * @const {string}
+ */
+Blockly.RENAME_VARIABLE_ID = 'RENAME_VARIABLE_ID';
+
+/**
+ * String for use in the dropdown created in field_variable.
+ * This string indicates that this option in the dropdown is 'Delete the "%1"
+ * variable' and if selected, should trigger the prompt to delete a variable.
+ * @const {string}
+ */
+Blockly.DELETE_VARIABLE_ID = 'DELETE_VARIABLE_ID';

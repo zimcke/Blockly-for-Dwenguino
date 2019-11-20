@@ -412,6 +412,10 @@ Blockly.JavaScript['math_random_float'] = function(block) {
 
 Blockly.JavaScript['char_type'] = function (block) {
     var text_bitmask = block.getFieldValue('BITMASK');
+    if (text_bitmask[1] ==  "b"){
+      text_bitmask = text_bitmask.substr(2, text_bitmask.length);
+      text_bitmask = parseInt(text_bitmask, 2);
+    }
     var code = text_bitmask;
     return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };

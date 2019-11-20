@@ -1,26 +1,27 @@
 <category id="catLogic" colour="0" name='Logic'>
     <block type="controls_if"></block>
+    <block type="controls_if"><mutation else="1"/></block>
     <block type="logic_compare"></block>
     <block type="logic_operation"></block>
     <block type="logic_negate"></block>
     <block type="logic_boolean"></block>
 </category>
-<category id="catLoops" colour="180" name="Loops">
+<category id="catLoops" colour="120" name="Loops">
   <block type="controls_for">
     <value name="FROM">
-      <shadow type="char_type">
+      <block type="char_type">
         <field name="BITMASK">0</field>
-      </shadow>
+      </block>
     </value>
       <value name="TO">
-      <shadow type="char_type">
+      <block type="char_type">
         <field name="BITMASK">10</field>
-      </shadow>
+      </block>
     </value>
     <value name="BY">
-      <shadow type="char_type">
+      <block type="char_type">
         <field name="BITMASK">1</field>
-      </shadow>
+      </block>
     </value>
   </block>
   <block type="controls_whileUntil"></block>
@@ -30,15 +31,26 @@
         <field name="BITMASK">100</field>
     </block>
     <block type="char_type"></block>
-    <block type="math_arithmetic"></block>
+    <block type="math_arithmetic">
+        <field name="OP">ADD</field>
+    </block>
+    <block type="math_arithmetic">
+        <field name="OP">MINUS</field>
+    </block>
+    <block type="math_arithmetic">
+        <field name="OP">MULTIPLY</field>
+    </block>
+    <block type="math_arithmetic">
+        <field name="OP">DIVIDE</field>
+    </block>
 </category>
 <category id="catText" colour="225" name="Text">
     <block type="text"></block>
     <block type="text_join"></block>
 </category>
-<category id="catVariables" colour="90" name='Math'>
-    <block type="variables_get"></block>
-    <block type="variables_declare_set"></block>
+<category id="catVariables" colour="90" name='Math' custom="DWB_VARIABLES">
+
+    
 </category>
 <category id="catDwenguino" colour="315" name='Dwenguino'>
     <block type="setup_loop_structure"></block>
@@ -49,6 +61,7 @@
             </block>
         </value>
     </block>
+    <block type="dwenguino_wait_for_switch"></block>
     <block type="clear_lcd"></block>
     <block type="dwenguino_lcd">
         <value name="text">
@@ -149,4 +162,9 @@
     </block>
     <block type="dwenguino_led_pins"></block>
     <block type="dwenguino_on_off"></block>
+</category>
+<sep></sep>
+<category id="catComments" colour="200" name='Comments'>
+    <block type="line_comment">
+    </block>
 </category>

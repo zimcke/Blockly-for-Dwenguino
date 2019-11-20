@@ -158,11 +158,13 @@ Blockly.JavaScript.init = function(workspace) {
     Blockly.JavaScript.variableDB_.reset();
   }
 
+  Blockly.JavaScript.variableDB_.setVariableMap(workspace.getVariableMap());
+
   var defvars = [];
-  var variables = workspace.variableList;
+  var variables = workspace.getAllVariables();
   if (variables.length) {
     for (var i = 0; i < variables.length; i++) {
-      defvars[i] = Blockly.JavaScript.variableDB_.getName(variables[i],
+      defvars[i] = Blockly.JavaScript.variableDB_.getName(variables[i]["id_"],
           Blockly.Variables.NAME_TYPE);
     }
     Blockly.JavaScript.definitions_['variables'] =
@@ -255,8 +257,8 @@ Blockly.JavaScript.scrub_ = function(block, code) {
   // Only collect comments for blocks that aren't inline.
   if (!block.outputConnection || !block.outputConnection.targetConnection) {
     // Collect comment for this block.
-    var comment = block.getCommentText();
-    comment = Blockly.utils.wrap(comment, Blockly.JavaScript.COMMENT_WRAP - 3);
+    var comment = block.getCommentText() || '';
+    //comment = Blockly.utils.wrap(comment, Blockly.JavaScript.COMMENT_WRAP - 3);
     if (comment) {
       if (block.getProcedureDef) {
         // Use a comment block for function comments.

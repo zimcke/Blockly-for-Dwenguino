@@ -33,7 +33,7 @@ loop: "gelung",
 dwenguino_main_program_structure: "Kod dalam blok persediaan dilaksanakan sekali pada permulaan program. Kod dalam gelung diulangi sehingga program berhenti.",
 catDwenguino: "Dwenguino",
 delay_help: "Tunggu sebilangan milisecond tertentu (1 milisecond = 1000 saat)",
-kelewatan: "kelewatan",
+delay: "kelewatan",
 clearLCD: "Clear LCD",
 dwenguinoLCD: "Dwenguino LCD %1 %2 %3 Tulis teks: %4 Pada baris: %5 Bermula dari lajur: %6",
 pin: "pin",
@@ -83,6 +83,7 @@ dwenguinoAnalogWriteTooltip: "Tulis nilai analog antara 0 dan 255 ke pin yang di
 dwenguinoAnalogRead: "Baca nilai analog dari %1",
 dwenguinoAnalogWriteTooltip: "Baca nilai beteween 0 dan 255 dari pin yang ditentukan",
 digitalReadSwitch: "Baca suis %1",
+waitForSwitch: "wait until button %1 is pressed",
 digitalReadSwitchTooltip: "Baca nilai dari salah satu suis dwenguino",
 north: "Utara",
 east: "Timur",
@@ -94,6 +95,9 @@ dwenguinoLedsRegTooltip: "Anda boleh menghidupkan 0 hingga 7 dengan menggunakan 
 pressed: "DITERIMA",
 notPressed: "TIDAK BERTINGKAT",
 pressedTooltip: "Merupakan keadaan butang. Gunakan nilai ini untuk membandingkan dengan keadaan butang sebenar",
+create: "Create",
+with_type: "with type",
+create_global: "Create global",
 };
 
 
@@ -124,6 +128,11 @@ code: "Kod",
 
 MSG.tutorials = {
 introduction: {},
+};
+
+MSG.tutorials.general = {
+  sureTitle: "Are you sure?",
+  sureText: "When you click 'Next' all blocks in the workspace will be removed.",
 };
 
 MSG.tutorials.introduction = {

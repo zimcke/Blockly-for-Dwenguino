@@ -1,9 +1,6 @@
 /**
  * @license
- * Visual Blocks Editor
- *
- * Copyright 2013 Google Inc.
- * https://developers.google.com/blockly/
+ * Copyright 2013 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +16,19 @@
  */
 
 /**
- * @fileoverview Empty name space for the Blocks singleton.
+ * @fileoverview A mapping of block type names to block prototype objects.
  * @author spertus@google.com (Ellen Spertus)
  */
 'use strict';
 
+/**
+ * A mapping of block type names to block prototype objects.
+ * @name Blockly.Blocks
+ */
 goog.provide('Blockly.Blocks');
+
+/*
+ * A mapping of block type names to block prototype objects.
+ * @type {!Object.<string,Object>}
+ */
+Blockly.Blocks = Object.create(null);

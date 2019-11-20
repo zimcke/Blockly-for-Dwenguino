@@ -10,7 +10,7 @@ DwenguinoBlocklyLanguageSettings.LANGUAGE_NAME = {
   };
 
 //Set default language setting
-DwenguinoBlocklyLanguageSettings.DEFAULT_LANG = 'my';
+DwenguinoBlocklyLanguageSettings.DEFAULT_LANG = 'nl';
 
 /**
 * Extracts a parameter from the URL.
@@ -38,6 +38,6 @@ DwenguinoBlocklyLanguageSettings.getLang = function() {
 };
 
 // Load the Code demo's language strings.
-document.write('<script src="msg/' + DwenguinoBlocklyLanguageSettings.getLang() + '.js"></script>\n');
+document.write('<script src="./DwenguinoIDE/msg/' + DwenguinoBlocklyLanguageSettings.getLang() + '.js"></script>\n');
 // Load Blockly's language strings.
-document.write('<script src="../blockly/msg/js/' + DwenguinoBlocklyLanguageSettings.getLang() + '.js"></script>\n');
+document.write('<script src="./blockly/msg/js/' + DwenguinoBlocklyLanguageSettings.getLang() + '.js"></script>\n');

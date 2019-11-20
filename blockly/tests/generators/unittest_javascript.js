@@ -1,9 +1,6 @@
 /**
  * @license
- * Visual Blocks Language
- *
- * Copyright 2012 Google Inc.
- * https://developers.google.com/blockly/
+ * Copyright 2012 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +24,7 @@
 Blockly.JavaScript['unittest_main'] = function(block) {
   // Container for unit tests.
   var resultsVar = Blockly.JavaScript.variableDB_.getName('unittestResults',
-      Blockly.Variables.NAME_TYPE);
+      Blockly.Names.DEVELOPER_VARIABLE_TYPE);
   var functionName = Blockly.JavaScript.provideFunction_(
       'unittest_report',
       [ 'function ' + Blockly.JavaScript.FUNCTION_NAME_PLACEHOLDER_ + '() {',
@@ -60,22 +57,24 @@ Blockly.JavaScript['unittest_main'] = function(block) {
         '}']);
   // Setup global to hold test results.
   var code = resultsVar + ' = [];\n';
+  // Say which test suite this is.
+  code += 'console.log(\'\\n====================\\n\\n' +
+      'Running suite: ' +
+      block.getFieldValue('SUITE_NAME') +
+       '\')\n';
   // Run tests (unindented).
   code += Blockly.JavaScript.statementToCode(block, 'DO')
       .replace(/^  /, '').replace(/\n  /g, '\n');
-  var reportVar = Blockly.JavaScript.variableDB_.getDistinctName(
-      'report', Blockly.Variables.NAME_TYPE);
-  code += 'var ' + reportVar + ' = ' + functionName + '();\n';
+  // Send the report to the console (that's where errors will go anyway).
+  code += 'console.log(' + functionName + '());\n';
   // Destroy results.
   code += resultsVar + ' = null;\n';
-  // Send the report to the console (that's where errors will go anyway).
-  code += 'console.log(' + reportVar + ');\n';
   return code;
 };
 
 Blockly.JavaScript['unittest_main'].defineAssert_ = function(block) {
   var resultsVar = Blockly.JavaScript.variableDB_.getName('unittestResults',
-      Blockly.Variables.NAME_TYPE);
+      Blockly.Names.DEVELOPER_VARIABLE_TYPE);
   var functionName = Blockly.JavaScript.provideFunction_(
       'assertEquals',
       [ 'function ' + Blockly.JavaScript.FUNCTION_NAME_PLACEHOLDER_ +
@@ -146,9 +145,8 @@ Blockly.JavaScript['unittest_assertvalue'] = function(block) {
 Blockly.JavaScript['unittest_fail'] = function(block) {
   // Always assert an error.
   var resultsVar = Blockly.JavaScript.variableDB_.getName('unittestResults',
-      Blockly.Variables.NAME_TYPE);
-  var message = Blockly.JavaScript.valueToCode(block, 'MESSAGE',
-      Blockly.JavaScript.ORDER_NONE) || '';
+      Blockly.Names.DEVELOPER_VARIABLE_TYPE);
+  var message = Blockly.JavaScript.quote_(block.getFieldValue('MESSAGE'));
   var functionName = Blockly.JavaScript.provideFunction_(
       'unittest_fail',
       [ 'function ' + Blockly.JavaScript.FUNCTION_NAME_PLACEHOLDER_ +
@@ -169,7 +167,7 @@ Blockly.JavaScript['unittest_adjustindex'] = function(block) {
   if (block.workspace.options.oneBasedIndex) {
     if (Blockly.isNumber(index)) {
       // If the index is a naked number, adjust it right now.
-      return [parseFloat(index) + 1, Blockly.JavaScript.ORDER_ATOMIC];
+      return [Number(index) + 1, Blockly.JavaScript.ORDER_ATOMIC];
     } else {
       // If the index is dynamic, adjust it in code.
       index = index + ' + 1';

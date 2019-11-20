@@ -36,7 +36,22 @@ Blockly.JavaScript['variables_get'] = function(block) {
   return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
-Blockly.JavaScript['variables_set'] = function(block) {
+Blockly.JavaScript['variables_get_int'] = function(block) {
+  // Variable getter.
+  var code = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('VAR'),
+      Blockly.Variables.NAME_TYPE);
+  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+};
+
+
+Blockly.JavaScript['variables_get_string'] = function(block) {
+  // Variable getter.
+  var code = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('VAR'),
+      Blockly.Variables.NAME_TYPE);
+  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+};
+
+Blockly.JavaScript['variables_set_int'] = function(block) {
   // Variable setter.
   var argument0 = Blockly.JavaScript.valueToCode(block, 'VALUE',
       Blockly.JavaScript.ORDER_ASSIGNMENT) || '0';
@@ -45,7 +60,18 @@ Blockly.JavaScript['variables_set'] = function(block) {
   return varName + ' = ' + argument0 + ';\n';
 };
 
-Blockly.JavaScript.variables_declare_set = function() {
+Blockly.JavaScript.variables_declare_set_int = function() {
+  // Variable setter.
+  var varValue = Blockly.JavaScript.valueToCode(this, 'VALUE',
+      Blockly.JavaScript.ORDER_ASSIGNMENT) || '0';
+  var varName = Blockly.JavaScript.variableDB_.getName(this.getFieldValue('VAR'),
+      Blockly.Variables.NAME_TYPE);
+  //Blockly.JavaScript.definitions_[varName] = 'var ' + varName + ';\n';
+
+  return varName + ' = ' + varValue + ';\n';
+};
+
+Blockly.JavaScript.variables_declare_set_string = function() {
   // Variable setter.
   var varValue = Blockly.JavaScript.valueToCode(this, 'VALUE',
       Blockly.JavaScript.ORDER_ASSIGNMENT) || '0';

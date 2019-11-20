@@ -10,7 +10,7 @@
     <block type="procedures_defreturn"></block>
     <block type="procedures_callreturn"></block>
 </category>
-<category id="catLoops" colour="180" name="Loops">
+<category id="catLoops" colour="120" name="Loops">
   <block type="controls_for">
     <value name="FROM">
       <shadow type="char_type">
@@ -41,10 +41,9 @@
     <block type="text"></block>
     <block type="text_join"></block>
 </category>
-<category id="catVariables" colour="90" name='Math'>
-    <block type="variables_get"></block>
-    <block type="variables_declare_set"></block>
+<category id="catVariables" colour="90" name='Math' custom="DWB_VARIABLES">
 </category>
+
 <category id="catDwenguino" colour="315" name='Dwenguino'>
     <block type="setup_loop_structure"></block>
     <block type="dwenguino_delay">
@@ -193,6 +192,8 @@
     </block>
 
 </category>
-<category id="catArduino" colour="100" name='arduino'>
-    <block type="setup_loop_structure_arduino"></block>
+
+<category id="catComments" colour="200" name='Comments'>
+    <block type="line_comment">
+    </block>
 </category>
