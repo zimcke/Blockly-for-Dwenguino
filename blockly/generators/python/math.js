@@ -1,9 +1,6 @@
 /**
  * @license
- * Visual Blocks Language
- *
- * Copyright 2012 Google Inc.
- * https://developers.google.com/blockly/
+ * Copyright 2012 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +31,7 @@ Blockly.Python.addReservedWords('math,random,Number');
 
 Blockly.Python['math_number'] = function(block) {
   // Numeric value.
-  var code = parseFloat(block.getFieldValue('NUM'));
+  var code = Number(block.getFieldValue('NUM'));
   var order;
   if (code == Infinity) {
     code = 'float("inf")';
@@ -147,7 +144,7 @@ Blockly.Python['math_single'] = function(block) {
       code = 'math.atan(' + arg + ') / math.pi * 180';
       break;
     default:
-      throw 'Unknown math operator: ' + operator;
+      throw Error('Unknown math operator: ' + operator);
   }
   return [code, Blockly.Python.ORDER_MULTIPLICATIVE];
 };
@@ -342,7 +339,7 @@ Blockly.Python['math_on_list'] = function(block) {
       code = 'random.choice(' + list + ')';
       break;
     default:
-      throw 'Unknown operator: ' + func;
+      throw Error('Unknown operator: ' + func);
   }
   return [code, Blockly.Python.ORDER_FUNCTION_CALL];
 };
@@ -385,4 +382,15 @@ Blockly.Python['math_random_float'] = function(block) {
   // Random fraction between 0 and 1.
   Blockly.Python.definitions_['import_random'] = 'import random';
   return ['random.random()', Blockly.Python.ORDER_FUNCTION_CALL];
+};
+
+Blockly.Python['math_atan2'] = function(block) {
+  // Arctangent of point (X, Y) in degrees from -180 to 180.
+  Blockly.Python.definitions_['import_math'] = 'import math';
+  var argument0 = Blockly.Python.valueToCode(block, 'X',
+      Blockly.Python.ORDER_NONE) || '0';
+  var argument1 = Blockly.Python.valueToCode(block, 'Y',
+      Blockly.Python.ORDER_NONE) || '0';
+  return ['math.atan2(' + argument1 + ', ' + argument0 + ') / math.pi * 180',
+      Blockly.Python.ORDER_MULTIPLICATIVE];
 };

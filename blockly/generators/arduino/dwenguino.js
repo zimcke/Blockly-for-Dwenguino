@@ -206,7 +206,8 @@ Blockly.Arduino.dwenguino_led_pins = function() {
 Blockly.Arduino.dwenguino_set_led = function(){
     var pin_number = Blockly.Arduino.valueToCode(this, "LED", Blockly.Arduino.ORDER_ATOMIC);
     var led_state = Blockly.Arduino.valueToCode(this, "LED_STATE", Blockly.Arduino.ORDER_ATOMIC);
-    Blockly.Arduino.setups_['setup_output_'+pin_number] = 'pinMode('+pin_number+', OUTPUT);';
+    //All led pins are set to output in the initDwenguino method
+    /*Blockly.Arduino.setups_['setup_output_'+pin_number] = 'pinMode('+pin_number+', OUTPUT);';*/ // This 
 
     var code = 'digitalWrite(' + pin_number + ', ' + led_state + ');\n'
     return code;

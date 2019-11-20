@@ -1,9 +1,6 @@
 /**
  * @license
- * Visual Blocks Language
- *
- * Copyright 2012 Google Inc.
- * https://developers.google.com/blockly/
+ * Copyright 2012 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,25 +29,39 @@ goog.require('Blockly.Python');
 Blockly.Python['controls_if'] = function(block) {
   // If/elseif/else condition.
   var n = 0;
-  var argument = Blockly.Python.valueToCode(block, 'IF' + n,
-      Blockly.Python.ORDER_NONE) || 'False';
-  var branch = Blockly.Python.statementToCode(block, 'DO' + n) ||
-      Blockly.Python.PASS;
-  var code = 'if ' + argument + ':\n' + branch;
-  for (n = 1; n <= block.elseifCount_; n++) {
-    argument = Blockly.Python.valueToCode(block, 'IF' + n,
-        Blockly.Python.ORDER_NONE) || 'False';
-    branch = Blockly.Python.statementToCode(block, 'DO' + n) ||
-        Blockly.Python.PASS;
-    code += 'elif ' + argument + ':\n' + branch;
+  var code = '', branchCode, conditionCode;
+  if (Blockly.Python.STATEMENT_PREFIX) {
+    // Automatic prefix insertion is switched off for this block.  Add manually.
+    code += Blockly.Python.injectId(Blockly.Python.STATEMENT_PREFIX, block);
   }
-  if (block.elseCount_) {
-    branch = Blockly.Python.statementToCode(block, 'ELSE') ||
+  do {
+    conditionCode = Blockly.Python.valueToCode(block, 'IF' + n,
+        Blockly.Python.ORDER_NONE) || 'False';
+    branchCode = Blockly.Python.statementToCode(block, 'DO' + n) ||
         Blockly.Python.PASS;
-    code += 'else:\n' + branch;
+    if (Blockly.Python.STATEMENT_SUFFIX) {
+      branchCode = Blockly.Python.prefixLines(
+          Blockly.Python.injectId(Blockly.Python.STATEMENT_SUFFIX, block),
+          Blockly.Python.INDENT) + branchCode;
+    }
+    code += (n == 0 ? 'if ' : 'elif ' ) + conditionCode + ':\n' + branchCode;
+    ++n;
+  } while (block.getInput('IF' + n));
+
+  if (block.getInput('ELSE') || Blockly.Python.STATEMENT_SUFFIX) {
+    branchCode = Blockly.Python.statementToCode(block, 'ELSE') ||
+        Blockly.Python.PASS;
+    if (Blockly.Python.STATEMENT_SUFFIX) {
+      branchCode = Blockly.Python.prefixLines(
+          Blockly.Python.injectId(Blockly.Python.STATEMENT_SUFFIX, block),
+          Blockly.Python.INDENT) + branchCode;
+    }
+    code += 'else:\n' + branchCode;
   }
   return code;
 };
+
+Blockly.Python['controls_ifelse'] = Blockly.Python['controls_if'];
 
 Blockly.Python['logic_compare'] = function(block) {
   // Comparison operator.

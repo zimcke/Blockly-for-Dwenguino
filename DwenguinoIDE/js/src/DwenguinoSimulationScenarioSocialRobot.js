@@ -219,14 +219,14 @@ function DwenguinoSimulationScenarioSocialRobot(){
     console.log("init social robot");
     this.robot = {
       numberOf: {},
-      imgServo: './img/board/servo_movement.png',
-      imgPir: './img/socialrobot/pir.png',
-      imgPirOn: './img/socialrobot/pir_on.png',
-      imgSonar: './img/board/sonar.png',
-      imgRobot: 'url("./img/socialrobot/robot1.png")',
+      imgServo: './DwenguinoIDE/img/socialrobot/servo_movement.png',
+      imgPir: './DwenguinoIDE/img/socialrobot/pir.png',
+      imgPirOn: './DwenguinoIDE/img/socialrobot/pir_on.png',
+      imgSonar: './DwenguinoIDE/img/board/sonar.png',
+      imgRobot: 'url("./DwenguinoIDE/img/socialrobot/robot1.png")',
       imgEye: './img/socialrobot/eye.svg',
-      imgRightHand: './img/socialrobot/righthand.png',
-      imgLeftHand: './img/socialrobot/lefthand.png'
+      imgRightHand: './DwenguinoIDE/img/socialrobot/righthand.png',
+      imgLeftHand: './DwenguinoIDE/img/socialrobot/lefthand.png'
     };
     
     for (const [type, t] of Object.entries(TypesEnum)) {

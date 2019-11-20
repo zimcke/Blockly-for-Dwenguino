@@ -304,7 +304,7 @@ body{
 }
 
 #sim_lcds.on{
-  background-color: #53aa1f;
+  background-color: rgb(83, 170, 31);
 }
 
 .sim_lcd {
@@ -746,7 +746,6 @@ body{
 }
 
 .lcd{
-    margin-left: 25px;
     height: 46%;
     width: 100%;
     padding: 8%;

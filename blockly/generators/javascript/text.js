@@ -1,9 +1,6 @@
 /**
  * @license
- * Visual Blocks Language
- *
- * Copyright 2012 Google Inc.
- * https://developers.google.com/blockly/
+ * Copyright 2012 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +32,34 @@ Blockly.JavaScript['text'] = function(block) {
   return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
+Blockly.JavaScript['text_multiline'] = function(block) {
+  // Text value.
+  var code = Blockly.JavaScript.multiline_quote_(block.getFieldValue('TEXT'));
+  if (code.includes('\n')) {
+      code = '(' + code + ')'
+  }
+  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+};
+
+/**
+ * Enclose the provided value in 'String(...)' function.
+ * Leave string literals alone.
+ * @param {string} value Code evaluating to a value.
+ * @return {string} Code evaluating to a string.
+ * @private
+ */
+Blockly.JavaScript.text.forceString_ = function(value) {
+  if (Blockly.JavaScript.text.forceString_.strRegExp.test(value)) {
+    return value;
+  }
+  return 'String(' + value + ')';
+};
+
+/**
+ * Regular expression to detect a single-quoted string literal.
+ */
+Blockly.JavaScript.text.forceString_.strRegExp = /^\s*'([^']|\\')*'\s*$/;
+
 Blockly.JavaScript['text_join'] = function(block) {
   // Create a string made up of any number of elements of any type.
   switch (block.itemCount_) {
@@ -43,14 +68,15 @@ Blockly.JavaScript['text_join'] = function(block) {
     case 1:
       var element = Blockly.JavaScript.valueToCode(block, 'ADD0',
           Blockly.JavaScript.ORDER_NONE) || '\'\'';
-      var code = 'String(' + element + ')';
+      var code = Blockly.JavaScript.text.forceString_(element);
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     case 2:
       var element0 = Blockly.JavaScript.valueToCode(block, 'ADD0',
           Blockly.JavaScript.ORDER_NONE) || '\'\'';
       var element1 = Blockly.JavaScript.valueToCode(block, 'ADD1',
           Blockly.JavaScript.ORDER_NONE) || '\'\'';
-      var code = 'String(' + element0 + ') + String(' + element1 + ')';
+      var code = Blockly.JavaScript.text.forceString_(element0) + ' + ' +
+          Blockly.JavaScript.text.forceString_(element1);
       return [code, Blockly.JavaScript.ORDER_ADDITION];
     default:
       var elements = new Array(block.itemCount_);
@@ -69,7 +95,7 @@ Blockly.JavaScript['text_append'] = function(block) {
       block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
   var value = Blockly.JavaScript.valueToCode(block, 'TEXT',
       Blockly.JavaScript.ORDER_NONE) || '\'\'';
-  return varName + ' = String(' + varName + ') + String(' + value + ');\n';
+  return varName + ' += ' + Blockly.JavaScript.text.forceString_(value) + ';\n';
 };
 
 Blockly.JavaScript['text_length'] = function(block) {
@@ -137,16 +163,16 @@ Blockly.JavaScript['text_charAt'] = function(block) {
       var code = functionName + '(' + text + ')';
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
   }
-  throw 'Unhandled option (text_charAt).';
+  throw Error('Unhandled option (text_charAt).');
 };
 
 /**
  * Returns an expression calculating the index into a string.
- * @private
  * @param {string} stringName Name of the string, used to calculate length.
  * @param {string} where The method of indexing, selected by dropdown in Blockly
  * @param {string=} opt_at The optional offset when indexing from start/end.
  * @return {string} Index expression.
+ * @private
  */
 Blockly.JavaScript.text.getIndex_ = function(stringName, where, opt_at) {
   if (where == 'FIRST') {
@@ -186,7 +212,7 @@ Blockly.JavaScript['text_getSubstring'] = function(block) {
         var at1 = '0';
         break;
       default:
-        throw 'Unhandled option (text_getSubstring).';
+        throw Error('Unhandled option (text_getSubstring).');
     }
     switch (where2) {
       case 'FROM_START':
@@ -201,7 +227,7 @@ Blockly.JavaScript['text_getSubstring'] = function(block) {
         var at2 = text + '.length';
         break;
       default:
-        throw 'Unhandled option (text_getSubstring).';
+        throw Error('Unhandled option (text_getSubstring).');
     }
     code = text + '.slice(' + at1 + ', ' + at2 + ')';
   } else {
@@ -296,9 +322,57 @@ Blockly.JavaScript['text_prompt_ext'] = function(block) {
   var code = 'window.prompt(' + msg + ')';
   var toNumber = block.getFieldValue('TYPE') == 'NUMBER';
   if (toNumber) {
-    code = 'parseFloat(' + code + ')';
+    code = 'Number(' + code + ')';
   }
   return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
 
 Blockly.JavaScript['text_prompt'] = Blockly.JavaScript['text_prompt_ext'];
+
+Blockly.JavaScript['text_count'] = function(block) {
+  var text = Blockly.JavaScript.valueToCode(block, 'TEXT',
+      Blockly.JavaScript.ORDER_MEMBER) || '\'\'';
+  var sub = Blockly.JavaScript.valueToCode(block, 'SUB',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+  var functionName = Blockly.JavaScript.provideFunction_(
+      'textCount',
+      ['function ' + Blockly.JavaScript.FUNCTION_NAME_PLACEHOLDER_ +
+          '(haystack, needle) {',
+       '  if (needle.length === 0) {',
+       '    return haystack.length + 1;',
+       '  } else {',
+       '    return haystack.split(needle).length - 1;',
+       '  }',
+       '}']);
+  var code = functionName + '(' + text + ', ' + sub + ')';
+  return [code, Blockly.JavaScript.ORDER_SUBTRACTION];
+};
+
+Blockly.JavaScript['text_replace'] = function(block) {
+  var text = Blockly.JavaScript.valueToCode(block, 'TEXT',
+      Blockly.JavaScript.ORDER_MEMBER) || '\'\'';
+  var from = Blockly.JavaScript.valueToCode(block, 'FROM',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+  var to = Blockly.JavaScript.valueToCode(block, 'TO',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+  // The regex escaping code below is taken from the implementation of
+  // goog.string.regExpEscape.
+  var functionName = Blockly.JavaScript.provideFunction_(
+      'textReplace',
+      ['function ' + Blockly.JavaScript.FUNCTION_NAME_PLACEHOLDER_ +
+          '(haystack, needle, replacement) {',
+       '  needle = ' +
+           'needle.replace(/([-()\\[\\]{}+?*.$\\^|,:#<!\\\\])/g,"\\\\$1")',
+       '                 .replace(/\\x08/g,"\\\\x08");',
+       '  return haystack.replace(new RegExp(needle, \'g\'), replacement);',
+       '}']);
+  var code = functionName + '(' + text + ', ' + from + ', ' + to + ')';
+  return [code, Blockly.JavaScript.ORDER_MEMBER];
+};
+
+Blockly.JavaScript['text_reverse'] = function(block) {
+  var text = Blockly.JavaScript.valueToCode(block, 'TEXT',
+      Blockly.JavaScript.ORDER_MEMBER) || '\'\'';
+  var code = text + '.split(\'\').reverse().join(\'\')';
+  return [code, Blockly.JavaScript.ORDER_MEMBER];
+};

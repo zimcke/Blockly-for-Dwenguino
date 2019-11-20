@@ -1,9 +1,6 @@
 /**
  * @license
- * Visual Blocks Editor
- *
- * Copyright 2012 Google Inc.
- * https://developers.google.com/blockly/
+ * Copyright 2012 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +67,16 @@ BlocklyStorage.restoreBlocks = function(opt_workspace) {
  */
 BlocklyStorage.link = function(opt_workspace) {
   var workspace = opt_workspace || Blockly.getMainWorkspace();
-  var xml = Blockly.Xml.workspaceToDom(workspace);
+  var xml = Blockly.Xml.workspaceToDom(workspace, true);
+  // Remove x/y coordinates from XML if there's only one block stack.
+  // There's no reason to store this, removing it helps with anonymity.
+  if (workspace.getTopBlocks(false).length == 1 && xml.querySelector) {
+    var block = xml.querySelector('block');
+    if (block) {
+      block.removeAttribute('x');
+      block.removeAttribute('y');
+    }
+  }
   var data = Blockly.Xml.domToText(xml);
   BlocklyStorage.makeRequest_('/storage', 'xml', data, workspace);
 };
@@ -160,10 +166,10 @@ BlocklyStorage.monitorChanges_ = function(workspace) {
     var xmlText = Blockly.Xml.domToText(xmlDom);
     if (startXmlText != xmlText) {
       window.location.hash = '';
-      workspace.removeChangeListener(bindData);
+      workspace.removeChangeListener(change);
     }
   }
-  var bindData = workspace.addChangeListener(change);
+  workspace.addChangeListener(change);
 };
 
 /**

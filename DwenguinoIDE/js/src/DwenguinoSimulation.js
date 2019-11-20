@@ -131,7 +131,7 @@ var DwenguinoSimulation = {
       if (value == DwenguinoSimulation.scenarioView){
         newOpt.attr("checked", "checked");
       }
-      var image = $("<img></img>").attr("class", "scenario_image").attr("src", "img/scenarios/scenario_" + value + ".png");
+      var image = $("<img></img>").attr("class", "scenario_image").attr("src", "DwenguinoIDE/img/scenarios/scenario_" + value + ".png");
       container.append(newOpt);
       container.append(image);
       $("#sim_scenario").append(container);
@@ -904,8 +904,11 @@ var DwenguinoSimulation = {
 
       // write new text to lcd screen and replace spaces with &nbsp;
       $("#sim_lcd_row" + row).text(text);
-      document.getElementById('sim_lcd_row' + row).innerHTML =
-      document.getElementById('sim_lcd_row' + row).innerHTML.replace(/ /g, '&nbsp;');
+      if(document.getElementById('sim_lcd_row' + row) !== null){
+        document.getElementById('sim_lcd_row' + row).innerHTML =
+        document.getElementById('sim_lcd_row' + row).innerHTML.replace(/ /g, '&nbsp;');
+      }
+
       // repaint
       var element = document.getElementById("sim_lcds");
       if(element !== null){
@@ -927,7 +930,7 @@ var DwenguinoSimulation = {
         if (pin >= 32 && pin <= 39) {
           pin -= 32;
         }
-        if (state === 'HIGH' || state === "1") {
+        if (state === 'HIGH' || state == 1) {
           pin=== 13? DwenguinoSimulation.board.leds[8] = 1 : DwenguinoSimulation.board.leds[pin] = 1;
           var sim_light =  document.getElementById('sim_light_' + pin);
           if (typeof(sim_light) != 'undefined' && sim_light != null) {
@@ -978,9 +981,24 @@ var DwenguinoSimulation = {
     * @param {String} bin "0b00000000" to turn all lights off, "0b11111111" to turn all lights on
     */
     setLeds: function(bin) {
-      for (var i = 2; i < 10; i++) {
-        DwenguinoSimulation.digitalWrite(i+30, bin[i]);
+      //Convert number to binary string
+      bin = bin.toString(2);
+
+      // Turn all leds off
+      for (var i = 0 ; i < 8 ; i++){
+        DwenguinoSimulation.digitalWrite(32+i, 0);
       }
+      // Turn on the respective leds
+      var diff = 8 - bin.length;
+      if (diff < 0){
+        diff = 0
+      }
+      for (var i = 0 ; i < Math.min(bin.length, 8) ; i++){
+        DwenguinoSimulation.digitalWrite(39 - (diff + i), bin[i]);
+      }
+      
+
+      
     },
 
     /*
@@ -1147,7 +1165,7 @@ var DwenguinoSimulation = {
       }, 20);
     },
     /*
-    * Returns the distance between the sonar and teh wall
+    * Returns the distance between the sonar and the wall
     * @param {int} trigPin 11
     * @param {int} echoPin 12
     * @returns {int} distance in cm
@@ -1156,12 +1174,13 @@ var DwenguinoSimulation = {
       DwenguinoSimulation.showSonar();
       //document.getElementById("sonar").checked = true;
       var sim_sonar  = document.getElementById('sonar_input');
+      var distance = Math.round(DwenguinoSimulation.board.sonarDistance);
       if(typeof(sim_sonar) != 'undefined' && sim_sonar != null){
-        sim_sonar.value = DwenguinoSimulation.board.sonarDistance;
+        sim_sonar.value = distance;
       } else {
         console.log('Sonar input element is undefined');
       }
-      return this.board.sonarDistance;
+      return distance
     },
 
     /**

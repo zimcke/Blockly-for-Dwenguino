@@ -48,6 +48,9 @@ var DwenguinoBlockly = {
             delete keys[e.which];
         });
 
+
+        
+
         //code to init the bootstrap modal dialog
         $("#submit_modal_dialog_button").click(function(){
             DwenguinoBlockly.agegroupSetting = $("input[name=optradio]:checked").val();
@@ -123,7 +126,6 @@ var DwenguinoBlockly = {
           if (dwenguinoBlocklyServer){
             xml = Blockly.Xml.textToDom(dwenguinoBlocklyServer.loadBlocks());
             DwenguinoBlockly.restoreFromXml(xml);
-            console.log(xml);
           }else{
             if (window.File && window.FileReader && window.FileList && window.Blob) {
               // Great success! All the File APIs are supported.
@@ -197,8 +199,6 @@ var DwenguinoBlockly = {
             }
           }
         });
-
-
 
         // This code handles the download of the workspace to a local file.
         // If this is run in the arduino ide, a filechooser is shown.
@@ -538,7 +538,7 @@ var DwenguinoBlockly = {
 
     setDifficultyLevel: function(level){
         DwenguinoBlockly.difficultyLevel = level;
-        $("#toolbox").load("levels/lvl" + level + ".xml", function(){
+        $("#toolbox").load("./DwenguinoIDE/levels/lvl" + level + ".xml", function(){
             DwenguinoBlockly.doTranslation();
             DwenguinoBlockly.workspace.updateToolbox(document.getElementById("toolbox"));
         });
@@ -592,13 +592,63 @@ var DwenguinoBlockly = {
         DwenguinoBlockly.workspace = Blockly.inject(blocklyDiv,
             {
                 toolbox: document.getElementById('toolbox'),
-                media: "./img/",
+                media: "DwenguinoIDE/img/",
                 zoom: {controls: true, wheel: true}
             });
         window.addEventListener('resize', DwenguinoBlockly.onresize, false);
         DwenguinoBlockly.onresize();
         Blockly.svgResize(DwenguinoBlockly.workspace);
         DwenguinoBlockly.workspace.addChangeListener(DwenguinoBlockly.renderCode);
+
+        // Init the callback for the dynamic creation of the toolbox
+        /**
+         * Construct the blocks required by the flyout for the colours category.
+         * @param {!Blockly.Workspace} workspace The workspace this flyout is for.
+         * @return {!Array.<!Element>} Array of XML block elements.
+         */
+        var variablesFlyoutCallback = function(workspace) {
+          var variables = DwenguinoBlockly.workspace.getAllVariables();
+          var block_texts = []
+          //block_texts.push('<button text="' + MSG['createVar'] + '" callbackKey="createVariableCallback"></button>')
+          block_texts.push('<block type="variables_declare_set_int"></block>');
+          block_texts.push('<block type="variables_get_int"></block>');
+          block_texts.push('<block type="variables_declare_set_string"></block>');
+          block_texts.push('<block type="variables_get_string"></block>');
+          
+          console.log(variables)
+          for (var i = 0 ; i < variables.length ; i++){
+            var type = "int";
+            if (variables[i]["type"] == "Number"){
+              type = "int";
+            } else if (variables[i]["type"] == "String"){
+              type = "string";
+            }
+            
+            var blockXml = '<block type="variables_get_' + type + '"><field name="VAR" id="';
+            blockXml = blockXml + variables[i]["id_"] + '" variabletype="';
+            blockXml = blockXml + variables[i]["type"] + '">';
+            blockXml = blockXml + variables[i]["name"] + '</field></block>';
+            console.log(blockXml);
+            block_texts.push(blockXml);
+          }
+          var blocks = []
+          for (var i = 0 ; i < block_texts.length ; i++){
+            blocks.push(Blockly.Xml.textToDom(block_texts[i]))
+          }
+          return blocks;
+        }
+
+        var createVariableCallback = function(btn){
+            console.log("Creating new variable");
+        };
+
+        DwenguinoBlockly.workspace.registerButtonCallback(
+          "createVariableCallback", createVariableCallback
+        );
+
+        DwenguinoBlockly.workspace.registerToolboxCategoryCallback(
+          "DWB_VARIABLES", variablesFlyoutCallback
+        );
     },
 
     changeLanguage: function() {

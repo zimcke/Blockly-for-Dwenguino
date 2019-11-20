@@ -38,6 +38,6 @@ DwenguinoBlocklyLanguageSettings.getLang = function() {
 };
 
 // Load the Code demo's language strings.
-document.write('<script src="msg/' + DwenguinoBlocklyLanguageSettings.getLang() + '.js"></script>\n');
+document.write('<script src="./DwenguinoIDE/msg/' + DwenguinoBlocklyLanguageSettings.getLang() + '.js"></script>\n');
 // Load Blockly's language strings.
-document.write('<script src="../blockly/msg/js/' + DwenguinoBlocklyLanguageSettings.getLang() + '.js"></script>\n');
+document.write('<script src="./blockly/msg/js/' + DwenguinoBlocklyLanguageSettings.getLang() + '.js"></script>\n');

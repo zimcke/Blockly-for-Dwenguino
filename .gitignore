@@ -3,3 +3,5 @@ Blockly/DwenguinoBlockly/nbproject/*
 Blockly/nbproject/*
 notes/*
 DwenguinoIDE/node_modules/*
+/DwenguinoBlocklyArduinoPlugin/build/
+/DwenguinoBlocklyArduinoPlugin/dist/
