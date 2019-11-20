@@ -608,14 +608,16 @@ var DwenguinoBlockly = {
           
           console.log(variables)
           for (var i = 0 ; i < variables.length ; i++){
-            var type = "int";
+            var type = "_int";
             if (variables[i]["type"] == "Number"){
-              type = "int";
+              type = "_int";
             } else if (variables[i]["type"] == "String"){
-              type = "string";
+              type = "_string";
+            }else{
+              type = ""
             }
             
-            var blockXml = '<block type="variables_get_' + type + '"><field name="VAR" id="';
+            var blockXml = '<block type="variables_get' + type + '"><field name="VAR" id="';
             blockXml = blockXml + variables[i]["id_"] + '" variabletype="';
             blockXml = blockXml + variables[i]["type"] + '">';
             blockXml = blockXml + variables[i]["name"] + '</field></block>';

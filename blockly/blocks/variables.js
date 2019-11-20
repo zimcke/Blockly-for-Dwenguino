@@ -46,6 +46,23 @@ Blockly.Blocks.variables.HUE_STR = 160;
 Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
   // Block for variable getter.
   {
+    "type": "variables_get",
+    "message0": "%1",
+    "args0": [
+      {
+        "type": "field_variable",
+        "name": "VAR",
+        "variable": "%{BKY_VARIABLES_DEFAULT_NAME}",
+      }
+    ],
+    "colour": Blockly.Msg['VARIABLES_HUE'],
+    "output": "",
+    "helpUrl": "%{BKY_VARIABLES_GET_HELPURL}",
+    "tooltip": "%{BKY_VARIABLES_GET_TOOLTIP}",
+    "extensions": ["contextMenu_variableSetterGetter"]
+  },
+  // Block for variable getter.
+  {
     "type": "variables_get_int",
     "message0": "%1",
     "args0": [

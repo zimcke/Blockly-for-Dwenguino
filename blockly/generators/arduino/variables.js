@@ -28,6 +28,13 @@ goog.provide('Blockly.Arduino.variables');
 goog.require('Blockly.Arduino');
 
 
+Blockly.Arduino.variables_get = function() {
+  // Variable getter.
+  var code = Blockly.Arduino.variableDB_.getName(this.getFieldValue('VAR'),
+      Blockly.Variables.NAME_TYPE);
+  return [code, Blockly.Arduino.ORDER_ATOMIC];
+};
+
 Blockly.Arduino.variables_get_int = function() {
   // Variable getter.
   var code = Blockly.Arduino.variableDB_.getName(this.getFieldValue('VAR'),
