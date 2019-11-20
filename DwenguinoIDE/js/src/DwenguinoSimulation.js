@@ -975,16 +975,16 @@ var DwenguinoSimulation = {
       }, 20);
     },
     /*
-    * Returns the distance between the sonar and teh wall
+    * Returns the distance between the sonar and the wall
     * @param {int} trigPin 11
     * @param {int} echoPin 12
     * @returns {int} distance in cm
     */
     sonar: function(trigPin, echoPin) {
       DwenguinoSimulation.showSonar();
-      //document.getElementById("sonar").checked = true;
-      document.getElementById('sonar_input').value = DwenguinoSimulation.board.sonarDistance;
-      return this.board.sonarDistance;
+      var distance = Math.round(DwenguinoSimulation.board.sonarDistance);
+      document.getElementById('sonar_input').value = distance;
+      return distance;
     },
 
     /*

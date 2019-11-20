@@ -125,7 +125,9 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       {
         "type": "field_variable",
         "name": "VAR",
-        "variable": null
+        "variable": null,
+        "variableTypes": ['Number'],
+        "defaultType": "Number",
       },
       {
         "type": "input_value",
@@ -169,7 +171,7 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       {
         "type": "field_variable",
         "name": "VAR",
-        "variable": null
+        "variable": null,
       },
       {
         "type": "input_value",
