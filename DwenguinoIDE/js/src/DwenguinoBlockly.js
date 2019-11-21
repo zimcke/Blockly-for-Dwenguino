@@ -218,7 +218,7 @@ var DwenguinoBlockly = {
 
         $("#db_menu_item_clear").click(function(){
           $("#db_menu_item_run").off("click");
-          $("#db_menu_item_dwengo_robot_teacher_image").attr("src", "img/gear_animation.gif");
+          $("#db_menu_item_dwengo_robot_teacher_image").attr("src", "./DwenguinoIDE/img/gear_animation.gif");
           $("#db_menu_item_dwengo_robot_teacher_image").css({padding: "10px 25px", maxHeight: "100%", float: "right"});
           $("#db_menu_item_run").css({color: "gray"});
           DwenguinoSimulation.handleSimulationStop();
