@@ -218,9 +218,10 @@ var DwenguinoBlockly = {
 
         $("#db_menu_item_clear").click(function(){
           $("#db_menu_item_run").off("click");
-          $("#db_menu_item_dwengo_robot_teacher_image").attr("src", "img/gear_animation.gif");
+          $("#db_menu_item_dwengo_robot_teacher_image").attr("src", "./DwenguinoIDE/img/gear_animation.gif");
           $("#db_menu_item_dwengo_robot_teacher_image").css({padding: "10px 25px", maxHeight: "100%", float: "right"});
           $("#db_menu_item_run").css({color: "gray"});
+          DwenguinoSimulation.handleSimulationStop();
           setTimeout(function(){
             console.log("timeout")
             $("#db_menu_item_run").click(DwenguinoBlockly.runEventHandler);
@@ -232,7 +233,7 @@ var DwenguinoBlockly = {
               $(this).css({color: "black"});
             });
             $("#db_menu_item_dwengo_robot_teacher_image").css({padding: "10px", maxHeight: "100%", float: "right"});
-            $("#db_menu_item_dwengo_robot_teacher_image").attr("src", "img/dwengo_robot_plain.svg");
+            $("#db_menu_item_dwengo_robot_teacher_image").attr("src", "./DwenguinoIDE/img/dwengo_robot_plain.svg");
           }, 5000);
           var code = '#include <Wire.h>\n#include <Dwenguino.h>\n#include <LiquidCrystal.h>\n\nvoid setup(){\ninitDwenguino();\ndwenguinoLCD.setCursor(2,0);\ndwenguinoLCD.print(String("WeGoSTEM ;)"));\n}\n\nvoid loop(){}\n';
           if ((typeof dwenguinoBlocklyServer) != 'undefined' && dwenguinoBlocklyServer){
