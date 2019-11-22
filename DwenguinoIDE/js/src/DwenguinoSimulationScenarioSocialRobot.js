@@ -44,7 +44,9 @@ function DwenguinoSimulationScenarioSocialRobot(){
     //Init robot state
     this.initSocialRobot();
 
-    $('#sim_background').css('background-image', this.robot.imgRobot);
+    this.setSensorOptions();
+    this.setBackground();
+
     this.scenarioUtils.contextMenuBackground();
 
     this.checkLocalStorage();
@@ -104,8 +106,8 @@ function DwenguinoSimulationScenarioSocialRobot(){
     var container = $(containerIdSelector);
     var simulationContainer = $("<div>").attr("id", "sim_container");
 
-    var sensorOptions = $("<div>").attr("id", "sensor_options");
-    $('#sim_container').append(sensorOptions);
+    // var sensorOptions = $("<div>").attr("id", "sensor_options");
+    // $('#sim_container').append(sensorOptions);
     // Add resize listerner to the conainer and update width and height accordingly
     var self = this;
     new ResizeSensor(simulationContainer, function() {
@@ -116,16 +118,12 @@ function DwenguinoSimulationScenarioSocialRobot(){
     container.empty();
     container.append(simulationContainer);
 
-    var backgroundCanvasId = 'sim_background';
-
-    this.robot[backgroundCanvasId] = {};
-    this.robot[backgroundCanvasId].offset = {'left': 0, 'top': 0};
+    // TODO implemnt change of background image
+    // var backgroundCanvasId = 'sim_background';
+    // this.robot[backgroundCanvasId] = {};
+    // this.robot[backgroundCanvasId].offset = {'left': 0, 'top': 0};
     // this.robot[backgroundCanvasId].image = new Image();
     // this.robot[backgroundCanvasId].image.src = this.robot.imgRobot;
-
-    $('#sim_container').append("<div id='sim_background' class='sim_element'></div>");
-    $('#sim_background').css('top', 0 + 'px');
-    $('#sim_background').css('left', 0 + 'px');
 
     // Reset the simulation state
     this.initSimulationState();
@@ -224,6 +222,7 @@ function DwenguinoSimulationScenarioSocialRobot(){
       imgPirOn: './DwenguinoIDE/img/socialrobot/pir_on.png',
       imgSonar: './DwenguinoIDE/img/board/sonar.png',
       imgRobot: 'url("./DwenguinoIDE/img/socialrobot/robot1.png")',
+      imgR: './DwenguinoIDE/img/socialrobot/robot1.png',
       imgEye: './img/socialrobot/eye.svg',
       imgRightHand: './DwenguinoIDE/img/socialrobot/righthand.png',
       imgLeftHand: './DwenguinoIDE/img/socialrobot/lefthand.png'
@@ -232,6 +231,25 @@ function DwenguinoSimulationScenarioSocialRobot(){
     for (const [type, t] of Object.entries(TypesEnum)) {
       this.robot.numberOf[t] = 0;
     }
+ };
+
+ DwenguinoSimulationScenarioSocialRobot.prototype.setSensorOptions = function(){
+  if(!document.getElementById('sensor_options')){
+    var sensorOptions = $("<div>").attr("id", "sensor_options");
+    $('#sim_container').append(sensorOptions);
+  }
+ }
+
+ DwenguinoSimulationScenarioSocialRobot.prototype.setBackground = function(){
+   console.log('set background');
+   $('#sim_container').append("<div id='sim_background' class='sim_element'></div>");
+    $('#sim_background').append("<div id='sim_background_img'></div>");
+    var sensorOptionswidth = $('#sensor_options').width();
+    var parentWidth = $('#sim_background').width() - sensorOptionswidth;
+    var width = $('#sim_background_img').width();
+    var offSet = ( parentWidth - width ) / 2;
+    $('#sim_background_img').css('top', 0 + 'px');
+    $('#sim_background_img').css('margin-left', offSet + 'px'); 
  };
 
  /**
@@ -245,7 +263,6 @@ function DwenguinoSimulationScenarioSocialRobot(){
       this.robot[servoCanvasId].y = 30;
       this.robot[servoCanvasId].angle = 0;
       this.robot[servoCanvasId].prevAngle = 0;
-
     }
 
     for(var i = 1; i <= this.robot.numberOf[TypesEnum.LED]; i++){
@@ -486,6 +503,12 @@ DwenguinoSimulationScenarioSocialRobot.prototype.removeSonar = function(){
 
   delete this.robot['sim_sonar_canvas' + id];
   this.robot.numberOf[TypesEnum.SONAR] -= 1;
+
+  if(this.robot.numberOf[TypesEnum.SONAR] === 0){
+    $('#slider1_label').remove();
+    $('#slider1_value').remove();
+    $('#slider1').remove();
+  }
 };
 
 
@@ -751,8 +774,7 @@ DwenguinoSimulationScenarioSocialRobot.prototype.addButtonEventHandler = functio
  * This function will be called when the social robot scenario is added to the list of scenarios.
  */
 DwenguinoSimulationScenarioSocialRobot.prototype.checkLocalStorage = function(){
-  var sensorOptions = $("<div>").attr("id", "sensor_options");
-  $('#sim_container').append(sensorOptions);
+  this.setSensorOptions();
 
   console.log('sim container', $('#sim_container'));
   
@@ -939,10 +961,8 @@ DwenguinoSimulationScenarioSocialRobot.prototype.loadFromXml = function(){
       elements[0].parentNode.removeChild(elements[0]);
   }
 
-  $('#sim_container').append("<div id='sim_background' class='sim_element'></div>");
-  $('#sim_background').css('top', 0 + 'px');
-  $('#sim_background').css('left', 0 + 'px');
-  $('#sim_background').css('background-image', this.robot.imgRobot);
+  this.setSensorOptions();
+  this.setBackground();
 
   var data = this.scenarioUtils.textToDom(this.xml);
 
@@ -959,7 +979,6 @@ DwenguinoSimulationScenarioSocialRobot.prototype.loadFromXml = function(){
         var height = parseFloat(xmlChild.getAttribute('Height'));
         var image = xmlChild.getAttribute('Image');
         var state = xmlChild.getAttribute('State');
-        console.log(state);
         var classes = xmlChild.getAttribute('Classes');
         this.addServo(true,offsetLeft, offsetTop, state, width, height, image, classes);
         break;

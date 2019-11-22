@@ -450,6 +450,15 @@ body{
     z-index:-1;
 }
 
+#sim_background_img {
+    /* background-image: url("../img/socialrobot/robot1.png");
+    background-size: contain;
+    background-repeat: no-repeat; */
+    content:url("../img/socialrobot/robot1.png");
+    height: inherit;
+    width: min-content;
+}
+
 .sim_servo {
     background: #0a3c7a;
     height: 25px;
