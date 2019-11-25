@@ -264,21 +264,18 @@ DwenguinoScenarioUtils.prototype.contextMenuLed = function(){
                 + '<li class="label1" title="yellow">yellow'
                 + '<li class="label2" title="red">red'
                 + '<li class="label3" title="blue">blue'
-                + '<li class="label4" title="green">green')
+                + '<li class="label4" title="green">#72f542' +'</ul></span>')
                 .appendTo(this)
                 .on('click', 'li', function() {
-                    // do some funky stuff
-                    //console.log('Clicked on ' + $(this).text());
-                    // hide the menu
                     root.$menu.trigger('contextmenu:hide');
                 });
     
             this.addClass('labels').on('contextmenu:focus', function(e) {
-                // setup some awesome stuff
+
             }).on('contextmenu:blur', function(e) {
-                // tear down whatever you did
+  
             }).on('keydown', function(e) {
-                // some funky key handling, maybe?
+
             });
         };
     
