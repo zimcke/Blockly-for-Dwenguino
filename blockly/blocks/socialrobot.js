@@ -38,6 +38,13 @@ var socialrobot_arms_down_json = {
       "type": "input_dummy"
       },
       {
+        "type": "field_image",
+        "src": "DwenguinoIDE/img/socialrobot/arms_down.png",
+        "width": 177,
+        "height": 147,
+        "alt": "*"
+      },
+      {
       "type": "input_dummy"
       },
       {
@@ -83,6 +90,13 @@ var socialrobot_arms_up_json = {
   "args0": [
   {
       "type": "input_dummy"
+      },
+      {
+        "type": "field_image",
+        "src": "DwenguinoIDE/img/socialrobot/arms_up.png",
+        "width": 177,
+        "height": 147,
+        "alt": "*"
       },
       {
       "type": "input_dummy"
@@ -178,6 +192,13 @@ var socialrobot_wave_arms_json = {
         "type": "input_dummy"
         },
         {
+          "type": "field_image",
+          "src": "DwenguinoIDE/img/socialrobot/turn_eyes_left.png",
+          "width": 150,
+          "height": 65,
+          "alt": "*"
+        },
+        {
         "type": "input_dummy"
         },
         {
@@ -222,6 +243,13 @@ var socialrobot_wave_arms_json = {
     "args0": [
     {
         "type": "input_dummy"
+        },
+        {
+          "type": "field_image",
+          "src": "DwenguinoIDE/img/socialrobot/turn_eyes_right.png",
+          "width": 150,
+          "height": 65,
+          "alt": "*"
         },
         {
         "type": "input_dummy"
