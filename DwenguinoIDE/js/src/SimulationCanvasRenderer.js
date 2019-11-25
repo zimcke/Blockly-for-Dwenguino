@@ -112,8 +112,8 @@ SimulationCanvasRenderer.prototype.drawServo = function(robot, canvas){
                     self.drawRotatedServohead(ctx, robot[id]);
                     break;
                 case 'eye':
-                    ctx.fillRect(robot[id].x+2, robot[id].y-15, robot[id].width, robot[id].height-20);
-                    self.drawEye(ctx,robot[id]);
+                   // ctx.fillRect(robot[id].x+2, robot[id].y-15, robot[id].width, robot[id].height-20);
+                    self.drawEye(ctx,robot[id], canvas);
                     break;
                 case 'righthand':
                     ctx.fillRect(robot[id].x+100, robot[id].y+30, robot[id].width-100, robot[id].height-60);
@@ -134,8 +134,8 @@ SimulationCanvasRenderer.prototype.drawServo = function(robot, canvas){
                 self.drawRotatedServohead(ctx, robot[id]);
                 break;
             case 'eye':
-                ctx.fillRect(robot[id].x+2, robot[id].y-15, robot[id].width, robot[id].height-20);
-                self.drawEye(ctx,robot[id]);
+                //ctx.fillRect(robot[id].x+2, robot[id].y-15, robot[id].width, robot[id].height-20);
+                self.drawEye(ctx,robot[id], canvas);
                 break;
             case 'righthand':
                 ctx.fillRect(robot[id].x+100, robot[id].y+30, robot[id].width-100, robot[id].height-60);
@@ -220,12 +220,7 @@ SimulationCanvasRenderer.prototype.drawSonar = function(robot, canvas){
  */
 SimulationCanvasRenderer.prototype.drawRotatedServohead = function(ctx, servo){
     // make the servo rotate stepwise
-    var direction = 0;
-    if((servo.angle-servo.prevAngle) > 0) {
-        direction = 1;
-    } else {
-        direction = -1
-    }
+    var direction = this.getDirection(servo.prevAngle, servo.angle);
 
     if((servo.angle-servo.prevAngle) != 0){
         if (((servo.angle-servo.prevAngle) > 5) || ((servo.angle-servo.prevAngle) < -5)) {
@@ -252,45 +247,73 @@ SimulationCanvasRenderer.prototype.drawRotatedServohead = function(ctx, servo){
     }
 }
 
-SimulationCanvasRenderer.prototype.drawEye = function(ctx, servo){
-    // TODO
-    // make the servo rotate stepwise
-    var angle = 0;
+SimulationCanvasRenderer.prototype.drawEye = function(ctx, servo, canvas){
+    this.renderEyeBall(ctx, servo, canvas);
+    this.renderIris(ctx, servo, canvas);    
+}
+
+SimulationCanvasRenderer.prototype.renderEyeBall = function(ctx, servo,canvas){
+    ctx.beginPath();
+    ctx.arc(canvas.width/2, canvas.height/2, servo.width, 0, 2 * Math.PI);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+    ctx.fillStyle = 'black';
+    ctx.stroke(); 
+}
+
+SimulationCanvasRenderer.prototype.renderIris = function(ctx, servo, canvas){
+    var direction = this.getDirection(servo.prevAngle, servo.angle);
+
     if((servo.angle-servo.prevAngle) != 0){
-        if ((servo.angle-servo.prevAngle) > 5) {
-            servo.prevAngle = servo.prevAngle + 5;
+        var factorBegin = Math.max((servo.prevAngle - 120)/10, 0.2);
+        var factorEnd = Math.min(2- ((servo.prevAngle-120)/10), 1.8);
+        var horTranslation = (servo.prevAngle / 120 * (canvas.width-60)) + 30;
+        if (((servo.angle-servo.prevAngle) > 5) || ((servo.angle-servo.prevAngle) < -5)) {
+            servo.prevAngle = servo.prevAngle + (5 * direction);
+            if((servo.prevAngle >= 0) & (servo.prevAngle <= 120)){
+                ctx.beginPath();
+                ctx.arc(horTranslation, canvas.height/2, 10, 0, 2 * Math.PI);
+                ctx.fillStyle = 'black';
+                ctx.fill();
+            } else if (servo.prevAngle <= 130){
+                ctx.beginPath();
+                horTranslation = (canvas.width-60) + 30;
+                ctx.arc(horTranslation, canvas.height/2, 10, factorBegin * Math.PI, factorEnd * Math.PI);
+                ctx.fillStyle = 'black';
+                ctx.fill(); 
+            }
         } else {
             servo.prevAngle = servo.prevAngle + (servo.angle-servo.prevAngle);
+            if((servo.prevAngle >= 0) & (servo.prevAngle <= 120)){
+                ctx.beginPath();
+                ctx.arc(horTranslation, canvas.height/2, 10, 0, 2 * Math.PI);
+                ctx.fillStyle = 'black';
+                ctx.fill();
+            } else if (servo.prevAngle <= 130){
+                ctx.beginPath();
+                horTranslation = (canvas.width-60) + 30;
+                ctx.arc(horTranslation, canvas.height/2, 10, factorBegin * Math.PI, factorEnd * Math.PI);
+                ctx.fillStyle = 'black';
+                ctx.fill(); 
+            }
         }
-        angle = servo.prevAngle;
     } else {
-        angle = servo.angle
+        var factorBegin = Math.max((servo.angle - 120)/10,0.2);
+        var factorEnd = Math.min(2- ((servo.angle-120)/10), 1.8);
+        var horTranslation = (servo.angle / 120 * (canvas.width-60)) + 30;
+        if((servo.angle >= 0) & (servo.angle <= 120)){
+            ctx.beginPath();
+            ctx.arc(horTranslation, canvas.height/2, 10, 0, 2 * Math.PI);
+            ctx.fillStyle = 'black';
+            ctx.fill();
+        } else if (servo.angle <= 130){
+            ctx.beginPath();
+            horTranslation = (canvas.width-60) + 30;
+            ctx.arc(horTranslation, canvas.height/2, 10, factorBegin * Math.PI, factorEnd * Math.PI);
+            ctx.fillStyle = 'black';
+            ctx.fill(); 
+        }
     }
-
-    console.log('angle', angle);
-    var verScale = 0;
-    var minWidth = 0.1*servo.width;
-    console.log('minWidth', minWidth);
-    
-    var maxWidth = servo.width;
-    console.log('maxWidth', maxWidth);
-
-    var horTranslation = 0;
-    if(angle <= 90){
-        verScale = (0.01*angle)+0.1;
-        //horTranslation = (servo.width/4)/90*angle;
-        horTranslation = ( ( ( ((servo.width/2) - (maxWidth/2)) - (minWidth/2) ) / (90) ) * angle ) + (minWidth/2)
-    } else {
-        verScale = (((1-0.1)/(91-180))*(angle-180))+0.1;
-        //horTranslation = (((servo.width/2) - (servo.width))/(91-180) * angle) + (((servo.width/2) - (servo.width))/(91-180) *(-180)) + (servo.width);
-        horTranslation = ( ( ( ((servo.width/2) - (maxWidth/2)) - (servo.width - (minWidth/2)) / (91 - 180) ) * (angle - 180) ) ) + (servo.width - (minWidth/2));
-    }
-    
-    console.log('verScale', verScale);
-    console.log('horTranslation', horTranslation);
-    ctx.transform(verScale, 0, 0, 1, horTranslation, 0);
-    ctx.drawImage(servo.image,0,0,servo.width,servo.height);
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 /**
@@ -362,12 +385,7 @@ SimulationCanvasRenderer.prototype.drawUp = function(ctx, servo){
  */
 SimulationCanvasRenderer.prototype.drawLeftHand = function(ctx, servo){
     // make the servo rotate stepwise
-    var direction = 0;
-    if((servo.angle-servo.prevAngle) > 0) {
-        direction = 1;
-    } else {
-        direction = -1
-    }
+    var direction = this.getDirection(servo.prevAngle, servo.angle);
 
     if((servo.angle-servo.prevAngle) != 0){
         if (((servo.angle-servo.prevAngle) > 5) || ((servo.angle-servo.prevAngle) < -5)) {
@@ -415,3 +433,13 @@ SimulationCanvasRenderer.prototype.configureCanvasDimensions = function(canvas){
       ctx.scale(dpr, dpr);
     }
 };
+
+SimulationCanvasRenderer.prototype.getDirection = function(previousAngle, angle){
+    var direction = 0;
+    if((angle-previousAngle) > 0) {
+        direction = 1;
+    } else {
+        direction = -1
+    }
+    return direction;
+}

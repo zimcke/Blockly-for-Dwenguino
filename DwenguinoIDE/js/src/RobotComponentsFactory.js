@@ -16,9 +16,9 @@ Object.freeze(TypesEnum);
  * This factory produces robot components for the given robot
  * @param {SocialRobot} robot 
  */
-function RobotComponentsFactory(robot) {
+function RobotComponentsFactory(robot, scenarioUtils) {
     this.robot = robot;
-    this.scenarioUtils = new DwenguinoScenarioUtils();
+    this.scenarioUtils = scenarioUtils
     this.renderer = new SimulationCanvasRenderer();
 }
 

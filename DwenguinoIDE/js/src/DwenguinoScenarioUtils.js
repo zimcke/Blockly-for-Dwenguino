@@ -1,4 +1,7 @@
-//const StatesEnum = {"plain":0, "eye":1, "mouth":2, "righthand":3, "lefthand":4};
+/**
+ * The different states robot components can be in. 
+ * Not all states are supported for each robot component.
+ */
 const StatesEnum = {
     PLAIN: 'plain', 
     EYE: 'eye', 
@@ -220,15 +223,14 @@ DwenguinoScenarioUtils.prototype.contextMenuServo = function(){
                         self.scenario.setServoState(i, StatesEnum.PLAIN);
                     }
                 },
-                // "eye": {
-                //     name: MSG.socialrobot['eye'], 
-                //     // superseeds "global" callback
-                //     callback: function(itemKey, opt, e) {
-                //         var simServoId = this.attr('id');
-                //         var i = simServoId.replace(/\D/g,'');
-                //         self.scenario.setServoState(i, StatesEnum.EYE);
-                //     }
-                // },
+                "eye": {
+                    name: MSG.socialrobot['eye'], 
+                    callback: function(itemKey, opt, e) {
+                        var simServoId = this.attr('id');
+                        var i = simServoId.replace(/\D/g,'');
+                        self.scenario.setServoState(i, StatesEnum.EYE);
+                    }
+                },
                 // "mouth": {name: MSG.socialrobot['mouth'],},
                 "righthand": {
                     name: MSG.socialrobot['righthand'],

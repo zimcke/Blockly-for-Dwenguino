@@ -31,7 +31,7 @@ function DwenguinoSimulationScenarioSocialRobot(){
 
     //Init robot state
     this.initSocialRobot();
-    this.robotComponentsFactory = new RobotComponentsFactory(this.robot);
+    this.robotComponentsFactory = new RobotComponentsFactory(this.robot, this.scenarioUtils);
 
     this.setSensorOptions();
     this.setBackground();
@@ -311,7 +311,6 @@ DwenguinoSimulationScenarioSocialRobot.prototype.setServoState = function(i, sta
 
   switch(state){
     case StatesEnum.PLAIN:
-        console.log('plain');
         this.renderer.clearCanvas(servoCanvasId);
         document.getElementById(servoCanvasId).classList.remove('hand_canvas');
         this.robot[servoCanvasId].image.src = this.robot.imgServo;
@@ -320,16 +319,14 @@ DwenguinoSimulationScenarioSocialRobot.prototype.setServoState = function(i, sta
         this.renderer.initializeCanvas(servoCanvasId, this.robot);
         break;
     case StatesEnum.EYE:
-        console.log('eye');
         this.renderer.clearCanvas(servoCanvasId);
         document.getElementById(servoCanvasId).classList.remove('hand_canvas');
-        this.robot[servoCanvasId].image.src = this.robot.imgEye;
-        this.robot[servoCanvasId].width = 50;
-        this.robot[servoCanvasId].height = 50;
+        this.robot[servoCanvasId].image.src = '';
+        this.robot[servoCanvasId].width = 35;
+        this.robot[servoCanvasId].height = 35;
         this.renderer.initializeCanvas(servoCanvasId, this.robot);
         break;
     case StatesEnum.RIGHTHAND:
-        console.log('right hand');
         this.renderer.clearCanvas(servoCanvasId);
         document.getElementById(servoCanvasId).classList.remove('hand_canvas');
         this.robot[servoCanvasId].image.src = this.robot.imgRightHand;
@@ -339,7 +336,6 @@ DwenguinoSimulationScenarioSocialRobot.prototype.setServoState = function(i, sta
         this.renderer.initializeCanvas(servoCanvasId, this.robot);
         break;
     case StatesEnum.LEFTHAND:
-        console.log('left hand');
         this.renderer.clearCanvas(servoCanvasId);
         document.getElementById(servoCanvasId).classList.remove('hand_canvas');
         this.robot[servoCanvasId].image.src = this.robot.imgLeftHand;
