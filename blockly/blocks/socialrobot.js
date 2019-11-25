@@ -28,7 +28,7 @@ goog.require('Blockly.Arduino');
 
 var DwenguinoHelpUrl = "http://www.dwengo.org/blockly";
 
-Blockly.Blocks.socialrobot.HUE = 200;
+Blockly.Blocks.socialrobot.HUE = 25;
 
 var socialrobot_arms_down_json = {
   "id": "socialrobot_arms_down",

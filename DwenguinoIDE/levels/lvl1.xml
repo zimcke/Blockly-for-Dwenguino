@@ -199,13 +199,7 @@
     </block>
 
 </category>
-
-<category id="catComments" colour="200" name='Comments'>
-    <block type="line_comment">
-    </block>
-</category>
-
-<category id="catSocialRobot" colour="200" name='SocialRobot'>
+<category id="catSocialRobot" name='SocialRobot'>
         <block type="socialrobot_arms_down">
                 <value name="servo_right_hand1">
                     <block type="math_number" id="202">
@@ -238,3 +232,12 @@
             </value>
         </block> -->
     </category>
+
+
+<sep></sep>
+<category id="catComments" colour="200" name='Comments'>
+    <block type="line_comment">
+    </block>
+</category>
+
+
