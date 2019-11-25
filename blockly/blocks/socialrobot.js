@@ -66,7 +66,7 @@ var socialrobot_arms_down_json = {
   "previousStatement": null,
   "nextStatement": null,
   "colour": Blockly.Blocks.socialrobot.HUE,
-  "tooltip": "Wave arms",
+  "tooltip": "Put arms down",
   "helpUrl": "http://www.dwengo.org/tutorials"
 };
 
@@ -74,6 +74,52 @@ var socialrobot_arms_down_json = {
 Blockly.Blocks['socialrobot_arms_down'] = {
   init: function() {
     this.jsonInit(socialrobot_arms_down_json);
+  }
+};
+
+var socialrobot_arms_up_json = {
+  "id": "socialrobot_arms_up",
+  "message0": MSG.socialRobotArmsUpBlock,
+  "args0": [
+  {
+      "type": "input_dummy"
+      },
+      {
+      "type": "input_dummy"
+      },
+      {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": ""
+      },
+      {
+      "type": "input_value",
+      "name": "servo_right_hand2",
+      "check": "Number",
+      "align": "RIGHT"
+      },
+      {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": ""
+      },
+      {
+      "type": "input_value",
+      "name": "servo_left_hand2",
+      "check": "Number",
+      "align": "RIGHT"
+      }
+  ],
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": Blockly.Blocks.socialrobot.HUE,
+  "tooltip": "Put arms up",
+  "helpUrl": "http://www.dwengo.org/tutorials"
+};
+
+Blockly.Blocks['socialrobot_arms_up'] = {
+  init: function() {
+    this.jsonInit(socialrobot_arms_up_json);
   }
 };
 
@@ -124,6 +170,97 @@ var socialrobot_wave_arms_json = {
     }
   };
 
+  var socialrobot_eyes_left_json = {
+    "id": "socialrobot_eyes_left",
+    "message0": MSG.socialRobotEyesLeftBlock,
+    "args0": [
+    {
+        "type": "input_dummy"
+        },
+        {
+        "type": "input_dummy"
+        },
+        {
+        "type": "field_label_serializable",
+        "name": "NAME",
+        "text": ""
+        },
+        {
+        "type": "input_value",
+        "name": "servo_right_eye",
+        "check": "Number",
+        "align": "RIGHT"
+        },
+        {
+        "type": "field_label_serializable",
+        "name": "NAME",
+        "text": ""
+        },
+        {
+        "type": "input_value",
+        "name": "servo_left_eye",
+        "check": "Number",
+        "align": "RIGHT"
+        }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": Blockly.Blocks.socialrobot.HUE,
+    "tooltip": "Turn eyes left",
+    "helpUrl": "http://www.dwengo.org/tutorials"
+  };
+  
+  Blockly.Blocks['socialrobot_eyes_left'] = {
+    init: function() {
+      this.jsonInit(socialrobot_eyes_left_json);
+    }
+  };
+
+  var socialrobot_eyes_right_json = {
+    "id": "socialrobot_eyes_right",
+    "message0": MSG.socialRobotEyesRightBlock,
+    "args0": [
+    {
+        "type": "input_dummy"
+        },
+        {
+        "type": "input_dummy"
+        },
+        {
+        "type": "field_label_serializable",
+        "name": "NAME",
+        "text": ""
+        },
+        {
+        "type": "input_value",
+        "name": "servo_right_eye1",
+        "check": "Number",
+        "align": "RIGHT"
+        },
+        {
+        "type": "field_label_serializable",
+        "name": "NAME",
+        "text": ""
+        },
+        {
+        "type": "input_value",
+        "name": "servo_left_eye1",
+        "check": "Number",
+        "align": "RIGHT"
+        }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": Blockly.Blocks.socialrobot.HUE,
+    "tooltip": "Turn eyes right",
+    "helpUrl": "http://www.dwengo.org/tutorials"
+  };
+  
+  Blockly.Blocks['socialrobot_eyes_right'] = {
+    init: function() {
+      this.jsonInit(socialrobot_eyes_right_json);
+    }
+  };
 
   var socialrobot_read_pin_json = {
     "id": "socialrobot_read_pin",
