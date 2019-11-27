@@ -546,7 +546,7 @@ MSG.tutorials.lampOnOffWeGoSTEM = {
 };
 
 MSG.tutorials.socialrobot['introduction'] = {};
-MSG.tutorials.socialrobot['introduction'].label = 'Ontwerp een robot';
+MSG.tutorials.socialrobot['introduction'].label = '1. Werken met de simulator';
 MSG.tutorials.socialrobot['introduction'].stepTitles = [
   "Ontwerp een robot",
   "Naar de simulator",

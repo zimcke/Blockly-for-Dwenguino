@@ -114,7 +114,7 @@ tutorials.introductionSocialRobot = {
       }
     },
     id: "introductionSocialRobot",
-    label: 'Introductie sociale robot',
+    label: MSG.tutorials.socialrobot['introduction'].label,
     //label: MSG.tutsLampOnOffWeGoSTEM,
     onStart: function(){
         //Load blocks with xml file
