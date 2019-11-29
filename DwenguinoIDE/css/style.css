@@ -959,3 +959,7 @@ span.grippy::after {
     color: darkgrey;
     padding: 2px 7px;
 }
+.tutorial {
+    max-width: 360px; 
+    max-height: 360px;
+}
