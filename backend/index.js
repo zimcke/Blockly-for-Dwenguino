@@ -40,8 +40,8 @@ app.use(bodyParser.json({ type: 'application/*+json' }));
 
 // connect to Mongoose and set connection variable
 // Depricate: mongoose.connect();
-//let dev_db_url = 'mongodb://localhost/dwenguinoblockly';
-let dev_db_url = 'mongodb://localhost/testingFuncSave';
+let dev_db_url = 'mongodb://localhost/dwenguinoblockly';
+//let dev_db_url = 'mongodb://localhost/testingFuncSave';
 let mongoDB = process.env.MONGODB_URI || dev_db_url;
 mongoose.connect(mongoDB, {
     useNewUrlParser: true,
@@ -80,7 +80,7 @@ let server = app.listen(port, function () {
 //commented out for debugging
 
 
-/*if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
     module.export = app;
 } else {
     // Launch a browser window
@@ -95,8 +95,7 @@ let server = app.listen(port, function () {
             process.exit();
         });
     });
-}*/
-
+}
 
 
 
