@@ -81,7 +81,7 @@ let server = app.listen(port, function () {
 
 
 if (process.env.NODE_ENV === 'production') {
-    module.export = app;
+    //module.export = app;
 } else {
     // Launch a browser window
     
