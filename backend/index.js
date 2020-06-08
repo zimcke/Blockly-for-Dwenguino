@@ -40,9 +40,9 @@ app.use(bodyParser.json({ type: 'application/*+json' }));
 
 // connect to Mongoose and set connection variable
 // Depricate: mongoose.connect();
-let dev_db_url = 'mongodb://localhost/dwenguinoblockly';
+let dev_db_url = 'mongodb://127.0.0.1:27017/dwenguinoblockly';
 //let dev_db_url = 'mongodb://localhost/testingFuncSave';
-let mongoDB = process.env.MONGODB_URI || dev_db_url;
+let mongoDB =  dev_db_url;
 mongoose.connect(mongoDB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
