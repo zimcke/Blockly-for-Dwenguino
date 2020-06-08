@@ -1,11 +1,11 @@
 import Useritem from '../models/userModel.js';
 import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 
 let exports = {};
 
 exports.new = function(req, res) {
-  let mongoose = require('mongoose');
-  mongoose.connect('mongodb://localhost/dwenguinoblocklyexit', { useNewUrlParser: true });
+  mongoose.connect('mongodb://127.0.0.1:27017/dwenguinoblockly', { useNewUrlParser: true });
   let db = mongoose.connection;
   const rounds = 10;
 
@@ -51,8 +51,7 @@ exports.new = function(req, res) {
 };
 
 exports.update = function(req, res) {
-  let mongoose = require('mongoose');
-  mongoose.connect('mongodb://localhost/dwenguinoblockly', { useNewUrlParser: true });
+  mongoose.connect('mongodb://127.0.0.1:27017/dwenguinoblockly', { useNewUrlParser: true });
   let db = mongoose.connection;
 
   db.collection('authentications').findOne({username: req.body.userId})
@@ -95,8 +94,7 @@ exports.update = function(req, res) {
 };
 
 exports.authenticate = function(req, res) {
-  let mongoose = require('mongoose');
-  mongoose.connect('mongodb://localhost/dwenguinoblockly', { useNewUrlParser: true });
+  mongoose.connect('mongodb://127.0.0.1:27017/dwenguinoblockly', { useNewUrlParser: true });
   let db = mongoose.connection;
 
   db.collection('authentications').findOne({username: req.body.userId})

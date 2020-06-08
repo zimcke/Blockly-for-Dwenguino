@@ -1,5 +1,5 @@
 export default class ServerConfig{
     static getServerUrl(){
-        return 'http://localhost:12032';
+        return 'http://18.195.79.132:12032';
     }
 }

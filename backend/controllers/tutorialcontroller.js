@@ -6,7 +6,7 @@ let exports  = {};
 
 exports.getCompletedTutorials = function(req, res) {
   let mongoose = require('mongoose');
-  mongoose.connect('mongodb://localhost/dwenguinoblockly', { useNewUrlParser: true });
+  mongoose.connect('mongodb://127.0.0.1:27017/dwenguinoblockly', { useNewUrlParser: true });
   let db = mongoose.connection;
 
   db.collection('authentications').findOne({username: req.body.username})
@@ -42,7 +42,7 @@ exports.getCompletedTutorials = function(req, res) {
 
 exports.newCompletedTutorial = function(req, res) {  
   let mongoose = require('mongoose');
-  mongoose.connect('mongodb://localhost/dwenguinoblockly', { useNewUrlParser: true });
+  mongoose.connect('mongodb://127.0.0.1:27017/dwenguinoblockly', { useNewUrlParser: true });
   let db = mongoose.connection;
 
   db.collection('authentications').findOne({username: req.body.username})
