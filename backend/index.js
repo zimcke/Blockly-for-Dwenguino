@@ -60,8 +60,8 @@ if (process.env.NODE_ENV === 'production') {
 } else {
     // Setup static file serving
     // Changed for debugging, use first line when debugging
-    //app.use('/dwenguinoblockly', express.static(path.join(__dirname, 'Blockly-for-Dwenguino')));
-    app.use('/dwenguinoblockly', express.static(path.join(__dirname, '..', 'Blockly-for-Dwenguino')));
+    app.use('/dwenguinoblockly', express.static(path.join(__dirname, 'Blockly-for-Dwenguino')));
+    //sapp.use('/dwenguinoblockly', express.static(path.join(__dirname, '..', 'Blockly-for-Dwenguino')));
 }
 
 // Use blockly routes for the app
@@ -77,7 +77,7 @@ let server = app.listen(port, function () {
 });
 
 
-//commented out for debugging
+//This is depricated, now the electron browser is which is started using a bash script
 
 
 if (process.env.NODE_ENV === 'production') {
@@ -96,6 +96,10 @@ if (process.env.NODE_ENV === 'production') {
         });
     });
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/dwenguinoblockly-standalone
 
 
 

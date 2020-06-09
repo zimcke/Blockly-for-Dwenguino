@@ -51,7 +51,7 @@ exports.new = function(req, res) {
 };
 
 exports.update = function(req, res) {
-  mongoose.connect('mongodb://127.0.0.1:27017/dwenguinoblockly', { useNewUrlParser: true });
+ mongoose.connect('mongodb://127.0.0.1:27017/dwenguinoblockly', { useNewUrlParser: true });
   let db = mongoose.connection;
 
   db.collection('authentications').findOne({username: req.body.userId})
@@ -94,7 +94,7 @@ exports.update = function(req, res) {
 };
 
 exports.authenticate = function(req, res) {
-  mongoose.connect('mongodb://127.0.0.1:27017/dwenguinoblockly', { useNewUrlParser: true });
+ mongoose.connect('mongodb://127.0.0.1:27017/dwenguinoblockly', { useNewUrlParser: true });
   let db = mongoose.connection;
 
   db.collection('authentications').findOne({username: req.body.userId})
