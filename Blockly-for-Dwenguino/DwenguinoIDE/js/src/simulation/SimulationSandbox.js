@@ -1,4 +1,5 @@
 import ButtonMap from "./ButtonMap.js";
+import PlotterConstants from "../scenario/plotter/PlotterConstants.js"
 
 /*
  * Contains all the functions that can be executed by the code that was created by the students.
@@ -6,20 +7,25 @@ import ButtonMap from "./ButtonMap.js";
  * code behind those blocks.
 */
 
-export default class SimulationSandbox{
-    boardState = null;
-    constructor(boardState){
-        this.boardState = boardState;
-    }
+export default class SimulationSandbox {
+  boardState = null;
+  currentScenario = null;
+  constructor(boardState) {
+    this.boardState = boardState;
+  }
+
+  setCurrentScenario(scenario){
+    this.currentScenario = scenario;
+  }
 
   /*
   * Clears the lcd display.
   *
   */
-  clearLcd(){
+  clearLcd() {
     // clear lcd by writing spaces to it
     for (var i = 0; i < 2; i++) {
-        this.writeLcd(" ".repeat(16), i, 1);
+      this.writeLcd(" ".repeat(16), i, 1);
     }
   }
 
@@ -34,10 +40,10 @@ export default class SimulationSandbox{
     this.boardState.setBacklight(1);
     // replace text in current content (if text is hello and then a is written this gives aello)
     text = this.boardState.getLcdContent(row).substr(0, column) +
-    text.substring(0, 16 - column) +
-    this.boardState.getLcdContent(row).substr(text.length + column, 16);
+      text.substring(0, 16 - column) +
+      this.boardState.getLcdContent(row).substr(text.length + column, 16);
     this.boardState.setLcdContent(row, text);
- 
+
   }
 
   /*
@@ -53,7 +59,7 @@ export default class SimulationSandbox{
         pin -= 32;
       }
       if (state === 'HIGH' || state == 1) {
-        pin=== 13 ? this.boardState.setLedState(8, 1) : this.boardState.setLedState(pin, 1);
+        pin === 13 ? this.boardState.setLedState(8, 1) : this.boardState.setLedState(pin, 1);
       } else {
         pin === 13 ? this.boardState.setLedState(8, 0) : this.boardState.setLedState(pin, 0);
       }
@@ -75,8 +81,8 @@ export default class SimulationSandbox{
   digitalRead(pin) {
     // read value from buttons
     if (pin.startsWith("SW_")) {
-        let pinIndex = ButtonMap.mapButtonPinNameToIndex(pin);
-        return this.boardState.getButtonState(pinIndex);
+      let pinIndex = ButtonMap.mapButtonPinNameToIndex(pin);
+      return this.boardState.getButtonState(pinIndex);
     }
 
     // Return the value that is set to the leds
@@ -106,16 +112,16 @@ export default class SimulationSandbox{
     bin = bin.toString(2);
 
     // Turn all leds off
-    for (var i = 0 ; i < 8 ; i++){
-        this.digitalWrite(32+i, 0);
+    for (var i = 0; i < 8; i++) {
+      this.digitalWrite(32 + i, 0);
     }
     // Turn on the respective leds
     var diff = 8 - bin.length;
-    if (diff < 0){
+    if (diff < 0) {
       diff = 0
     }
-    for (var i = 0 ; i < Math.min(bin.length, 8) ; i++){
-        this.digitalWrite(39 - (diff + i), bin[i]);
+    for (var i = 0; i < Math.min(bin.length, 8); i++) {
+      this.digitalWrite(39 - (diff + i), bin[i]);
     }
   }
 
@@ -159,8 +165,8 @@ export default class SimulationSandbox{
     let pin = channel + 35;
 
     if (angle !== this.boardState.getServoAngle(channel)) {
-        this.boardState.setServoAngle(channel, angle);
-        this.boardState.setIoPinState(pin, angle); // for completion also save the angle on the corresponding pin
+      this.boardState.setServoAngle(channel, angle);
+      this.boardState.setIoPinState(pin, angle); // for completion also save the angle on the corresponding pin
     }
   }
 
@@ -170,7 +176,7 @@ export default class SimulationSandbox{
    * @param {int} angle 
    */
   servoWithPin(pin, angle) {
-    if (angle !== this.boardState.getIoPinState(pin)){
+    if (angle !== this.boardState.getIoPinState(pin)) {
       this.boardState.setIoPinState(pin, angle);
     }
   }
@@ -192,7 +198,7 @@ export default class SimulationSandbox{
     }
 
     // change view of motor
-    if (speed === this.boardState.getMotorSpeedchannel) {
+    if (speed === this.boardState.getMotorSpeed(channel)) {
       return;
     }
     this.boardState.setMotorSpeed(channel, speed);
@@ -220,10 +226,10 @@ export default class SimulationSandbox{
    * @param {int} trigPin 
    */
   pir(trigPin) {
-      // TODO: figure out hou to access the pir data
+    // TODO: figure out hou to access the pir data
 
     //invert state (low = pressed)
-      return this.boardState.getIoPinState(trigPin);
+    return this.boardState.getIoPinState(trigPin);
   }
 
   /**
@@ -231,7 +237,120 @@ export default class SimulationSandbox{
    * The acutal waiting is done in the step function in DwenguinoSimulation
    * @param {int} time The time that should be waited in miliseconds
    */
-  sleep(time){
+  sleep(time) {
     return;
   }
+
+
+  stepmotorQueue = [];
+  servoAngleQueue = [];
+  colorQueue = [];
+  stepperPins = [33, 34];
+  penPositionPins = [36, 37];
+  colorPin = 35;
+  stylusPosPin =38;
+  drawingActive = false;
+
+  /**
+   * 
+   * @param {Number} channel The pin on which the stepper motor is connected.
+   * @param {Number} direction The direction of the step positive = right, negative = left.
+   */
+  stepperMotorStep(channel, direction) {
+    let step = (direction > 0) ? 1 : -1;
+    this.boardState.setIoPinState(channel, this.boardState.getIoPinState(channel) + step);
+  }
+
+  stepMotorSteps(channel, steps) {
+    for (let i = 0; i < Math.abs(steps); ++i) {
+      this.stepperMotorStep(channel, steps);
+    }
+  }
+
+  stepMotorsTo(increments) {
+    let newPosition  = [0, 0];
+    for (let i = 0 ; i < newPosition.length ; ++i){
+      newPosition[i] = this.boardState.getIoPinState(this.penPositionPins[i]) + increments[i];
+    }
+    let steps = this.coordinatesToSteps(newPosition);
+    for (let i = 0; i < steps.length; ++i) {
+      this.boardState.setIoPinState(
+        this.stepperPins[i],
+        steps[i]
+      );
+    }
+  }
+
+  coordinatesToSteps(coords){
+    let l1 = Math.sqrt(coords[0]**2 + coords[1]**2);
+    let l2 = Math.sqrt(coords[1]**2 + (PlotterConstants.motorDistance - coords[0])**2);
+    let steplength = 2*Math.PI*PlotterConstants.motorRadius/PlotterConstants.nrOfSteps;
+    l1 /= steplength;
+    l2 /= steplength;
+    
+    return [l1, l2]
+  }
+
+  drawRobotCheckPosition(position) {
+    var sc = DwenguinoSimulation.currentScenario;
+    if (position[0] < sc.paper.position.x || position[0] > sc.paper.position.x + sc.paper.width || position[1] < sc.paper.position.y || position[1] > sc.paper.position.y + sc.paper.height) {
+      if (!window.stepMotorError) {
+        alert(MSG.bounds);
+        DwenguinoSimulation.handleSimulationStop();
+        window.stepMotorError = true;
+      }
+    }
+  };
+
+
+  drawRobotLine(x, y, screenCoord) {
+    if (screenCoord) { //if the coordinates are taken from the screen
+      x += 20;
+      y += 40;
+    }
+
+    // Find the starting position
+    let currentPosition  = [0, 0];
+    for (let i = 0 ; i < currentPosition.length ; ++i){
+      currentPosition[i] = this.boardState.getIoPinState(this.penPositionPins[i]);
+    }
+    var pStart = currentPosition;
+
+    // Find all the points between start and end
+    let angle  = Math.atan((y - pStart[1])/(x - pStart[0]));
+    let length = Math.sqrt((pStart[0] - x)**2 + (pStart[1] - y)**2);
+    let xIncrement = Math.cos(angle);
+    let yIncrement = Math.sin(angle);
+    this.update(length, xIncrement, yIncrement);
+    this.drawingActive = true;
+
+  };
+
+  update(stepsLeft, xIncrement, yIncrement){
+    if (stepsLeft > 0){
+      this.stepMotorsTo([xIncrement, yIncrement]);
+      this.currentScenario.updateScenario(this.boardState);
+      setTimeout(() => {this.update(stepsLeft-1, xIncrement, yIncrement)}, 30);
+    }else{
+      this.drawingActive = false;
+    }
+  }
+
+
+
+  drawRobotLowerStylus() {
+    this.boardState.setIoPinState(this.stylusPosPin, 0);
+
+  };
+
+  drawRobotLiftStylus() {
+    this.boardState.setIoPinState(this.stylusPosPin, 90);
+
+  };
+
+  changeColor(color) {
+    this.boardState.setIoPinState(this.colorPin, color);
+
+  };
+
 }

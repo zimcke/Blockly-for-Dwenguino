@@ -104,15 +104,15 @@ var MSG = {
   with_type: "with type",
   create_global: "Create global",
   socialrobotSetPinState: "Set %1 %2",
-  socialrobotServoBlock: "Servo motor %1 %2 %3  channel %4 pin %5 angle %6",
-  socialrobotWaveArmesBlock: "Wave arms %1 %2 Servo right arm %3 %4 Servo left arm %5 %6",
-  socialRobotArmsDownBlock: "Put arms down %1 %2 %3 Servo right arm %4 %5 Servo left arm %6 %7",
-  socialRobotArmsUpBlock: "Put arms up %1 %2 %3 Servo right arm %4 %5 Servo left arm %6 %7",
-  socialRobotEyesLeftBlock: "Turn eyes left %1 %2 %3 Servo left eye %4 %5 Servo right eye %6 %7",
-  socialRobotEyesRightBlock: "Turn eyes right %1 %2 %3 Servo left eye %4 %5 Servo right eye %6 %7",
+  socialrobotServoBlock: "Servo motor %1 %2 %3 pin %4 angle %5",
+  socialrobotWaveArmesBlock: "Wave arms %1 %2 Servo pin right arm %3 %4 Servo left arm %5 %6",
+  socialRobotArmsDownBlock: "Put arms down %1 %2 %3 Servo pin right arm %4 %5 Servo pin left arm %6 %7",
+  socialRobotArmsUpBlock: "Put arms up %1 %2 %3 Servo pin right arm %4 %5 Servo pin left arm %6 %7",
+  socialRobotEyesLeftBlock: "Turn eyes left %1 %2 %3 Servo pin left eye %4 %5 Servo pin right eye %6 %7",
+  socialRobotEyesRightBlock: "Turn eyes right %1 %2 %3 Servo pin left eye %4 %5 Servo pin right eye %6 %7",
   socialrobotReadPinBlock: "Read value of pin %1 %2",
-  socialRobotServoRightHand: "Servo right hand",
-  socialRobotServoLeftHand: "Servo left hand",
+  socialRobotServoRightHand: "Servo pin right hand",
+  socialRobotServoLeftHand: "Servo pin left hand",
   sonarSliderLabel: "Sonar distance",
   pirButtonLabel: "PIR button",
   soundButtonLabel: "Sound button",
@@ -130,6 +130,30 @@ var MSG = {
   cleanError: "The previous code could not be removed.\nPlease check if another application is using any .cpp files.\n Close the application.",
   compileError: "The code could not be compiled.\nYou should check your code, did you forget a block someware?",
 
+
+  // TODO: Translate:
+  dwenguinoStepperMotorBlock: "stepper-motor %1 %2 %3 nummer %4 aantal stappen %5",
+  dwenguinoStepperMotorBlockTooltip: "TODO",
+  drawingrobotMove:"Verplaats de stift onder een van hoek %1 graden met %2 stappen",
+  drawingrobotMoveXY:"Verplaats de stift %1 naar rechts en %2 naar links",
+  drawingrobotLine:"Teken een lijn naar x: %1 y: %2",
+  drawingrobotCircle:"Teken een cirkel met straal: %1",
+  drawingrobotRectangle:"Teken een rechthoek met breedte: %1 en hoogte: %2",
+  drawingrobotLiftStylus: "Stift opheffen",
+  drawingrobotLowerStylus: "Stift neerzetten",
+  drawingrobotChangeColor: "Kleur %1",
+  up:"omhoog",
+  down:"omlaag",
+  left:"links",
+  right:"rechts",
+  bounds:"Opgelet\nJe probeert buiten het papier te tekenen",
+  drawingrobotgrid: "raster",
+  colorpicker:"Kleur",
+  drawingrobotSaveImage:"Tekening opslaan",
+  drawingrobotDrawing:"Tekening",
+  stepperMotorOne: "STEPPER1", 
+  stepperMotorTwo: "STEPPER2",
+  stepperMotorTooltip: "Select which stepper motor from the plotter robot you want to use."
 };
 
 MSG.dropzone = {
@@ -178,6 +202,7 @@ MSG.simulator = {
   button: "Button",
   sound: "Sound sensor",
   light: "Light sensor",
+  buzzer: "Buzzer",
   decoration: "Decoration",
 };
 
@@ -192,6 +217,7 @@ MSG.socialrobot = {
 MSG.tutorialMenu = {
   header: "Tutorials",
   catDwenguino: "Learn to program<br>with DwenguinoBlockly",
+  catDwenguinoComponents: "Handy overview of<br>the Dwenguino components",
   catRidingRobot: "Riding robot",
   catSocialRobot: "Social robot",
   catWeGoStem: "WeGoSTEM",
@@ -201,8 +227,9 @@ MSG.tutorialMenu = {
   close: "Close",
   checkAnswer: "Check answer",
   correctAnswer: "The answer was correct!",
-  wrongAnswer: "The answer was not correct. Try again!"
-}
+  wrongAnswer: "The answer was not correct. Try again!",
+  dwenguinoComponents: "Dwenguino components"
+};
 
 MSG.tutorials = {
   introduction: {},

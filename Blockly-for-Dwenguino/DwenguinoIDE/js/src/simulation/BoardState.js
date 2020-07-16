@@ -16,6 +16,7 @@ export default class BoardState {
         for (let i = 0 ; i < 24 ; ++i){
             this.pinMapping[i + ""] = i;
         }
+
         // Map analog pin names to simulated pin indexes
         for (let i = 0 ; i < 8 ; ++i){
             this.pinMapping["A" + i] = 24 + i;
@@ -42,6 +43,11 @@ export default class BoardState {
             this.pinMapping["LED" + i] = 38 + i;
         }
         
+        // In case built-in components are directly programmed on the pins
+        for (let i = 33 ; i < 45 ; i++){
+            this.pinMapping[i + ""] = i;
+        }
+
         this.pinMapping["LED13"] = 13;
         this.resetBoard();
     }
@@ -145,20 +151,20 @@ export default class BoardState {
             throw Error("No motor with this number")
         }
         let motorSpeed = speed;
-        if (speed < 0){
-            motorspeed = 0;
+        if (speed < -255){
+            motorSpeed = -255;
         }
         if (speed > 255){
             motorspeed = 255;
         }
-        this.pins[this.pinMapping["SERVO_MOTOR_" + motorNr]] = speed;
+        this.pins[this.pinMapping["DC_MOTOR_" + motorNr]] = speed;
     }
 
     getMotorSpeed(motorNr){
         if (motorNr >2 || motorNr < 1){
             throw Error("No motor with this number")
         }
-        return this.pins[this.pinMapping["SERVO_MOTOR_" + motorNr]];
+        return this.pins[this.pinMapping["DC_MOTOR_" + motorNr]];
     }
 
     setLedState(index, state){

@@ -115,6 +115,30 @@ var MSG = {
   uploadError: "The code could not be uploaded to the board. \nPlease check if the board is connected with the usb cable.\n If it is connected try unplugging it and plugging it back in.",
   cleanError: "The previous code could not be removed.\nPlease check if another application is using any .cpp files.\n Close the application.",
   compileError: "The code could not be compiled.\nYou should check your code, did you forget a block someware?",
+
+  //TODO: translate
+  dwenguinoStepperMotorBlock: "stepper-motor %1 %2 %3 nummer %4 aantal stappen %5",
+  dwenguinoStepperMotorBlockTooltip: "TODO",
+  drawingrobotMove:"Verplaats de stift onder een van hoek %1 graden met %2 stappen",
+  drawingrobotMoveXY:"Verplaats de stift %1 naar rechts en %2 naar links",
+  drawingrobotLine:"Teken een lijn naar x: %1 y: %2",
+  drawingrobotCircle:"Teken een cirkel met straal: %1",
+  drawingrobotRectangle:"Teken een rechthoek met breedte: %1 en hoogte: %2",
+  drawingrobotLiftStylus: "Stift opheffen",
+  drawingrobotLowerStylus: "Stift neerzetten",
+  drawingrobotChangeColor: "Kleur %1",
+  up:"omhoog",
+  down:"omlaag",
+  left:"links",
+  right:"rechts",
+  bounds:"Opgelet\nJe probeert buiten het papier te tekenen",
+  drawingrobotgrid: "raster",
+  colorpicker:"Kleur",
+  drawingrobotSaveImage:"Tekening opslaan",
+  drawingrobotDrawing:"Tekening",
+  stepperMotorOne: "STEPPER1", 
+  stepperMotorTwo: "STEPPER2",
+  stepperMotorTooltip: "Select which stepper motor from the plotter robot you want to use."
 };
 
 
@@ -141,8 +165,41 @@ MSG.simulator = {
   scenario_moving: "Κινούμενο ρομπότ",
   scenario_wall: "Κινούμενο ρομπότ και τοίχος",
   code: "Κώδικας",
+  pir: "PIR sensor",
+  sonar: "Sonar",
+  led: "LED",
+  lcd: "LCD screen",
+  button: "Button",
+  sound: "Sound sensor",
+  light: "Light sensor",
+  buzzer: "Buzzer",
+  decoration: "Decoration",
 };
 
+MSG.socialrobot = {
+  plain: "Default",
+  eye: "Eye",
+  mouth: "Mouth",
+  righthand: "Right hand",
+  lefthand: "Left hand",
+};
+
+MSG.tutorialMenu = {
+  header: "Tutorials",
+  catDwenguino: "Learn to program<br>with DwenguinoBlockly",
+  catDwenguinoComponents: "Handy overview of<br>the Dwenguino components",
+  catRidingRobot: "Riding robot",
+  catSocialRobot: "Social robot",
+  catWeGoStem: "WeGoSTEM",
+  chooseCategory: "Select a tutorial category",
+  chooseTutorial: "Select a tutorial",
+  previous: "Previous",
+  close: "Close",
+  checkAnswer: "Check answer",
+  correctAnswer: "The answer was correct!",
+  wrongAnswer: "The answer was not correct. Try again!",
+  dwenguinoComponents: "Dwenguino components"
+};
 
 MSG.tutorials = {
   introduction: {},

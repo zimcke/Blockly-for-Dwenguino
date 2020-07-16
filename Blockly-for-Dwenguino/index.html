@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Blockly Demo:</title>
     <link rel="stylesheet" href="./DwenguinoIDE/css/style.css">
+    <link rel="stylesheet" href="./DwenguinoIDE/css/colors.css">
     <link rel="stylesheet" href="./DwenguinoIDE/css/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="./DwenguinoIDE/css/bootstrap/css/bootstrap-grid.css">
     <link rel="stylesheet" href="./DwenguinoIDE/js/lib/jquery-ui/jquery-ui.css">
@@ -190,13 +191,6 @@
                   </block>
               </value>
           </block>
-          <block type="pir_sensor">
-            <value name="trig">
-                <block type="char_type" id="pir_sensor_pin"> 
-                  <field name="BITMASK">13</field>
-                </block>
-            </value>
-        </block>
           <block type="dwenguino_set_led">
               <value name="LED">
                   <block type="dwenguino_led_pins">
@@ -220,12 +214,14 @@
           <block type="dwenguino_on_off"></block>
       </category>
       <category id="catSocialRobot" colour="25" name='SocialRobot'>
-        <block type="socialrobot_servo">
-            <value name="channel">
-                <block type="math_number" id="211">
-                    <field name="NUM">3</field>
+        <block type="pir_sensor">
+            <value name="trig">
+                <block type="char_type" id="pir_sensor_pin"> 
+                  <field name="BITMASK">13</field>
                 </block>
             </value>
+        </block>
+        <block type="socialrobot_servo">
             <value name="pin">
                 <block type="math_number" id="212">
                     <field name="NUM">0</field>
@@ -405,6 +401,8 @@
     <script src="./blockly/blocks/socialrobot.js"></script>
     <script src="./blockly/blocks/arduino.js"></script>
     <script src="./blockly/blocks/comments.js"></script>
+    <script src="./blockly/blocks/drawingrobot.js"></script>
+
 
     <!-- Blockly translators to c++ code -->
 
@@ -431,6 +429,7 @@
     <script src="./blockly/generators/javascript/dwenguino.js"></script>
     <script src="./blockly/generators/javascript/socialrobot.js"></script>
     <script src="./blockly/generators/javascript/comments.js"></script>
+    <script src="./blockly/generators/javascript/drawingrobot.js"></script>
 
     <!-- extra javascript libs -->
 
