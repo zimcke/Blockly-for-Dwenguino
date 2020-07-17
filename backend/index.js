@@ -72,37 +72,5 @@ app.get("/", (req, res) => res.send('Welcome to blockly'));
 // Setup server port
 var port = process.env.PORT || 12032;
 // Launch app to listen to specified port
-let server = app.listen(port, function () {
-    console.log("Running RestHub on port " + port);
-});
-
-
-//This is depricated, now the electron browser is which is started using a bash script
-
-
-if (process.env.NODE_ENV === 'production') {
-    //module.export = app;
-} else {
-    // Launch a browser window
-    
-    ChromeLauncher.launch({
-        startingUrl: 'http://localhost:12032/dwenguinoblockly',
-        chromeFlags: ['--star-fullscreen', '--start-maximized'],
-    }).then(chrome => {
-        chrome.process.on('close', (code) => {
-            console.log("browser window closed, closing application");
-            server.close();
-            process.exit();
-        });
-    });
-}
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/dwenguinoblockly-standalone
-
-
-
-
-
+let server = app.listen(port, '172.31.41.220');
 
